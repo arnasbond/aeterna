@@ -25,7 +25,7 @@ export async function appUpdateRoutes(app: FastifyInstance) {
       });
     }
 
-    const raw = await readFile(MANIFEST_FILE, "utf8");
+    const raw = (await readFile(MANIFEST_FILE, "utf8")).replace(/^\uFEFF/, "");
     const manifest = JSON.parse(raw) as {
       versionCode: number;
       versionName: string;

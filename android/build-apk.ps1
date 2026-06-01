@@ -1,6 +1,10 @@
 # AETERNA — debug APK surinkimas + publikavimas OTA atnaujinimams (Windows)
 # Reikia: Android SDK (Android Studio) ir JDK 17+
 
+param(
+    [string]$Notes = ""
+)
+
 $ErrorActionPreference = "Stop"
 $Root = $PSScriptRoot
 $RepoRoot = Split-Path $Root -Parent
@@ -32,7 +36,10 @@ if (Test-Path $VersionFile) {
 }
 $versionCode++
 
-$notes = Read-Host "Atnaujinimo aprašymas (Enter = numatytasis)"
+$notes = $Notes
+if (-not $notes) {
+    $notes = Read-Host "Atnaujinimo aprašymas (Enter = numatytasis)"
+}
 if (-not $notes) {
     $notes = "AETERNA Android $versionName (build $versionCode)"
 }
@@ -83,7 +90,7 @@ try {
         releaseNotes = $notes
         required = $false
     } | ConvertTo-Json -Depth 3
-    $manifest | Set-Content -Path $UpdateJson -Encoding UTF8
+    $manifest | Set-Content -Path $UpdateJson -Encoding utf8NoBOM
 
     Remove-Item $apk.FullName -Force -ErrorAction SilentlyContinue
 
