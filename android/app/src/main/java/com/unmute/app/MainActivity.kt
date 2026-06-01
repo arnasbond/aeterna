@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+        toolbar.setOnClickListener { loadHome(force = true) }
 
         webView = findViewById(R.id.webview)
         errorPanel = findViewById(R.id.error_panel)
@@ -111,12 +112,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (savedInstanceState != null) {
-            webView.restoreState(savedInstanceState)
-            pageLoaded = true
-        } else {
-            loadHome()
-        }
+        // Visada titulinis — ne atkurti paskutinį demo ar kitą puslapį
+        loadHome(force = true)
 
         AppUpdateManager.checkForUpdate(this)
     }
@@ -126,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun homeUrl(): String {
-        return UrlStore.getUrl(this).trimEnd('/')
+        return UrlStore.getUrl(this)
     }
 
     private fun loadHome(force: Boolean = false) {
@@ -230,6 +227,11 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 AppDownloadHelper.openApkDownload(this@MainActivity)
             }
+        }
+
+        @JavascriptInterface
+        fun goHome() {
+            runOnUiThread { loadHome(force = true) }
         }
     }
 

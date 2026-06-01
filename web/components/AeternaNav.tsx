@@ -1,9 +1,18 @@
+"use client";
+
 import Link from "next/link";
 
 export function AeternaNav() {
+  const goHome = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window !== "undefined" && window.AeternaApp?.goHome) {
+      e.preventDefault();
+      window.AeternaApp.goHome();
+    }
+  };
+
   return (
     <nav className="ae-nav">
-      <Link href="/" className="ae-logo">
+      <Link href="/" className="ae-logo" onClick={goHome}>
         AETERNA
       </Link>
       <div className="ae-nav-links">
@@ -27,4 +36,14 @@ export function AeternaNav() {
       </Link>
     </nav>
   );
+}
+
+declare global {
+  interface Window {
+    AeternaApp?: {
+      sharePage: (title: string, text: string) => void;
+      downloadApp: () => void;
+      goHome: () => void;
+    };
+  }
 }

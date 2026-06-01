@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">AETERNA</string>
     <string name="settings_title">Serverio adresas</string>
-    <string name="settings_intro">Įveskite Next.js dev serverį (be galinio slash). Telefonas ir kompiuteris turi būti tame pačiame Wi‑Fi.</string>
+    <string name="settings_intro">Įveskite svetainės adresą (tik šaknis, pvz. https://aeterna-web-six.vercel.app — be /m/demo). Paspaudus AETERNA viršuje — titulinis puslapis.</string>
     <string name="url_hint">http://192.168.1.42:3000</string>
     <string name="default_url_hint">Numatytasis iš build: %1$s</string>
     <string name="save">Išsaugoti</string>

@@ -68,6 +68,7 @@ declare global {
     AeternaApp?: {
       sharePage: (title: string, text: string) => void;
       downloadApp: () => void;
+      goHome: () => void;
     };
   }
 }

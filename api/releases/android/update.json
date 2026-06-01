@@ -1,6 +1,6 @@
 {
-    "releaseNotes":  "Atidaryti titulini puslapi, ne demo memoriala",
-    "versionCode":  6,
+    "releaseNotes":  "Titulinis startas, AETERNA mygtukas, URL be demo kelio",
+    "versionCode":  7,
     "versionName":  "0.1.0-dev",
     "required":  false
 }
