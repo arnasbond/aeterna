@@ -1,0 +1,265 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-vilnius",
+        "name": "Vilniaus miesto seniūnija",
+        "diocese": "Vilniaus arkivyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [25.05, 54.55],
+            [25.55, 54.55],
+            [25.55, 54.85],
+            [25.05, 54.85],
+            [25.05, 54.55]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-trakai",
+        "name": "Trakų seniūnija",
+        "diocese": "Vilniaus arkivyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [24.6, 54.45],
+            [25.05, 54.45],
+            [25.05, 54.75],
+            [24.6, 54.75],
+            [24.6, 54.45]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-utena-molėtai",
+        "name": "Utenos–Molėtų seniūnija",
+        "diocese": "Vilniaus arkivyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [25.4, 54.85],
+            [26.2, 54.85],
+            [26.2, 55.45],
+            [25.4, 55.45],
+            [25.4, 54.85]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-kaunas",
+        "name": "Kauno miesto seniūnija",
+        "diocese": "Kauno arkivyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [23.75, 54.75],
+            [24.35, 54.75],
+            [24.35, 55.05],
+            [23.75, 55.05],
+            [23.75, 54.75]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-kedainiai",
+        "name": "Kėdainių seniūnija",
+        "diocese": "Kauno arkivyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [23.9, 55.05],
+            [24.5, 55.05],
+            [24.5, 55.45],
+            [23.9, 55.45],
+            [23.9, 55.05]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-marijampole",
+        "name": "Marijampolės seniūnija",
+        "diocese": "Vilkaviškio vyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [22.8, 54.35],
+            [23.75, 54.35],
+            [23.75, 54.75],
+            [22.8, 54.75],
+            [22.8, 54.35]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-alytus",
+        "name": "Alytaus seniūnija",
+        "diocese": "Vilkaviškio vyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [23.75, 54.0],
+            [24.6, 54.0],
+            [24.6, 54.35],
+            [23.75, 54.35],
+            [23.75, 54.0]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-telsiai",
+        "name": "Telšių seniūnija",
+        "diocese": "Telšių vyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [21.8, 55.8],
+            [22.8, 55.8],
+            [22.8, 56.2],
+            [21.8, 56.2],
+            [21.8, 55.8]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-klaipeda",
+        "name": "Klaipėdos seniūnija",
+        "diocese": "Telšių vyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [20.9, 55.45],
+            [21.8, 55.45],
+            [21.8, 56.0],
+            [20.9, 56.0],
+            [20.9, 55.45]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-siauliai",
+        "name": "Šiaulių seniūnija",
+        "diocese": "Telšių vyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [22.8, 55.45],
+            [24.0, 55.45],
+            [24.0, 56.0],
+            [22.8, 56.0],
+            [22.8, 55.45]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-panevezys",
+        "name": "Panevėžio seniūnija",
+        "diocese": "Panevėžio vyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [24.0, 55.45],
+            [25.4, 55.45],
+            [25.4, 56.0],
+            [24.0, 56.0],
+            [24.0, 55.45]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-birzai-rokuiskis",
+        "name": "Biržų–Rokiškio seniūnija",
+        "diocese": "Panevėžio vyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [24.5, 55.65],
+            [26.5, 55.65],
+            [26.5, 56.45],
+            [24.5, 56.45],
+            [24.5, 55.65]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sen-klaipedos-krastas",
+        "name": "Pajūrio seniūnija",
+        "diocese": "Telšių vyskupija"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [20.9, 55.0],
+            [21.6, 55.0],
+            [21.6, 55.45],
+            [20.9, 55.45],
+            [20.9, 55.0]
+          ]
+        ]
+      }
+    }
+  ]
+}

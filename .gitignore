@@ -8,11 +8,12 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 *.db
-data/
 api/data/
 api/data/aeterna-*.json
 !api/seeds/
 !api/seeds/**
+!api/src/data/
+!api/src/data/**
 
 # Android SDK (lokalus build)
 android-sdk/
