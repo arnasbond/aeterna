@@ -1,0 +1,45 @@
+[
+  {
+    "id": "894657e1-050d-4556-a06a-2a56c66ce95b",
+    "slug": "ona-demo",
+    "profileUrl": "http://localhost:3000/m/ona-demo",
+    "qrCodeUrl": "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http%3A%2F%2Flocalhost%3A3000%2Fm%2Fona-demo",
+    "createdAt": "2026-06-01T16:51:11.606Z",
+    "updatedAt": "2026-06-01T20:00:00.000Z",
+    "userId": null,
+    "parishId": "parish-vilniaus-sv-stanislovo-ir-sv-vladislovo-arkikatedra-bazilika",
+    "fullName": "Ona Kazlauskienė",
+    "birthDate": "1942-03-15",
+    "deathDate": "2024-11-02",
+    "portraitUrl": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=85",
+    "farewellMessage": "Mylimieji mano vaikai ir anūkai — jei skaitote šiuos žodžius, žinokite: mano širdis liko su jumis. Nepykite vieni ant kitų, melskitės už tuos, kurių nebėra šalia, ir neškit dovaną tiems, kuriems šiandien sunku. Aš mačiau jūsų šypsenas tūkstančius kartų — jos man buvo didžiausias dangaus langas. Myliu jus amžinai.",
+    "biography": "Ona Kazlauskienė gimė 1942 m. kovo 15 d. Raseinių rajone. Visą gyvenimą kūrė namus su Juozu — kartu užaugino tris vaikus ir džiaugėsi aštuoniais anūkais. Mėgo giedoti parapijos chore, kepti duoną pagal močiutės receptą ir priimti svečius su arbata bei šypsena.\n\nPaskutiniais metais Ona rašė atsiminimus ir sakydavo: „Geriausia dovana — laikas kartu.“ Jos rankos visada buvo pasiruošusios apkabinti, o žodžiai — paguosti.",
+    "mediaGallery": [
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=85",
+      "https://images.unsplash.com/photo-1490750967868-88d498d6a715?auto=format&fit=crop&w=900&q=85",
+      "https://images.unsplash.com/photo-1518895949257-8f162f49e7b5?auto=format&fit=crop&w=900&q=85",
+      "https://images.unsplash.com/photo-1609223503685-d7e2b1d90e73?auto=format&fit=crop&w=900&q=85"
+    ],
+    "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-candle-flame-burning-close-up-945-large.mp4",
+    "geoLocation": { "lat": 54.6866, "lng": 25.2872 },
+    "privacyStatus": "public"
+  },
+  {
+    "id": "ab606127-6dfe-4d1f-8b92-39b0d6c0eaa1",
+    "slug": "vardenis-pavardenis",
+    "userId": null,
+    "parishId": "parish-prienu-kristaus-apsireiskimo-parapija",
+    "fullName": "vardenis pavardenis",
+    "birthDate": "1969-01-19",
+    "deathDate": "2000-02-20",
+    "biography": "augo daugiavaikeje seimoje",
+    "mediaGallery": [],
+    "videoUrl": null,
+    "geoLocation": null,
+    "privacyStatus": "public",
+    "profileUrl": "http://localhost:3000/m/vardenis-pavardenis",
+    "qrCodeUrl": "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http%3A%2F%2Flocalhost%3A3000%2Fm%2Fvardenis-pavardenis",
+    "createdAt": "2026-06-01T18:14:05.608Z",
+    "updatedAt": "2026-06-01T18:14:05.608Z"
+  }
+]

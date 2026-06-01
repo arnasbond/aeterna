@@ -1,0 +1,170 @@
+import type { FastifyInstance, FastifyRequest } from "fastify";
+import type { PriestAccessRequestInput, PriestLoginInput } from "../types/aeterna.js";
+import {
+  confirmMassBooking,
+  createMassSlot,
+  getPriestDashboard,
+  getPriestParishId,
+  listMassesForPriest,
+  priestLogin,
+} from "../services/mass-candle-store.js";
+import { submitPriestAccessRequest } from "../services/priest-access-store.js";
+import type { ParishProfileInput } from "../types/parish-profile.js";
+import {
+  getParishDetail,
+  importParishProfileFromWebsite,
+  updateParishProfile,
+} from "../services/parish-profile-store.js";
+
+function parishFromRequest(req: FastifyRequest): string | null {
+  const auth = req.headers.authorization;
+  const token = auth?.startsWith("Bearer ") ? auth.slice(7) : req.headers["x-priest-token"];
+  const t = typeof token === "string" ? token : undefined;
+  return getPriestParishId(t);
+}
+
+export async function priestRoutes(app: FastifyInstance) {
+  app.post<{ Body: PriestAccessRequestInput }>("/api/v1/priest/access-request", async (req, reply) => {
+    const { parishId, priestName, email, phone, note } = req.body ?? {};
+    if (!parishId || !priestName?.trim() || !email?.trim()) {
+      return reply.status(400).send({
+        success: false,
+        error: { message: "parishId, priestName ir email privalomi" },
+      });
+    }
+    try {
+      const row = await submitPriestAccessRequest({
+        parishId,
+        priestName,
+        email,
+        phone,
+        note,
+      });
+      return {
+        success: true,
+        data: {
+          id: row.id,
+          message:
+            "Užklausa išsiųsta administratoriui. Prisijungti galėsite gavę patvirtinimą ir laikiną slaptažodį.",
+        },
+      };
+    } catch (e) {
+      return reply.status(400).send({
+        success: false,
+        error: { message: e instanceof Error ? e.message : "Nepavyko pateikti užklausos" },
+      });
+    }
+  });
+
+  app.post<{ Body: PriestLoginInput }>("/api/v1/priest/login", async (req, reply) => {
+    const { parishId, password } = req.body ?? {};
+    if (!parishId || !password) {
+      return reply.status(400).send({ success: false, error: { message: "parishId ir password privalomi" } });
+    }
+    const session = await priestLogin(parishId, password);
+    if (!session) {
+      return reply.status(401).send({
+        success: false,
+        error: {
+          message:
+            "Neteisingi duomenys arba nepatvirtinta prieiga. Pateikite užklausą administratoriui ir naudokite gautą laikiną slaptažodį.",
+        },
+      });
+    }
+    return { success: true, data: session };
+  });
+
+  app.get("/api/v1/priest/dashboard", async (req, reply) => {
+    const parishId = parishFromRequest(req);
+    if (!parishId) {
+      return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
+    }
+    return { success: true, data: await getPriestDashboard(parishId) };
+  });
+
+  app.get("/api/v1/priest/masses", async (req, reply) => {
+    const parishId = parishFromRequest(req);
+    if (!parishId) {
+      return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
+    }
+    return { success: true, data: await listMassesForPriest(parishId) };
+  });
+
+  app.post<{ Body: { dateTime: string } }>("/api/v1/priest/masses", async (req, reply) => {
+    const parishId = parishFromRequest(req);
+    if (!parishId) {
+      return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
+    }
+    if (!req.body?.dateTime) {
+      return reply.status(400).send({ success: false, error: { message: "dateTime privalomas" } });
+    }
+    const slot = await createMassSlot(parishId, req.body.dateTime);
+    return { success: true, data: slot };
+  });
+
+  app.get("/api/v1/priest/parish-profile", async (req, reply) => {
+    const parishId = parishFromRequest(req);
+    if (!parishId) {
+      return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
+    }
+    const detail = await getParishDetail(parishId);
+    if (!detail) {
+      return reply.status(404).send({ success: false, error: { message: "Parapija nerasta" } });
+    }
+    return { success: true, data: detail };
+  });
+
+  app.put<{ Body: ParishProfileInput }>("/api/v1/priest/parish-profile", async (req, reply) => {
+    const parishId = parishFromRequest(req);
+    if (!parishId) {
+      return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
+    }
+    try {
+      const profile = await updateParishProfile(parishId, req.body ?? {});
+      return { success: true, data: profile };
+    } catch (e) {
+      return reply.status(400).send({
+        success: false,
+        error: { message: e instanceof Error ? e.message : "Nepavyko išsaugoti" },
+      });
+    }
+  });
+
+  app.post<{ Body: { url?: string } }>("/api/v1/priest/parish-profile/import-website", async (req, reply) => {
+    const parishId = parishFromRequest(req);
+    if (!parishId) {
+      return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
+    }
+    try {
+      const profile = await importParishProfileFromWebsite(parishId, req.body?.url);
+      return {
+        success: true,
+        data: {
+          profile,
+          message: "Informacija perkelta iš oficialios svetainės. Peržiūrėkite ir patikslinkite laukus.",
+        },
+      };
+    } catch (e) {
+      return reply.status(400).send({
+        success: false,
+        error: { message: e instanceof Error ? e.message : "Nepavyko importuoti" },
+      });
+    }
+  });
+
+  app.patch<{ Params: { id: string } }>("/api/v1/priest/masses/:id/confirm", async (req, reply) => {
+    const parishId = parishFromRequest(req);
+    if (!parishId) {
+      return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
+    }
+    try {
+      const slot = await confirmMassBooking(req.params.id, parishId);
+      return { success: true, data: slot };
+    } catch (e) {
+      return reply.status(400).send({
+        success: false,
+        error: { message: e instanceof Error ? e.message : "Nepavyko patvirtinti" },
+      });
+    }
+  });
+}

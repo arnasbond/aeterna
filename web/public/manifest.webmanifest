@@ -1,0 +1,11 @@
+{
+  "name": "AETERNA",
+  "short_name": "AETERNA",
+  "description": "Skaitmeninis atminimas per QR kodą ant paminklo",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fcfbf7",
+  "theme_color": "#4a6741",
+  "lang": "lt",
+  "orientation": "portrait"
+}

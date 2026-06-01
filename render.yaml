@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: aeterna-api
+    runtime: node
+    rootDir: api
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: AETERNA_DISABLE_TEST_LOGIN
+        value: "1"
+      - key: AETERNA_ADMIN_PASSWORD
+        sync: false
+      - key: PUBLIC_WEB_URL
+        fromService:
+          type: web
+          name: aeterna-web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: CORS_ORIGINS
+        fromService:
+          type: web
+          name: aeterna-web
+          envVarKey: RENDER_EXTERNAL_URL
+
+  - type: web
+    name: aeterna-web
+    runtime: node
+    rootDir: web
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: API_INTERNAL_URL
+        fromService:
+          type: web
+          name: aeterna-api
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: NEXT_PUBLIC_SITE_URL
+        fromService:
+          type: web
+          name: aeterna-web
+          envVarKey: RENDER_EXTERNAL_URL

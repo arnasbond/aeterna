@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AETERNA — ryšys</title>
+  <style>
+    body { margin:0; min-height:100vh; background:#000; color:#e4e4e7; font-family:system-ui,sans-serif;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; }
+    h1 { font-size:1.1rem; letter-spacing:.35em; font-weight:500; }
+    p { color:#a1a1aa; line-height:1.6; max-width:20rem; font-size:.9rem; }
+    code { color:#c4b5fd; word-break:break-all; }
+    .url { margin:1rem 0; padding:.75rem; background:#18181b; border-radius:8px; width:100%; max-width:20rem; box-sizing:border-box; }
+  </style>
+</head>
+<body>
+  <h1>AETERNA</h1>
+  <p>Nepavyko atidaryti dev serverio.</p>
+  <div class="url"><code id="u"></code></div>
+  <p>Kompiuteryje paleiskite <code>npm run dev</code> (api) ir <code>npm run dev:lan</code> (web). Telefonas ir PC — tas pats Wi‑Fi.</p>
+  <p>Meniu ⋮ → <strong>Serverio adresas</strong> — patikrinkite IP (<code>ipconfig</code>).</p>
+  <script>
+    var q = new URLSearchParams(location.search);
+    document.getElementById("u").textContent = q.get("url") || "—";
+  </script>
+</body>
+</html>

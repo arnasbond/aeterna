@@ -1,0 +1,4 @@
+AETERNA — žr. Desktop\UNMUTE-INSTALIAVIMAS.txt (pavadinimas atnaujinsime po naujo APK build)
+
+Paleisti: PALESTI-SERVERIUS.bat
+Demo: http://localhost:3000/m/ona-demo

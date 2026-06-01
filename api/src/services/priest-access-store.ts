@@ -1,0 +1,193 @@
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
+import { config } from "../config.js";
+
+/** Laikina — pašalinti prieš production (žr. config.testLoginEnabled) */
+export function isTestLoginPassword(password: string): boolean {
+  return config.testLoginEnabled && password.trim() === config.testLoginPassword;
+}
+import type { PriestAccessRequest, PriestAccessRequestInput } from "../types/aeterna.js";
+import { getParish } from "./aeterna-store.js";
+
+const REQUESTS_FILE = join(config.dataDir, "priest-access-requests.json");
+const CREDENTIALS_FILE = join(config.dataDir, "priest-credentials.json");
+
+const ADMIN_PASSWORD = process.env.AETERNA_ADMIN_PASSWORD || "admin-aeterna-2026";
+const PASSWORD_SALT = process.env.AETERNA_PASSWORD_SALT || "aeterna-priest-v1";
+const TEMP_PASSWORD_TTL_MS = Number(process.env.PRIEST_TEMP_PASSWORD_HOURS || 72) * 60 * 60 * 1000;
+
+const adminTokens = new Map<string, number>();
+
+type PriestCredential = {
+  id: string;
+  requestId: string;
+  parishId: string;
+  passwordHash: string;
+  expiresAt: string;
+  usedAt: string | null;
+  createdAt: string;
+};
+
+let requestsCache: PriestAccessRequest[] | null = null;
+let credentialsCache: PriestCredential[] | null = null;
+
+function hashPassword(plain: string): string {
+  return createHash("sha256").update(`${PASSWORD_SALT}:${plain}`).digest("hex");
+}
+
+function generateTempPassword(): string {
+  const raw = randomBytes(6).toString("hex").toUpperCase();
+  return `${raw.slice(0, 4)}-${raw.slice(4, 8)}-${raw.slice(8, 12)}`;
+}
+
+async function loadRequests(): Promise<PriestAccessRequest[]> {
+  if (requestsCache) return requestsCache;
+  await mkdir(config.dataDir, { recursive: true });
+  try {
+    requestsCache = JSON.parse(await readFile(REQUESTS_FILE, "utf8")) as PriestAccessRequest[];
+  } catch {
+    requestsCache = [];
+    await saveRequests();
+  }
+  return requestsCache;
+}
+
+async function saveRequests(): Promise<void> {
+  await writeFile(REQUESTS_FILE, JSON.stringify(requestsCache ?? [], null, 2));
+}
+
+async function loadCredentials(): Promise<PriestCredential[]> {
+  if (credentialsCache) return credentialsCache;
+  await mkdir(config.dataDir, { recursive: true });
+  try {
+    credentialsCache = JSON.parse(await readFile(CREDENTIALS_FILE, "utf8")) as PriestCredential[];
+  } catch {
+    credentialsCache = [];
+    await saveCredentials();
+  }
+  return credentialsCache;
+}
+
+async function saveCredentials(): Promise<void> {
+  await writeFile(CREDENTIALS_FILE, JSON.stringify(credentialsCache ?? [], null, 2));
+}
+
+export async function submitPriestAccessRequest(
+  input: PriestAccessRequestInput
+): Promise<PriestAccessRequest> {
+  const parish = getParish(input.parishId);
+  if (!parish) throw new Error("Parapija nerasta");
+
+  const requests = await loadRequests();
+  const pending = requests.find(
+    (r) => r.parishId === input.parishId && r.email.toLowerCase() === input.email.trim().toLowerCase() && r.status === "pending"
+  );
+  if (pending) {
+    throw new Error("Šiai parapijai jau yra laukianti patvirtinimo užklausa su šiuo el. paštu");
+  }
+
+  const row: PriestAccessRequest = {
+    id: randomUUID(),
+    parishId: input.parishId,
+    parishTitle: parish.title,
+    priestName: input.priestName.trim(),
+    email: input.email.trim().toLowerCase(),
+    phone: input.phone?.trim() || null,
+    note: input.note?.trim() || null,
+    status: "pending",
+    createdAt: new Date().toISOString(),
+    reviewedAt: null,
+  };
+  requests.push(row);
+  await saveRequests();
+  return row;
+}
+
+export async function listPriestAccessRequests(): Promise<PriestAccessRequest[]> {
+  const requests = await loadRequests();
+  return [...requests].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export async function approvePriestAccessRequest(requestId: string): Promise<{
+  request: PriestAccessRequest;
+  temporaryPassword: string;
+  expiresAt: string;
+}> {
+  const requests = await loadRequests();
+  const req = requests.find((r) => r.id === requestId);
+  if (!req) throw new Error("Užklausa nerasta");
+  if (req.status !== "pending") throw new Error("Užklausa jau peržiūrėta");
+
+  const plain = generateTempPassword();
+  const expiresAt = new Date(Date.now() + TEMP_PASSWORD_TTL_MS).toISOString();
+  const credentials = await loadCredentials();
+
+  credentials.push({
+    id: randomUUID(),
+    requestId: req.id,
+    parishId: req.parishId,
+    passwordHash: hashPassword(plain),
+    expiresAt,
+    usedAt: null,
+    createdAt: new Date().toISOString(),
+  });
+
+  req.status = "approved";
+  req.reviewedAt = new Date().toISOString();
+  await saveCredentials();
+  await saveRequests();
+
+  return { request: req, temporaryPassword: plain, expiresAt };
+}
+
+export async function rejectPriestAccessRequest(requestId: string): Promise<PriestAccessRequest> {
+  const requests = await loadRequests();
+  const req = requests.find((r) => r.id === requestId);
+  if (!req) throw new Error("Užklausa nerasta");
+  if (req.status !== "pending") throw new Error("Užklausa jau peržiūrėta");
+  req.status = "rejected";
+  req.reviewedAt = new Date().toISOString();
+  await saveRequests();
+  return req;
+}
+
+export async function verifyPriestTemporaryPassword(
+  parishId: string,
+  password: string
+): Promise<boolean> {
+  const credentials = await loadCredentials();
+  const now = Date.now();
+  const hash = hashPassword(password.trim());
+
+  const match = credentials.find(
+    (c) =>
+      c.parishId === parishId &&
+      c.passwordHash === hash &&
+      !c.usedAt &&
+      new Date(c.expiresAt).getTime() > now
+  );
+
+  if (!match) return false;
+
+  match.usedAt = new Date().toISOString();
+  await saveCredentials();
+  return true;
+}
+
+export function adminLogin(password: string): string | null {
+  if (password !== ADMIN_PASSWORD && !isTestLoginPassword(password)) return null;
+  const token = createHash("sha256").update(`admin:${Date.now()}:${randomBytes(8)}`).digest("hex");
+  adminTokens.set(token, Date.now() + 12 * 60 * 60 * 1000);
+  return token;
+}
+
+export function getAdminFromToken(token: string | undefined): boolean {
+  if (!token) return false;
+  const exp = adminTokens.get(token);
+  if (!exp || exp < Date.now()) {
+    adminTokens.delete(token);
+    return false;
+  }
+  return true;
+}

@@ -1,0 +1,37 @@
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.db
+data/
+api/data/
+api/data/aeterna-*.json
+!api/seeds/
+!api/seeds/**
+
+# Android SDK (lokalus build)
+android-sdk/
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.apk
+!AETERNA-install.apk
+!api/releases/android/aeterna.apk
+!android/README.md
+node_modules/
+dist/
+build/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

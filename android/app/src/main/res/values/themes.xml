@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Unmute" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#4a6741</item>
+        <item name="colorPrimaryVariant">#3d5636</item>
+        <item name="colorOnPrimary">#ffffff</item>
+        <item name="android:statusBarColor">#3d5636</item>
+        <item name="android:navigationBarColor">#fcfbf7</item>
+        <item name="android:windowBackground">#fcfbf7</item>
+    </style>
+
+    <style name="Theme.Unmute.Settings" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">#4a6741</item>
+        <item name="android:statusBarColor">#3d5636</item>
+        <item name="android:windowBackground">#fcfbf7</item>
+    </style>
+</resources>

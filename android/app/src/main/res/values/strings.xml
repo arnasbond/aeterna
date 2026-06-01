@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AETERNA</string>
+    <string name="settings_title">Serverio adresas</string>
+    <string name="settings_intro">Įveskite Next.js dev serverį (be galinio slash). Telefonas ir kompiuteris turi būti tame pačiame Wi‑Fi.</string>
+    <string name="url_hint">http://192.168.1.42:3000</string>
+    <string name="default_url_hint">Numatytasis iš build: %1$s</string>
+    <string name="save">Išsaugoti</string>
+    <string name="reset_default">Atkurti numatytąjį</string>
+    <string name="url_invalid">Adresas turi prasidėti http:// arba https://</string>
+    <string name="url_saved">Adresas išsaugotas. Grįžkite ir perkraukite.</string>
+    <string name="url_reset">Atkurtas numatytasis adresas</string>
+    <string name="reload">Perkrauti</string>
+    <string name="press_back_again">Paspauskite atgal dar kartą, kad išeitumėte</string>
+    <string name="error_title">Nepavyko atidaryti serverio</string>
+    <string name="error_timeout">Serveris neatsako per 15 s. Ar paleistas „npm run dev:lan“?</string>
+    <string name="error_unknown">Tinklo klaida</string>
+    <string name="retry">Bandyti dar kartą</string>
+    <string name="settings_help">1. Kompiuteryje: api ir web (npm run dev).\n2. Raskite PC IP: ipconfig → IPv4.\n3. web/.env.local: NEXT_PUBLIC_API_URL=http://JŪSŲ_IP:4000\n4. Paleiskite web su: npx next dev -H 0.0.0.0\n5. Čia įrašykite: http://JŪSŲ_IP:3000\n\nEmuliatoriuje: http://10.0.2.2:3000</string>
+    <string name="update_available_title">Galimas programėlės atnaujinimas</string>
+    <string name="update_available_body">Nauja versija %1$s (dabar: %2$d). Atsisiųsti ir įdiegti?</string>
+    <string name="update_download">Atsisiųsti</string>
+    <string name="update_later">Vėliau</string>
+    <string name="update_downloading">Atsisiunčiama…</string>
+    <string name="update_please_wait">Palaukite, kol bus paruošta nauja APK.</string>
+    <string name="update_download_failed">Nepavyko atsisiųsti: %1$s</string>
+    <string name="update_check_failed">Atnaujinimų serveris nepasiekiamas</string>
+    <string name="update_install_permission_title">Leidimas įdiegti</string>
+    <string name="update_install_permission_body">Android reikia leisti AETERNA įdiegti atnaujinimus. Įjunkite „Leisti iš šio šaltinio“ nustatymuose.</string>
+    <string name="update_open_settings">Atidaryti nustatymus</string>
+    <string name="action_check_update">Tikrinti atnaujinimus</string>
+</resources>
