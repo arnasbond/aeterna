@@ -34,4 +34,7 @@
     <string name="action_download_app">Atsisiųsti APK</string>
     <string name="share_failed">Nepavyko atidaryti dalinimosi</string>
     <string name="share_app_invite_text">Atsisiųskite AETERNA Android programėlę — memorialai ir parapijos telefone.</string>
+    <string name="download_started">Atsisiunčiama… Patikrinkite pranešimus arba Atsisiuntimų aplanką.</string>
+    <string name="download_open_browser">Atidaroma naršyklėje…</string>
+    <string name="download_notification_desc">AETERNA Android programėlė</string>
 </resources>

@@ -2265,6 +2265,15 @@
   margin: 0 auto;
 }
 
+.ae-download-page__direct {
+  display: block;
+  width: 100%;
+  max-width: 22rem;
+  margin: 0 auto 1rem;
+  text-align: center;
+  text-decoration: none;
+}
+
 .ae-download-page__steps {
   margin: 2rem auto 0;
   max-width: 24rem;

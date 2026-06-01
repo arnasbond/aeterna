@@ -22,12 +22,22 @@ export default function DownloadAppPage() {
         be namų Wi‑Fi.
       </p>
 
+      <a
+        href={apkUrl}
+        download="aeterna.apk"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="ae-btn ae-btn--gold ae-download-page__direct"
+      >
+        Atsisiųsti aeterna.apk
+      </a>
+
       <DownloadAppButton showHint className="ae-download-page__cta" />
 
       <p className="ae-hint" style={{ textAlign: "center", marginTop: "1rem" }}>
-        Tiesioginė APK nuoroda:{" "}
-        <a href={apkUrl} download="aeterna.apk" className="ae-map-popup-link">
-          aeterna.apk
+        Tiesioginė nuoroda:{" "}
+        <a href={apkUrl} download="aeterna.apk" target="_blank" rel="noopener noreferrer" className="ae-map-popup-link">
+          {apkUrl.replace(/^https:\/\//, "")}
         </a>
       </p>
 

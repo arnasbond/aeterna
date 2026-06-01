@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { getApkDownloadUrl, getAppDownloadPageUrl } from "@/lib/site";
 
 type Props = {
@@ -11,13 +12,17 @@ type Props = {
 export function DownloadAppButton({ variant = "button", className = "", showHint = false }: Props) {
   const apkUrl = getApkDownloadUrl();
   const pageUrl = getAppDownloadPageUrl();
+  const [inApp, setInApp] = useState(false);
 
-  const onDownload = () => {
-    if (typeof window !== "undefined" && window.AeternaApp?.downloadApp) {
+  useEffect(() => {
+    setInApp(typeof window !== "undefined" && !!window.AeternaApp?.downloadApp);
+  }, []);
+
+  const onClick = (e: React.MouseEvent) => {
+    if (inApp && window.AeternaApp?.downloadApp) {
+      e.preventDefault();
       window.AeternaApp.downloadApp();
-      return;
     }
-    window.location.href = apkUrl;
   };
 
   if (variant === "link") {
@@ -28,17 +33,41 @@ export function DownloadAppButton({ variant = "button", className = "", showHint
     );
   }
 
+  const label = inApp ? "Atsisiųsti APK failą" : "Atsisiųsti Android programėlę";
+
   return (
     <div className={`ae-download-app-wrap ${className}`.trim()}>
-      <button type="button" className="ae-btn ae-btn--gold ae-download-app__btn" onClick={onDownload}>
-        Atsisiųsti Android programėlę
-      </button>
+      <a
+        href={inApp ? pageUrl : apkUrl}
+        download={inApp ? undefined : "aeterna.apk"}
+        target={inApp ? undefined : "_blank"}
+        rel={inApp ? undefined : "noopener noreferrer"}
+        className="ae-btn ae-btn--gold ae-download-app__btn"
+        onClick={onClick}
+      >
+        {label}
+      </a>
       {showHint && (
         <p className="ae-hint ae-download-app__hint">
-          Reikia leisti įdiegti iš nežinomų šaltinių.{" "}
-          <a href={pageUrl}>Instrukcijos →</a>
+          {inApp
+            ? "Failas bus Atsisiuntimų aplanke. Jei reikia — leiskite įdiegti nežinomą programą."
+            : "Reikia leisti įdiegti iš nežinomų šaltinių. "}
+          {!inApp && (
+            <>
+              <a href={pageUrl}>Instrukcijos →</a>
+            </>
+          )}
         </p>
       )}
     </div>
   );
+}
+
+declare global {
+  interface Window {
+    AeternaApp?: {
+      sharePage: (title: string, text: string) => void;
+      downloadApp: () => void;
+    };
+  }
 }

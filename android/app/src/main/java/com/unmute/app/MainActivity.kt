@@ -101,7 +101,14 @@ class MainActivity : AppCompatActivity() {
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?
-            ): Boolean = false
+            ): Boolean {
+                val url = request?.url?.toString() ?: return false
+                if (AppDownloadHelper.isApkDownloadUrl(url)) {
+                    AppDownloadHelper.openApkDownload(this@MainActivity)
+                    return true
+                }
+                return false
+            }
         }
 
         if (savedInstanceState != null) {
