@@ -23,6 +23,7 @@ type Props = {
 
 export function MemorialProfile({ memorial, children }: Props) {
   const [lightbox, setLightbox] = useState<string | null>(null);
+  const [videoFailed, setVideoFailed] = useState(false);
 
   useEffect(() => {
     if (!lightbox) return;
@@ -43,7 +44,7 @@ export function MemorialProfile({ memorial, children }: Props) {
       />
       <header className="ae-memorial-head">
         <div className="ae-memorial-portrait-wrap">
-          <img src={portrait} alt="" className="ae-memorial-portrait" />
+          <img src={portrait} alt="" className="ae-memorial-portrait" referrerPolicy="no-referrer" />
         </div>
         <span className="ae-badge">{memorial.parish.diocese}</span>
         <p className="ae-memorial-parish">{memorial.parish.title}</p>
@@ -69,16 +70,27 @@ export function MemorialProfile({ memorial, children }: Props) {
         <section className="ae-memorial-video" aria-label="Atminimo video">
           <h2 className="ae-memorial-section-title">Šviesos akimirka</h2>
           <div className="ae-memorial-video__frame">
-            <video
-              src={memorial.videoUrl}
-              poster={portrait}
-              controls
-              playsInline
-              preload="metadata"
-              className="ae-memorial-video__el"
-            >
-              Jūsų naršyklė nepalaiko video.
-            </video>
+            {!videoFailed ? (
+              <video
+                key={memorial.videoUrl}
+                src={memorial.videoUrl}
+                poster={portrait}
+                controls
+                playsInline
+                preload="metadata"
+                className="ae-memorial-video__el"
+                onError={() => setVideoFailed(true)}
+              >
+                Jūsų naršyklė nepalaiko video.
+              </video>
+            ) : (
+              <p className="ae-memorial-video__fallback">
+                Video nepavyko įkelti.{" "}
+                <a href={memorial.videoUrl} target="_blank" rel="noopener noreferrer">
+                  Atidaryti vaizdo įrašą →
+                </a>
+              </p>
+            )}
           </div>
         </section>
       )}
@@ -103,7 +115,7 @@ export function MemorialProfile({ memorial, children }: Props) {
                 className="ae-memorial-photos__item"
                 onClick={() => setLightbox(url)}
               >
-                <img src={url} alt="" loading="lazy" />
+                <img src={url} alt="" loading="lazy" referrerPolicy="no-referrer" />
               </button>
             ))}
           </div>

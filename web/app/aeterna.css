@@ -874,6 +874,20 @@
   vertical-align: middle;
 }
 
+.ae-memorial-video__fallback {
+  margin: 0;
+  padding: 2rem 1.25rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.ae-memorial-video__fallback a {
+  color: var(--ae-accent);
+  font-weight: 600;
+}
+
 .ae-memorial-bio {
   max-width: 36rem;
   margin: 0 auto 2.5rem;

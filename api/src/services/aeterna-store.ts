@@ -2,7 +2,11 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { config } from "../config.js";
-import { DEMO_AETERNA_MEMORIAL, DEMO_MEMORIAL_SLUG } from "../data/demo-aeterna.js";
+import {
+  DEMO_AETERNA_MEMORIAL,
+  DEMO_MEDIA_VERSION,
+  DEMO_MEMORIAL_SLUG,
+} from "../data/demo-aeterna.js";
 import { LT_PARISHES } from "../data/lt-parishes.js";
 import type {
   AeternaMemorial,
@@ -69,7 +73,8 @@ function seedMemorials(): Map<string, AeternaMemorial> {
     createdAt: now,
     updatedAt: now,
     ...DEMO_AETERNA_MEMORIAL,
-  });
+    demoMediaVersion: DEMO_MEDIA_VERSION,
+  } as AeternaMemorial);
   return m;
 }
 
@@ -90,17 +95,25 @@ async function loadMemorials(): Promise<Map<string, AeternaMemorial>> {
     await saveMemorials();
   } else {
     const existing = memorialsCache.get(DEMO_MEMORIAL_SLUG)!;
-    if (!existing.farewellMessage || !existing.videoUrl) {
+    const demoVersion = (existing as AeternaMemorial & { demoMediaVersion?: number }).demoMediaVersion ?? 0;
+    const needsDemoRefresh =
+      demoVersion < DEMO_MEDIA_VERSION ||
+      !existing.farewellMessage ||
+      !existing.videoUrl ||
+      existing.mediaGallery.length < DEMO_AETERNA_MEMORIAL.mediaGallery.length;
+
+    if (needsDemoRefresh) {
       memorialsCache.set(DEMO_MEMORIAL_SLUG, {
         ...existing,
         ...DEMO_AETERNA_MEMORIAL,
         id: existing.id,
         slug: DEMO_MEMORIAL_SLUG,
         createdAt: existing.createdAt,
-        profileUrl: existing.profileUrl,
-        qrCodeUrl: existing.qrCodeUrl,
+        profileUrl: profileUrl(DEMO_MEMORIAL_SLUG),
+        qrCodeUrl: qrPlaceholder(DEMO_MEMORIAL_SLUG),
         updatedAt: new Date().toISOString(),
-      });
+        demoMediaVersion: DEMO_MEDIA_VERSION,
+      } as AeternaMemorial);
       await saveMemorials();
     }
   }
