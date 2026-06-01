@@ -79,7 +79,7 @@ gradle wrapper
 2. Įjunkite **Įdiegti iš nežinomų šaltinių** (failų tvarkyklė / Chrome)
 3. Atidarykite APK
 
-Programėlė pagal nutylėjimą atidaro **`/m/ona-demo`**.
+Programėlė pagal nutylėjimą atidaro **titulinį puslapį** (`/`).
 
 ## 6. Automatiniai APK atnaujinimai (OTA)
 

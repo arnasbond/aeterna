@@ -126,8 +126,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun homeUrl(): String {
-        val base = UrlStore.getUrl(this).trimEnd('/')
-        return "$base/m/ona-demo"
+        return UrlStore.getUrl(this).trimEnd('/')
     }
 
     private fun loadHome(force: Boolean = false) {

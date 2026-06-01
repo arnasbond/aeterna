@@ -1,6 +1,6 @@
 {
-    "releaseNotes":  "Fix APK download via DownloadManager and external browser",
-    "versionCode":  5,
+    "releaseNotes":  "Atidaryti titulini puslapi, ne demo memoriala",
+    "versionCode":  6,
     "versionName":  "0.1.0-dev",
     "required":  false
 }
