@@ -28,6 +28,7 @@ android/.idea/
 !AETERNA-install.apk
 !api/releases/android/aeterna.apk
 !android/README.md
+.vercel
 node_modules/
 dist/
 build/

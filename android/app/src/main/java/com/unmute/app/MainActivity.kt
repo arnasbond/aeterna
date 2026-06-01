@@ -1,6 +1,7 @@
 package com.unmute.app
 
 import android.annotation.SuppressLint
+import android.webkit.JavascriptInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -72,6 +73,8 @@ class MainActivity : AppCompatActivity() {
         if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
             WebSettingsCompat.setAlgorithmicDarkeningAllowed(webView.settings, true)
         }
+
+        webView.addJavascriptInterface(WebAppBridge(), "AeternaApp")
 
         webView.webChromeClient = WebChromeClient()
         webView.webViewClient = object : WebViewClient() {
@@ -161,6 +164,21 @@ class MainActivity : AppCompatActivity() {
                 AppUpdateManager.checkForUpdate(this, force = true)
                 true
             }
+            R.id.action_share -> {
+                val url = webView.url?.takeIf { it.startsWith("http") } ?: homeUrl()
+                val title = webView.title?.takeIf { it.isNotBlank() }
+                    ?: getString(R.string.app_name)
+                ShareHelper.share(this, url, title, "")
+                true
+            }
+            R.id.action_share_app -> {
+                AppDownloadHelper.shareAppInvite(this)
+                true
+            }
+            R.id.action_download_app -> {
+                AppDownloadHelper.openApkDownload(this)
+                true
+            }
             R.id.action_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
@@ -190,6 +208,23 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         webView.saveState(outState)
+    }
+
+    private inner class WebAppBridge {
+        @JavascriptInterface
+        fun sharePage(title: String, text: String) {
+            runOnUiThread {
+                val url = webView.url?.takeIf { it.startsWith("http") } ?: homeUrl()
+                ShareHelper.share(this@MainActivity, url, title, text)
+            }
+        }
+
+        @JavascriptInterface
+        fun downloadApp() {
+            runOnUiThread {
+                AppDownloadHelper.openApkDownload(this@MainActivity)
+            }
+        }
     }
 
     @Deprecated("Deprecated in Java")

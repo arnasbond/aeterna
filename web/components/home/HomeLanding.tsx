@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { DownloadAppButton } from "@/components/DownloadAppButton";
+import { ShareBar } from "@/components/ShareBar";
+import { getSiteOrigin } from "@/lib/site";
 
 const DEMO_MEMORIAL_PATH = "/m/ona-demo";
 const siteBase = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "http://localhost:3000";
@@ -41,7 +44,14 @@ export function HomeLanding() {
               <Link href={DEMO_MEMORIAL_PATH} className="ae-btn ae-btn--outline ae-btn--lg">
                 Peržiūrėti demo
               </Link>
+              <DownloadAppButton className="ae-home-hero__download" />
             </div>
+            <ShareBar
+              className="ae-home-hero__share"
+              title="AETERNA — skaitmeninis atminimas"
+              text="Viena akimirka prie paminklo — amžina atmintis ir parama parapijai."
+              url={`${getSiteOrigin()}${DEMO_MEMORIAL_PATH}`}
+            />
             <p className="ae-home-hero__trust">
               <Link href="/map">Parapijų žemėlapis</Link>
               <span aria-hidden> · </span>

@@ -2143,3 +2143,166 @@
   border-radius: 8px;
   border: 1px solid #dce6d6;
 }
+
+/* Dalintis ir programėlės atsisiuntimas */
+.ae-btn--ghost {
+  background: transparent;
+  border: 1px solid #c5d4bc;
+  color: var(--ae-primary);
+}
+
+.ae-btn--ghost:hover {
+  background: rgba(74, 103, 65, 0.08);
+}
+
+.ae-share {
+  width: 100%;
+}
+
+.ae-share__primary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ae-share__btn {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.85rem 1rem;
+}
+
+.ae-share__status {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--ae-primary);
+  margin: 0.35rem 0 0;
+}
+
+.ae-share__more {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.35rem;
+  border: none;
+  background: none;
+  color: var(--ae-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.ae-share__hint {
+  font-size: 0.75rem;
+  color: var(--ae-muted);
+  text-align: center;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.ae-share__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.ae-share__chip {
+  display: inline-block;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #dce6d6;
+  background: #fff;
+  color: var(--ae-primary-dark);
+}
+
+.ae-share__chip:hover {
+  background: #f4f8f1;
+  border-color: var(--ae-primary);
+}
+
+.ae-share__chip--facebook { border-color: #1877f2; color: #1877f2; }
+.ae-share__chip--whatsapp { border-color: #25d366; color: #1a8f4a; }
+.ae-share__chip--telegram { border-color: #0088cc; color: #0088cc; }
+
+.ae-download-app-wrap {
+  width: 100%;
+}
+
+.ae-download-app__btn {
+  width: 100%;
+}
+
+.ae-download-app__hint {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+}
+
+.ae-download-app--link {
+  font-weight: 600;
+  color: var(--ae-primary);
+}
+
+.ae-download-page {
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+.ae-download-page__lead {
+  text-align: center;
+  color: var(--ae-muted);
+  line-height: 1.55;
+  margin-bottom: 1.5rem;
+}
+
+.ae-download-page__cta {
+  max-width: 22rem;
+  margin: 0 auto;
+}
+
+.ae-download-page__steps {
+  margin: 2rem auto 0;
+  max-width: 24rem;
+  padding-left: 1.25rem;
+  line-height: 1.6;
+  color: var(--ae-text);
+}
+
+.ae-download-page__share {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e8ebe4;
+}
+
+.ae-home-hero__share {
+  margin-top: 1.25rem;
+  max-width: 22rem;
+}
+
+.ae-home-hero__download {
+  width: 100%;
+}
+
+.ae-parish-hero__share {
+  margin-top: 1.25rem;
+  max-width: 22rem;
+}
+
+@media (min-width: 640px) {
+  .ae-home-hero__actions {
+    flex-wrap: wrap;
+  }
+
+  .ae-share__primary {
+    flex-direction: row;
+  }
+
+  .ae-share__btn {
+    flex: 1;
+  }
+}

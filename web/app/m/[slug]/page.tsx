@@ -2,11 +2,14 @@
 
 import { Suspense, use, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { DownloadAppButton } from "@/components/DownloadAppButton";
 import { GeoFixButton } from "@/components/GeoFixButton";
 import { MemorialProfile } from "@/components/MemorialProfile";
 import { NavigateToGrave } from "@/components/NavigateToGrave";
+import { ShareBar } from "@/components/ShareBar";
 import { VirtualCandles } from "@/components/VirtualCandles";
 import { fetchMemorial, type MemorialPublic } from "@/lib/api";
+import { getSiteOrigin } from "@/lib/site";
 
 function MemorialInner({ slug }: { slug: string }) {
   const search = useSearchParams();
@@ -44,6 +47,11 @@ function MemorialInner({ slug }: { slug: string }) {
       <VirtualCandles slug={slug} />
 
       <div className="ae-memorial-footer-actions">
+        <ShareBar
+          url={`${getSiteOrigin()}/m/${slug}`}
+          title={`${memorial.fullName} — AETERNA`}
+          text={`Amžina atmintis: ${memorial.fullName}. ${memorial.parish.title}.`}
+        />
         {location ? (
           <NavigateToGrave lat={location.lat} lng={location.lng} />
         ) : (
@@ -54,6 +62,7 @@ function MemorialInner({ slug }: { slug: string }) {
         {(showFix || !location) && (
           <GeoFixButton slug={slug} onFixed={(lat, lng) => setGeo({ lat, lng })} />
         )}
+        <DownloadAppButton showHint />
       </div>
 
       <p className="ae-memorial-support">

@@ -7,6 +7,18 @@
         android:title="@string/reload"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_share"
+        android:title="@string/action_share"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_share_app"
+        android:title="@string/action_share_app"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_download_app"
+        android:title="@string/action_download_app"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_check_update"
         android:title="@string/action_check_update"
         app:showAsAction="never" />

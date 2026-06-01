@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ShareBar } from "@/components/ShareBar";
+import { getSiteOrigin } from "@/lib/site";
 import { useParams } from "next/navigation";
 import { CandleSection } from "@/components/CandleSection";
 import { MassBookingSection } from "@/components/MassBookingSection";
@@ -99,6 +101,12 @@ export default function ParishHubPage() {
               Prieigos užklausa
             </Link>
           </div>
+          <ShareBar
+            className="ae-parish-hero__share"
+            url={`${getSiteOrigin()}/parishes/${parish.id}`}
+            title={`${parish.title} — AETERNA`}
+            text={`${parish.title} — skaitmeninis atminimas ir parama parapijai.`}
+          />
         </div>
       </section>
 

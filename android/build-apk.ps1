@@ -90,7 +90,8 @@ try {
         releaseNotes = $notes
         required = $false
     } | ConvertTo-Json -Depth 3
-    $manifest | Set-Content -Path $UpdateJson -Encoding utf8NoBOM
+    $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+    [System.IO.File]::WriteAllText($UpdateJson, $manifest, $utf8NoBom)
 
     Remove-Item $apk.FullName -Force -ErrorAction SilentlyContinue
 

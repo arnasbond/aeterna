@@ -29,4 +29,9 @@
     <string name="update_install_permission_body">Android reikia leisti AETERNA įdiegti atnaujinimus. Įjunkite „Leisti iš šio šaltinio“ nustatymuose.</string>
     <string name="update_open_settings">Atidaryti nustatymus</string>
     <string name="action_check_update">Tikrinti atnaujinimus</string>
+    <string name="action_share">Dalintis puslapį</string>
+    <string name="action_share_app">Rekomenduoti programėlę</string>
+    <string name="action_download_app">Atsisiųsti APK</string>
+    <string name="share_failed">Nepavyko atidaryti dalinimosi</string>
+    <string name="share_app_invite_text">Atsisiųskite AETERNA Android programėlę — memorialai ir parapijos telefone.</string>
 </resources>

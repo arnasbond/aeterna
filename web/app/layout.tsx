@@ -30,6 +30,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="ae-footer">
           <p>AETERNA — skaitmeninis atminimas ir parama parapijai</p>
           <nav className="ae-footer-links" aria-label="Paslaugos ir prisijungimai">
+            <a href="/atsisiusti">Atsisiųsti programėlę</a>
+            <span aria-hidden>·</span>
             <a href="/m/ona-demo">Demo profilis</a>
             <span aria-hidden>·</span>
             <a href="/priest/login">Klebono prisijungimas</a>
