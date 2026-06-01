@@ -31,7 +31,17 @@ Telefonui: `npm run dev:lan` ir `web/.env.local` su PC LAN IP.
 
 ## Android APK
 
-Žr. [docs/ANDROID-APK.md](docs/ANDROID-APK.md) · Į telefoną: **`AETERNA-install.apk`** (projekto šaknyje).
+Žr. [docs/ANDROID-APK.md](docs/ANDROID-APK.md) · Į telefoną: **`AETERNA-install.apk`**
+
+## Debesies deploy (nemokama, visame pasaulyje)
+
+Žr. **[docs/DEPLOY-CLOUD.md](docs/DEPLOY-CLOUD.md)** · GitHub: [github.com/arnasbond/aeterna](https://github.com/arnasbond/aeterna)
+
+```powershell
+.\deploy-cloud.ps1   # jau įkelta — sekite Render Blueprint instrukcijas
+```
+
+Po deploy: **https://aeterna-web.onrender.com** (projekto šaknyje).
 
 ## Dokumentacija
 

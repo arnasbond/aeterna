@@ -89,21 +89,22 @@ export type MemorialPublic = {
 
 export function resolveApiBase(): string {
   const env = process.env.NEXT_PUBLIC_API_URL?.trim();
+  if (env) return env.replace(/\/$/, "");
+
   if (typeof window !== "undefined") {
     const { protocol, hostname, origin } = window.location;
     const isLocalHost = hostname === "localhost" || hostname === "127.0.0.1";
     const isLan = /^192\.168\.|^10\.|^172\.(1[6-9]|2\d|3[01])\./.test(hostname);
 
-    // Production (Vercel ir pan.): API per Next.js rewrite — tas pats domenas
-    if (protocol === "https:" || (!isLocalHost && !isLan && !env)) {
+    if (protocol === "https:" || (!isLocalHost && !isLan)) {
       return origin.replace(/\/$/, "");
     }
 
-    if ((!env || /localhost|127\.0\.0\.1/i.test(env)) && !isLocalHost) {
+    if (!isLocalHost) {
       return `${protocol}//${hostname}:4000`;
     }
   }
-  return env || "http://127.0.0.1:4000";
+  return "http://127.0.0.1:4000";
 }
 
 function base(): string {

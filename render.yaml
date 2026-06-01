@@ -35,7 +35,7 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: API_INTERNAL_URL
+      - key: NEXT_PUBLIC_API_URL
         fromService:
           type: web
           name: aeterna-api
@@ -44,4 +44,9 @@ services:
         fromService:
           type: web
           name: aeterna-web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: API_INTERNAL_URL
+        fromService:
+          type: web
+          name: aeterna-api
           envVarKey: RENDER_EXTERNAL_URL
