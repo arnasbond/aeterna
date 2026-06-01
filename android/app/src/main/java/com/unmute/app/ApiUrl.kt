@@ -6,7 +6,7 @@ object ApiUrl {
     /** HTTPS production — tas pats hostas (API per Next rewrite). Dev — :4000 */
     fun resolveApiBase(webUrl: String): String {
         val trimmed = webUrl.trim().trimEnd('/')
-        if (trimmed.isEmpty()) return "https://aeterna-web.onrender.com"
+        if (trimmed.isEmpty()) return "https://aeterna-web-six.vercel.app"
 
         if (trimmed.startsWith("https://")) {
             return trimmed
