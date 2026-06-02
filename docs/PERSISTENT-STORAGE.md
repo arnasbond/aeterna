@@ -4,10 +4,23 @@ Pranešimai tarp parapijos administratoriaus ir AETERNA admin saugomi JSON forma
 
 ## Rekomenduojama: Vercel KV (Upstash)
 
-1. [Vercel Dashboard](https://vercel.com) → projektas **API** (`api-three-chi-63` arba jūsų API projektas)
-2. **Storage** → **Create Database** → **KV**
-3. Pavadinimas pvz. `aeterna-kv` → **Connect to Project** → pasirinkite API projektą
-4. Perdeploy’inkite API (arba palaukite automatinio deploy po `git push`)
+**Produkcijoje jau sukurta:** duomenų bazė `aeterna-kv` (Frankfurt), prijungta prie API projekto.
+
+Patikrinimas: https://api-three-chi-63.vercel.app/health → `"jsonStore": "kv"`
+
+### Naujai (kitam projektui arba lokaliai)
+
+```powershell
+cd api
+.\scripts\setup-kv.ps1
+```
+
+Arba rankiniu būdu:
+
+1. [Vercel Dashboard](https://vercel.com) → projektas **API**
+2. **Storage** / `vercel install upstash/upstash-kv --name aeterna-kv`
+3. **Connect to Project** → API
+4. `vercel deploy --prod` (api aplankas)
 
 Automatiškai atsiras:
 
