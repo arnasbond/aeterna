@@ -11,6 +11,7 @@ const NAV = [
   { href: "/map", label: "Žemėlapis" },
   { href: "/parishes", label: "Parapijos" },
   { href: "/#zvakute", label: "Žvakutė" },
+  { href: "/prisijungti", label: "Prisijungti" },
   { href: "/priest/login", label: "Klebonas" },
 ] as const;
 
@@ -57,6 +58,9 @@ export function SiteHeader() {
           </nav>
 
           <div className="vk-header__actions">
+            <Link href="/paskyra" className="vk-btn vk-btn--outline vk-header__account">
+              Paskyra
+            </Link>
             <Link href="/wizard" className="vk-btn vk-btn--primary vk-header__cta">
               Sukurti atmintį
               <span aria-hidden>→</span>
@@ -99,6 +103,9 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            <Link href="/paskyra" onClick={close}>
+              Mano paskyra
+            </Link>
             <Link href="/atsisiusti" onClick={close}>
               Atsisiųsti programėlę
             </Link>

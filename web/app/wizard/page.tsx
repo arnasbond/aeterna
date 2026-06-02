@@ -3,7 +3,14 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { checkout, createMemorial, fetchParishes, type Parish } from "@/lib/api";
+import {
+  checkout,
+  createMemorial,
+  fetchParishes,
+  fetchUserMe,
+  getUserToken,
+  type Parish,
+} from "@/lib/api";
 import { formatPrice, getPlateTier, MEMORIAL_PACKAGE_CENTS, packageTotalCents, type PlateTierId } from "@/lib/qr-plates";
 
 const WIZARD_STEPS = [
@@ -50,9 +57,15 @@ function WizardInner() {
   const [biography, setBiography] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [parishId, setParishId] = useState(preParish);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     fetchParishes().then(setParishes).catch(() => {});
+    if (getUserToken()) {
+      fetchUserMe()
+        .then(() => setLoggedIn(true))
+        .catch(() => setLoggedIn(false));
+    }
   }, []);
 
   useEffect(() => {
@@ -291,6 +304,11 @@ function WizardInner() {
             >
               Fiksuoti kapo vietą (GPS)
             </Link>
+            {loggedIn && (
+              <Link href="/paskyra" className="ae-btn ae-btn--outline" style={{ width: "100%", marginTop: "0.5rem" }}>
+                Mano paskyra — redaguoti atmintis
+              </Link>
+            )}
           </>
         )}
       </div>

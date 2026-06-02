@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, use, useEffect, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { DownloadAppButton } from "@/components/DownloadAppButton";
 import { GeoFixButton } from "@/components/GeoFixButton";
@@ -8,7 +9,7 @@ import { MemorialProfile } from "@/components/MemorialProfile";
 import { NavigateToGrave } from "@/components/NavigateToGrave";
 import { ShareBar } from "@/components/ShareBar";
 import { VirtualCandles } from "@/components/VirtualCandles";
-import { fetchMemorial, type MemorialPublic } from "@/lib/api";
+import { fetchMemorial, fetchUserMemorial, getUserToken, type MemorialPublic } from "@/lib/api";
 import { getSiteOrigin } from "@/lib/site";
 
 function MemorialInner({ slug }: { slug: string }) {
@@ -18,6 +19,7 @@ function MemorialInner({ slug }: { slug: string }) {
   const [memorial, setMemorial] = useState<MemorialPublic | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [geo, setGeo] = useState<{ lat: number; lng: number } | null>(null);
+  const [canEdit, setCanEdit] = useState(false);
 
   useEffect(() => {
     fetchMemorial(slug)
@@ -26,6 +28,11 @@ function MemorialInner({ slug }: { slug: string }) {
         if (m?.geoLocation) setGeo(m.geoLocation);
       })
       .catch((e) => setError(e.message));
+    if (getUserToken()) {
+      fetchUserMemorial(slug)
+        .then((m) => setCanEdit(!!m))
+        .catch(() => setCanEdit(false));
+    }
   }, [slug]);
 
   if (error) {
@@ -47,6 +54,11 @@ function MemorialInner({ slug }: { slug: string }) {
       <VirtualCandles slug={slug} />
 
       <div className="ae-memorial-footer-actions">
+        {canEdit && (
+          <Link href={`/paskyra/atmintis/${slug}`} className="ae-btn ae-btn--gold" style={{ width: "100%" }}>
+            Redaguoti mano paskyroje
+          </Link>
+        )}
         <ShareBar
           url={`${getSiteOrigin()}/m/${slug}`}
           title={`${memorial.fullName} — AETERNA`}

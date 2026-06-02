@@ -10,6 +10,7 @@ const SEED_FILES = [
   "aeterna-orders.json",
   "mass-schedule.json",
   "virtual-candles.json",
+  "users.json",
 ] as const;
 
 export async function bootstrapDataDir(): Promise<void> {

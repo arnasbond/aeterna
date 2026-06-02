@@ -203,9 +203,27 @@ export async function getMemorialPublic(slug: string): Promise<AeternaMemorialPu
   };
 }
 
-export async function createMemorial(input: CreateMemorialInput): Promise<AeternaMemorial> {
+export async function listMemorialsByUserId(userId: string): Promise<AeternaMemorial[]> {
+  const map = await loadMemorials();
+  return [...map.values()]
+    .filter((m) => m.userId === userId)
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+}
+
+export async function createMemorial(
+  input: CreateMemorialInput,
+  userId?: string | null
+): Promise<AeternaMemorial> {
   const parish = getParish(input.parishId);
   if (!parish) throw new Error("Parapija nerasta");
+
+  if (userId) {
+    const owned = await listMemorialsByUserId(userId);
+    const { MAX_MEMORIALS_PER_USER } = await import("./user-store.js");
+    if (owned.length >= MAX_MEMORIALS_PER_USER) {
+      throw new Error(`Vienoje paskyroje galima iki ${MAX_MEMORIALS_PER_USER} atminties profilių`);
+    }
+  }
 
   const map = await loadMemorials();
   let base = slugify(input.fullName) || "atminimas";
@@ -219,7 +237,7 @@ export async function createMemorial(input: CreateMemorialInput): Promise<Aetern
   const row: AeternaMemorial = {
     id: randomUUID(),
     slug,
-    userId: null,
+    userId: userId ?? null,
     parishId: input.parishId,
     fullName: input.fullName,
     birthDate: input.birthDate ?? null,
@@ -239,14 +257,50 @@ export async function createMemorial(input: CreateMemorialInput): Promise<Aetern
   return row;
 }
 
+export async function updateMemorialByOwner(
+  slug: string,
+  userId: string,
+  patch: {
+    fullName?: string;
+    birthDate?: string | null;
+    deathDate?: string | null;
+    biography?: string;
+    farewellMessage?: string | null;
+    videoUrl?: string | null;
+    portraitUrl?: string | null;
+    mediaGallery?: string[];
+    privacyStatus?: "public" | "private";
+  }
+): Promise<AeternaMemorial | null> {
+  const map = await loadMemorials();
+  const row = map.get(slug);
+  if (!row || row.userId !== userId) return null;
+
+  if (patch.fullName?.trim()) row.fullName = patch.fullName.trim();
+  if (patch.birthDate !== undefined) row.birthDate = patch.birthDate;
+  if (patch.deathDate !== undefined) row.deathDate = patch.deathDate;
+  if (patch.biography !== undefined) row.biography = patch.biography;
+  if (patch.farewellMessage !== undefined) row.farewellMessage = patch.farewellMessage;
+  if (patch.videoUrl !== undefined) row.videoUrl = patch.videoUrl;
+  if (patch.portraitUrl !== undefined) row.portraitUrl = patch.portraitUrl;
+  if (patch.mediaGallery !== undefined) row.mediaGallery = patch.mediaGallery;
+  if (patch.privacyStatus !== undefined) row.privacyStatus = patch.privacyStatus;
+  row.updatedAt = new Date().toISOString();
+  map.set(slug, row);
+  await saveMemorials();
+  return row;
+}
+
 export async function setMemorialLocation(
   slug: string,
   lat: number,
-  lng: number
+  lng: number,
+  userId?: string | null
 ): Promise<AeternaMemorial | null> {
   const map = await loadMemorials();
   const row = map.get(slug);
   if (!row) return null;
+  if (row.userId && row.userId !== userId) return null;
   row.geoLocation = { lat, lng };
   row.updatedAt = new Date().toISOString();
   map.set(slug, row);

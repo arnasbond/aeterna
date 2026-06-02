@@ -167,18 +167,29 @@ export type CreateMemorialPayload = {
 };
 
 export async function createMemorial(payload: CreateMemorialPayload) {
+  const token = getUserToken();
   const r = await fetch(`${base()}/api/v1/memorials`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify(payload),
   });
   return parse<{ slug: string; profileUrl: string; qrCodeUrl: string | null }>(r);
 }
 
 export async function fixMemorialLocation(slug: string, lat: number, lng: number) {
-  const r = await fetch(`${base()}/api/v1/memorials/${encodeURIComponent(slug)}/location`, {
+  const token = getUserToken();
+  const url = token
+    ? `${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}/location`
+    : `${base()}/api/v1/memorials/${encodeURIComponent(slug)}/location`;
+  const r = await fetch(url, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify({ lat, lng }),
   });
   return parse<{ geoLocation: { lat: number; lng: number } }>(r);
@@ -249,6 +260,151 @@ export type PriestAccessRequest = {
 
 const priestTokenKey = "aeterna_priest_token";
 const adminTokenKey = "aeterna_admin_token";
+const userTokenKey = "aeterna_user_token";
+
+export type UserAccount = {
+  id: string;
+  email: string;
+  fullName: string;
+  createdAt: string;
+};
+
+export type OwnedMemorial = {
+  id: string;
+  slug: string;
+  fullName: string;
+  birthDate: string | null;
+  deathDate: string | null;
+  parishId: string;
+  profileUrl: string;
+  qrCodeUrl: string | null;
+  privacyStatus: string;
+  updatedAt: string;
+};
+
+export type OwnedMemorialDetail = {
+  id: string;
+  slug: string;
+  userId: string;
+  parishId: string;
+  fullName: string;
+  birthDate: string | null;
+  deathDate: string | null;
+  biography: string;
+  portraitUrl?: string | null;
+  farewellMessage?: string | null;
+  mediaGallery: string[];
+  videoUrl: string | null;
+  geoLocation: { lat: number; lng: number } | null;
+  privacyStatus: string;
+  profileUrl: string;
+  qrCodeUrl: string | null;
+};
+
+export type UpdateMemorialPayload = {
+  fullName?: string;
+  birthDate?: string | null;
+  deathDate?: string | null;
+  biography?: string;
+  farewellMessage?: string | null;
+  videoUrl?: string | null;
+  portraitUrl?: string | null;
+  mediaGallery?: string[];
+  privacyStatus?: "public" | "private";
+};
+
+export function getUserToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(userTokenKey);
+}
+
+export function setUserToken(token: string) {
+  localStorage.setItem(userTokenKey, token);
+}
+
+export function clearUserToken() {
+  localStorage.removeItem(userTokenKey);
+}
+
+function userHeaders(): HeadersInit {
+  const t = getUserToken();
+  return t ? { Authorization: `Bearer ${t}` } : {};
+}
+
+export async function userRegister(payload: {
+  fullName: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+}) {
+  const r = await fetch(`${base()}/api/v1/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  return parse<{ user: UserAccount; token: string }>(r);
+}
+
+export async function userLogin(email: string, password: string) {
+  const r = await fetch(`${base()}/api/v1/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  return parse<{ user: UserAccount; token: string }>(r);
+}
+
+export async function fetchUserMe() {
+  const r = await fetch(`${base()}/api/v1/auth/me`, {
+    headers: userHeaders(),
+    cache: "no-store",
+  });
+  return parse<UserAccount>(r);
+}
+
+export async function fetchUserMemorials() {
+  const r = await fetch(`${base()}/api/v1/user/memorials`, {
+    headers: userHeaders(),
+    cache: "no-store",
+  });
+  return parse<OwnedMemorial[]>(r);
+}
+
+export async function fetchUserMemorial(slug: string) {
+  const r = await fetch(`${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}`, {
+    headers: userHeaders(),
+    cache: "no-store",
+  });
+  if (r.status === 404) return null;
+  return parse<OwnedMemorialDetail>(r);
+}
+
+export async function updateUserMemorial(slug: string, payload: UpdateMemorialPayload) {
+  const r = await fetch(`${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...userHeaders() },
+    body: JSON.stringify(payload),
+  });
+  return parse<OwnedMemorialDetail>(r);
+}
+
+export async function createUserMemorial(payload: CreateMemorialPayload) {
+  const r = await fetch(`${base()}/api/v1/user/memorials`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...userHeaders() },
+    body: JSON.stringify(payload),
+  });
+  return parse<{ slug: string; profileUrl: string; qrCodeUrl: string | null }>(r);
+}
+
+export async function fixUserMemorialLocation(slug: string, lat: number, lng: number) {
+  const r = await fetch(`${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}/location`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...userHeaders() },
+    body: JSON.stringify({ lat, lng }),
+  });
+  return parse<{ geoLocation: { lat: number; lng: number } }>(r);
+}
 
 export function getPriestToken(): string | null {
   if (typeof window === "undefined") return null;

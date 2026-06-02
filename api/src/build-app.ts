@@ -29,7 +29,7 @@ export async function buildApp(): Promise<FastifyInstance> {
     data: {
       name: "AETERNA",
       version: "1.1.0",
-      modules: ["memorials", "candles", "masses", "priest"],
+      modules: ["memorials", "candles", "masses", "auth", "priest"],
     },
   }));
 

@@ -25,6 +25,8 @@ import {
 } from "../services/mass-candle-store.js";
 import { priestRoutes } from "./priest.js";
 import { adminRoutes } from "./admin.js";
+import { userRoutes } from "./user.js";
+import { getUserIdFromToken } from "../services/user-store.js";
 import { getMapData, getParishesByDeanery, searchParishes } from "../services/map-store.js";
 import { getParishDetail, listParishesForPublic } from "../services/parish-profile-store.js";
 
@@ -95,7 +97,10 @@ export async function apiRoutes(app: FastifyInstance) {
       });
     }
     try {
-      const memorial = await createMemorial(body);
+      const auth = req.headers.authorization;
+      const token = auth?.startsWith("Bearer ") ? auth.slice(7) : undefined;
+      const userId = getUserIdFromToken(token);
+      const memorial = await createMemorial(body, userId);
       return { success: true, data: memorial };
     } catch (e) {
       return reply.status(400).send({
@@ -116,9 +121,19 @@ export async function apiRoutes(app: FastifyInstance) {
         error: { message: "Nurodykite lat ir lng" },
       });
     }
-    const row = await setMemorialLocation(req.params.slug, lat, lng);
+    const auth = req.headers.authorization;
+    const token = auth?.startsWith("Bearer ") ? auth.slice(7) : undefined;
+    const userId = getUserIdFromToken(token);
+    const row = await setMemorialLocation(req.params.slug, lat, lng, userId);
     if (!row) {
-      return reply.status(404).send({ success: false, error: { message: "Profilis nerastas" } });
+      return reply.status(404).send({
+        success: false,
+        error: {
+          message: userId
+            ? "Profilis nerastas arba priklauso kitam vartotojui"
+            : "Prisijunkite, kad nustatytumėte kapo vietą",
+        },
+      });
     }
     return { success: true, data: { geoLocation: row.geoLocation } };
   });
@@ -204,6 +219,7 @@ export async function apiRoutes(app: FastifyInstance) {
     }
   });
 
+  await userRoutes(app);
   await priestRoutes(app);
   await adminRoutes(app);
 }

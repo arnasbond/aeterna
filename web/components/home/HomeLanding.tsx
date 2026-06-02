@@ -156,14 +156,15 @@ export function HomeLanding() {
           <h2 className="vk-title vk-title--center">Kaip sukurti atmintį ir gauti QR kodą?</h2>
           <ol className="vk-steps-4">
             <li>
-              <h3>1. Pasirinkite parapiją</h3>
+              <h3>1. Prisiregistruokite nemokamai</h3>
               <p>
-                <Link href="/map">Žemėlapyje</Link> arba sąraše — dalis sumos skiriama parapijos veiklai.
+                <Link href="/prisijungti">El. paštas ir slaptažodis</Link> — apsaugota paskyra, kaip Virtualus
+                Kapas.
               </p>
             </li>
             <li>
               <h3>2. Sukurkite memorialą</h3>
-              <p>Vardas, datos, nuotraukos, video ir palinkėjimas — per paprastą vedlį.</p>
+              <p>Vardas, datos, nuotraukos, video ir palinkėjimas — per kūrimo vedlys.</p>
             </li>
             <li>
               <h3>3. Užsisakykite QR plokštelę</h3>

@@ -57,6 +57,8 @@ export function SiteFooter() {
           <h3>Prisijungimai</h3>
           <ul>
             <li>
+              <Link href="/prisijungti">Prisijungti / Registruotis</Link>
+              <Link href="/paskyra">Mano paskyra</Link>
               <Link href="/priest/login">Klebono prisijungimas</Link>
             </li>
             <li>
