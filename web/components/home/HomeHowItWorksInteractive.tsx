@@ -39,7 +39,7 @@ function PhonePreview({ screen }: { screen: (typeof STEPS)[number]["screen"] }) 
     return (
       <div className="ae-how-phone__view ae-how-phone__view--profile">
         <div className="ae-how-phone__profile-bar" />
-        <div className="ae-how-phone__profile-name">Stasė Ramonienė</div>
+        <div className="ae-how-phone__profile-name">Stasė</div>
         <div className="ae-how-phone__profile-lines" />
       </div>
     );

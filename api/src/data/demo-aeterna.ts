@@ -10,7 +10,7 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
 > = {
   userId: null,
   parishId: DEMO_PARISH_ID,
-  fullName: "Stasė Ramonienė",
+  fullName: "Stasė",
   birthDate: "1936-05-12",
   deathDate: "2024-12-24",
   portraitUrl:
@@ -18,7 +18,7 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
   farewellMessage:
     "Mano saldžiausieji vaikai ir anūkai — jei skaitote šiuos žodžius, žinokite: aš vis dar sėdžiu su jumis prie arbatos stalo, tik jau tyliau. Būkite švelnūs vieni kitam, dalinkitės maistu ir juokais — tai mano mėgstamiausios dovanos. Nepamirškite pasakyti „ačiū“ už mažas akimirkas ir apkabinti tada, kai dar galite. Aš jus myliu labiau, nei žodžiai telpa.",
   biography:
-    "Stasė Ramonienė — visi ją vadino tiesiog Močiute. Gimė 1936 m. gegužę, užaugino keturis vaikus ir džiaugėsi dvylika anūkų. Jos virtuvėje visada kvepėjo cinamonu — obuolių pyragas buvo šeimos sekmadienio ritualas. Stasė mokėjo išklausyti be skubėjimo, siūti sagą ant megztinio ir paslėpti saldainį kišenėje „tik tam, kas buvo geras“.\n\nJi mėgo sodą, senas dainas ir rankas, kurios niekada nebuvo tuščios — ar apkabinti, ar paduoti arbatinuką. Paskutiniais metais dažnai sakydavo: „Geriausia dovana — laikas kartu ir šiltas žodis.“ Jos šypsena liko namuose, kai ji pati jau išėjo ramiai, Kūčių išvakarėse.",
+    "Stasė — visi ją vadino tiesiog Močiute. Gimė 1936 m. gegužę, užaugino keturis vaikus ir džiaugėsi dvylika anūkų. Jos virtuvėje visada kvepėjo cinamonu — obuolių pyragas buvo šeimos sekmadienio ritualas. Stasė mokėjo išklausyti be skubėjimo, siūti sagą ant megztinio ir paslėpti saldainį kišenėje „tik tam, kas buvo geras“.\n\nJi mėgo sodą, senas dainas ir rankas, kurios niekada nebuvo tuščios — ar apkabinti, ar paduoti arbatinuką. Paskutiniais metais dažnai sakydavo: „Geriausia dovana — laikas kartu ir šiltas žodis.“ Jos šypsena liko namuose, kai ji pati jau išėjo ramiai, Kūčių išvakarėse.",
   mediaGallery: [
     "https://images.unsplash.com/photo-1758686254563-5c5ab338c8b9?w=900&q=85",
     "https://images.unsplash.com/photo-1616286608358-0e1b143f7d2f?w=900&q=85",
@@ -35,4 +35,4 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
 export const DEMO_MEMORIAL_SLUG = "ona-demo";
 
 /** Padidinkite, kai keičiate demo turinį — priverstinis atnaujinimas serveryje. */
-export const DEMO_MEDIA_VERSION = 4;
+export const DEMO_MEDIA_VERSION = 5;

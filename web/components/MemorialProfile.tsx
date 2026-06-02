@@ -90,7 +90,7 @@ export function MemorialProfile({ memorial, slug, children }: Props) {
               className="vk-memorial-portrait"
               referrerPolicy="no-referrer"
             />
-            <h1 className="vk-memorial-name">{memorial.fullName}</h1>
+            <h1 className="vk-memorial-name">{firstName}</h1>
             <p className="vk-memorial-years">{formatYears(memorial.birthDate, memorial.deathDate)}</p>
             {lead && <p className="vk-memorial-lead">{lead}</p>}
             {heroParagraphs.length > 0 && (

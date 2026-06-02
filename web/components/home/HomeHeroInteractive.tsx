@@ -30,7 +30,7 @@ export function HomeHeroInteractive({ demoQrUrl }: Props) {
         <div className="ae-hero-scene__stone-top" />
         <button
           type="button"
-          className={`ae-hero-scene__qr${scene !== "idle" ? " ae-hero-scene__qr--pulse" : ""}`}
+          className={`ae-hero-scene__qr${scene === "scanning" ? " ae-hero-scene__qr--pulse" : ""}`}
           onClick={simulateScan}
           aria-label="Simuliuoti QR kodo skenavimą"
         >
@@ -61,7 +61,7 @@ export function HomeHeroInteractive({ demoQrUrl }: Props) {
             <div className="ae-hero-scene__phone-memorial">
               <div className="ae-hero-scene__memorial-head">
                 <span className="ae-hero-scene__memorial-avatar" aria-hidden />
-                <strong>Stasė Ramonienė</strong>
+                <strong>Stasė</strong>
                 <small>1936 – 2024</small>
               </div>
               <p className="ae-hero-scene__memorial-text">Amžina atmintis šeimai — nuotraukos, video, žvakutė.</p>

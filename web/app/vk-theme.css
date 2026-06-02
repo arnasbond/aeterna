@@ -432,6 +432,8 @@
 .vk-hero--immersive {
   padding: 0.5rem 0 0;
   min-height: auto;
+  overflow: hidden;
+  contain: layout paint;
 }
 
 .vk-hero__bg--immersive {
@@ -578,11 +580,10 @@
   padding: 8px;
   box-shadow: 0 20px 50px rgba(26, 18, 40, 0.35);
   border: 2px solid #3d2d55;
-  transition: transform 0.35s ease;
 }
 
 .ae-hero-scene__phone--on {
-  transform: translateY(-4px) rotate(-2deg);
+  box-shadow: 0 24px 56px rgba(74, 47, 122, 0.4);
 }
 
 .ae-hero-scene__phone-notch {
@@ -706,11 +707,7 @@
     right: 50%;
     transform: translateX(50%);
     top: auto;
-    bottom: -10px;
-  }
-
-  .ae-hero-scene__phone--on {
-    transform: translateX(50%) translateY(-4px);
+    bottom: 0;
   }
 
   .ae-hero-scene {
@@ -907,6 +904,7 @@
   border-radius: 20px;
   min-height: 280px;
   overflow: hidden;
+  contain: layout style paint;
 }
 
 .ae-how-phone__caption {
@@ -1468,4 +1466,19 @@
 
 .vk-final-cta .vk-download-link {
   color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ae-hero-scene__qr--pulse,
+  .ae-hero-scene__spinner,
+  .ae-hero-scene__scan-line,
+  .ae-float,
+  .ae-phone-mock,
+  .ae-qr-arrow {
+    animation: none !important;
+  }
+
+  .ae-hero-scene__phone-screen > * {
+    transition: none !important;
+  }
 }

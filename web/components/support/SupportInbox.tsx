@@ -85,9 +85,21 @@ export function SupportInbox({ mode, parishId, authorName }: Props) {
         mode === "priest" ? await fetchPriestSupportThread(id) : await fetchAdminSupportThread(id);
       setDetail(data);
       setActiveId(id);
-      await loadThreads();
+      setThreads((prev) =>
+        prev.map((t) =>
+          t.id === id
+            ? {
+                ...t,
+                ...data.thread,
+                priestUnread: 0,
+                adminUnread: 0,
+              }
+            : t
+        )
+      );
+      setUnread((u) => Math.max(0, u - (mode === "priest" ? data.thread.priestUnread : data.thread.adminUnread)));
     },
-    [mode, loadThreads]
+    [mode]
   );
 
   useEffect(() => {
