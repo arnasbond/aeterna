@@ -25,6 +25,7 @@ import {
 } from "../services/mass-candle-store.js";
 import { priestRoutes } from "./priest.js";
 import { adminRoutes } from "./admin.js";
+import { adminSupportRoutes, priestSupportRoutes } from "./support.js";
 import { userRoutes } from "./user.js";
 import { getUserIdFromToken } from "../services/user-store.js";
 import { getMapData, getParishesByDeanery, searchParishes } from "../services/map-store.js";
@@ -222,4 +223,6 @@ export async function apiRoutes(app: FastifyInstance) {
   await userRoutes(app);
   await priestRoutes(app);
   await adminRoutes(app);
+  await priestSupportRoutes(app);
+  await adminSupportRoutes(app);
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { SupportInbox } from "@/components/support/SupportInbox";
 import {
   approvePriestRequest,
   clearAdminToken,
@@ -86,9 +87,9 @@ export default function AdminDashboardPage() {
       <div className="ae-priest-header">
         <div>
           <h1 className="ae-section-title" style={{ marginBottom: "0.25rem" }}>
-            Parapijos administratorių prieiga
+            Administratoriaus skydas
           </h1>
-          <p className="ae-hint">Laukia: {pending.length}</p>
+          <p className="ae-hint">Parapijos administratorių prieiga · laukia: {pending.length}</p>
         </div>
         <button type="button" className="ae-btn ae-btn--outline" onClick={logout}>
           Atsijungti
@@ -125,6 +126,14 @@ export default function AdminDashboardPage() {
       )}
 
       {err && <p className="ae-error">{err}</p>}
+
+      <div className="ae-card" style={{ marginBottom: "2rem" }}>
+        <SupportInbox mode="admin" />
+      </div>
+
+      <h2 className="ae-section-title" style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>
+        Parapijos administratorių užklausos
+      </h2>
 
       {pending.length === 0 ? (
         <p className="ae-hint" style={{ textAlign: "center" }}>

@@ -258,6 +258,36 @@ export type PriestAccessRequest = {
   reviewedAt: string | null;
 };
 
+export type SupportCategory = "problem" | "fix" | "request" | "other";
+export type SupportStatus = "open" | "in_progress" | "resolved";
+
+export type SupportThread = {
+  id: string;
+  parishId: string;
+  parishTitle: string;
+  subject: string;
+  category: SupportCategory;
+  status: SupportStatus;
+  createdAt: string;
+  updatedAt: string;
+  priestUnread: number;
+  adminUnread: number;
+};
+
+export type SupportMessage = {
+  id: string;
+  threadId: string;
+  authorRole: "priest" | "admin";
+  authorLabel: string;
+  body: string;
+  createdAt: string;
+};
+
+export type SupportThreadDetail = {
+  thread: SupportThread;
+  messages: SupportMessage[];
+};
+
 const priestTokenKey = "aeterna_priest_token";
 const adminTokenKey = "aeterna_admin_token";
 const userTokenKey = "aeterna_user_token";
@@ -615,4 +645,106 @@ export async function importPriestParishFromWebsite(url?: string) {
 
 export function formatEuro(cents: number) {
   return new Intl.NumberFormat("lt-LT", { style: "currency", currency: "EUR" }).format(cents / 100);
+}
+
+// —— Pranešimai parapijos administratorius ↔ AETERNA admin ——
+
+function supportPriestBase(path: string) {
+  return `${base()}/api/v1/priest/support${path}`;
+}
+
+function supportAdminBase(path: string) {
+  return `${base()}/api/v1/admin/support${path}`;
+}
+
+export async function fetchPriestSupportThreads() {
+  const r = await fetch(supportPriestBase("/threads"), { headers: priestHeaders(), cache: "no-store" });
+  return parse<SupportThread[]>(r);
+}
+
+export async function fetchPriestSupportUnread() {
+  const r = await fetch(supportPriestBase("/unread"), { headers: priestHeaders(), cache: "no-store" });
+  return parse<{ count: number }>(r);
+}
+
+export async function fetchPriestSupportThread(id: string) {
+  const r = await fetch(supportPriestBase(`/threads/${encodeURIComponent(id)}`), {
+    headers: priestHeaders(),
+    cache: "no-store",
+  });
+  return parse<SupportThreadDetail>(r);
+}
+
+export async function createPriestSupportThread(payload: {
+  subject: string;
+  category: SupportCategory;
+  body: string;
+  authorName?: string;
+}) {
+  const r = await fetch(supportPriestBase("/threads"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...priestHeaders() },
+    body: JSON.stringify(payload),
+  });
+  return parse<SupportThreadDetail>(r);
+}
+
+export async function postPriestSupportMessage(threadId: string, body: string, authorName?: string) {
+  const r = await fetch(supportPriestBase(`/threads/${encodeURIComponent(threadId)}/messages`), {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...priestHeaders() },
+    body: JSON.stringify({ body, authorName }),
+  });
+  return parse<SupportThreadDetail>(r);
+}
+
+export async function fetchAdminSupportThreads(parishId?: string) {
+  const q = parishId ? `?parishId=${encodeURIComponent(parishId)}` : "";
+  const r = await fetch(supportAdminBase(`/threads${q}`), { headers: adminHeaders(), cache: "no-store" });
+  return parse<SupportThread[]>(r);
+}
+
+export async function fetchAdminSupportUnread() {
+  const r = await fetch(supportAdminBase("/unread"), { headers: adminHeaders(), cache: "no-store" });
+  return parse<{ count: number }>(r);
+}
+
+export async function fetchAdminSupportThread(id: string) {
+  const r = await fetch(supportAdminBase(`/threads/${encodeURIComponent(id)}`), {
+    headers: adminHeaders(),
+    cache: "no-store",
+  });
+  return parse<SupportThreadDetail>(r);
+}
+
+export async function createAdminSupportThread(payload: {
+  parishId: string;
+  subject: string;
+  category: SupportCategory;
+  body: string;
+}) {
+  const r = await fetch(supportAdminBase("/threads"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...adminHeaders() },
+    body: JSON.stringify(payload),
+  });
+  return parse<SupportThreadDetail>(r);
+}
+
+export async function postAdminSupportMessage(threadId: string, body: string) {
+  const r = await fetch(supportAdminBase(`/threads/${encodeURIComponent(threadId)}/messages`), {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...adminHeaders() },
+    body: JSON.stringify({ body }),
+  });
+  return parse<SupportThreadDetail>(r);
+}
+
+export async function updateAdminSupportThreadStatus(threadId: string, status: SupportStatus) {
+  const r = await fetch(supportAdminBase(`/threads/${encodeURIComponent(threadId)}`), {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...adminHeaders() },
+    body: JSON.stringify({ status }),
+  });
+  return parse<SupportThread>(r);
 }

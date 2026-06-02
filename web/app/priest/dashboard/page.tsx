@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { SupportInbox } from "@/components/support/SupportInbox";
 import {
   clearPriestToken,
   confirmPriestMass,
@@ -109,6 +110,10 @@ export default function PriestDashboardPage() {
         <Link href="/priest/profile" className="ae-btn ae-btn--gold">
           Redaguoti parapijos profilį
         </Link>
+      </div>
+
+      <div className="ae-card" style={{ marginTop: "1.5rem" }}>
+        <SupportInbox mode="priest" parishId={dash.parish.id} authorName={dash.parish.title} />
       </div>
 
       <div className="ae-card" style={{ marginTop: "2rem" }}>
