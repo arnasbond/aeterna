@@ -6,6 +6,13 @@ import { useSearchParams } from "next/navigation";
 import { checkout, createMemorial, fetchParishes, type Parish } from "@/lib/api";
 import { formatPrice, getPlateTier, MEMORIAL_PACKAGE_CENTS, packageTotalCents, type PlateTierId } from "@/lib/qr-plates";
 
+const WIZARD_STEPS = [
+  { n: 1, label: "Duomenys" },
+  { n: 2, label: "Media" },
+  { n: 3, label: "Parapija" },
+  { n: 4, label: "Apmokėjimas" },
+] as const;
+
 function WizardInner() {
   const params = useSearchParams();
   const preParish = params.get("parish") ?? "";
@@ -14,6 +21,19 @@ function WizardInner() {
   const doneOrder = params.get("order");
 
   const [step, setStep] = useState(1);
+  const [maxStep, setMaxStep] = useState(1);
+
+  function goToStep(next: number) {
+    if (step === 5 || next < 1 || next > 4 || next > maxStep) return;
+    setStep(next);
+    setErr(null);
+  }
+
+  function advance(next: number) {
+    setStep(next);
+    setMaxStep((m) => Math.max(m, next));
+    setErr(null);
+  }
   const [parishes, setParishes] = useState<Parish[]>([]);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -81,8 +101,11 @@ function WizardInner() {
   return (
     <section className="ae-section">
       <h1 className="ae-section-title" style={{ fontSize: "1.75rem" }}>
-        Kūrimo burtininkas
+        Kūrimo vedlys
       </h1>
+      <p className="ae-wizard-lead">
+        Paspauskite žingsnio juostą, jei norite grįžti ir pataisyti įvestus duomenis.
+      </p>
       {plateTier && (
         <p className="ae-wizard-plate-hint">
           QR plokštelė: <strong>{plateTier.name}</strong> ({formatPrice(plateTier.priceCents)}) ·{" "}
@@ -90,11 +113,34 @@ function WizardInner() {
         </p>
       )}
       <div className="ae-wizard">
-        <div className="ae-wizard-steps">
-          {[1, 2, 3, 4].map((n) => (
-            <span key={n} className={step >= n ? "active" : ""} />
-          ))}
-        </div>
+        <nav className="ae-wizard-steps" aria-label="Kūrimo žingsniai">
+          {WIZARD_STEPS.map(({ n, label }) => {
+            const reachable = step !== 5 && n <= maxStep;
+            const isCurrent = step === n;
+            const isDone = step !== 5 && n < step;
+            return (
+              <button
+                key={n}
+                type="button"
+                className={[
+                  "ae-wizard-step",
+                  isCurrent ? "ae-wizard-step--current" : "",
+                  isDone ? "ae-wizard-step--done" : "",
+                  reachable ? "ae-wizard-step--reachable" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                disabled={!reachable}
+                aria-current={isCurrent ? "step" : undefined}
+                aria-label={`${n} žingsnis: ${label}${reachable ? "" : " (dar nepasiekta)"}`}
+                onClick={() => goToStep(n)}
+              >
+                <span className="ae-wizard-step__bar" aria-hidden />
+                <span className="ae-wizard-step__label">{label}</span>
+              </button>
+            );
+          })}
+        </nav>
         {err && <p style={{ color: "#b91c1c", marginBottom: "1rem" }}>{err}</p>}
 
         {step === 1 && (
@@ -121,7 +167,7 @@ function WizardInner() {
               className="ae-btn ae-btn--primary"
               style={{ width: "100%" }}
               disabled={!fullName.trim()}
-              onClick={() => setStep(2)}
+              onClick={() => advance(2)}
             >
               Toliau
             </button>
@@ -138,14 +184,14 @@ function WizardInner() {
               <label>Video nuoroda</label>
               <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} />
             </div>
-            <button type="button" className="ae-btn ae-btn--outline" onClick={() => setStep(1)}>
+            <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(1)}>
               Atgal
             </button>
             <button
               type="button"
               className="ae-btn ae-btn--primary"
               style={{ width: "100%", marginTop: "0.5rem" }}
-              onClick={() => setStep(3)}
+              onClick={() => advance(3)}
             >
               Toliau
             </button>
@@ -166,7 +212,7 @@ function WizardInner() {
                 ))}
               </select>
             </div>
-            <button type="button" className="ae-btn ae-btn--outline" onClick={() => setStep(2)}>
+            <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(2)}>
               Atgal
             </button>
             <button
@@ -174,7 +220,7 @@ function WizardInner() {
               className="ae-btn ae-btn--primary"
               style={{ width: "100%", marginTop: "0.5rem" }}
               disabled={!parishId}
-              onClick={() => setStep(4)}
+              onClick={() => advance(4)}
             >
               Toliau
             </button>
@@ -205,7 +251,7 @@ function WizardInner() {
                 20% parapijai · likutis platformai ir saugojimui
               </p>
             </div>
-            <button type="button" className="ae-btn ae-btn--outline" onClick={() => setStep(3)}>
+            <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(3)}>
               Atgal
             </button>
             <button

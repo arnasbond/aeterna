@@ -14,7 +14,7 @@ unmute/           # repo aplankas (vėliau galima pervadinti)
 |--------|-----------|
 | `/` | Landing |
 | `/parishes` | Parapijos |
-| `/wizard` | Kūrimo burtininkas |
+| `/wizard` | Kūrimo vedlys |
 | `/m/[slug]` | Profilis + GPS + žvakutės |
 | `/priest/login` | Klebono prisijungimas |
 | `/priest/dashboard` | Mišių kalendorius, finansai |

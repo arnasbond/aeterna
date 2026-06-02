@@ -4,7 +4,7 @@
 
 ## Funkcijos (MVP)
 
-- Landing ir kūrimo burtininkas (4 žingsniai)
+- Landing ir kūrimo vedlys (4 žingsniai, grįžimas paspaudus juostą)
 - Parapijų sąrašas ir paramos modelis
 - Viešas profilis `/m/[slug]` + **GPS** navigacija iki kapo
 - QR kodas po „apmokėjimo“ (MVP stub)
