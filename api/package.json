@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
-    "build": "tsc",
+    "build": "tsc && node scripts/copy-static-data.mjs",
     "vercel-build": "npm run build",
     "import:parishes": "tsx scripts/import-katalikai-parishes.ts",
     "import:parish-profiles": "tsx scripts/import-parish-profiles.ts"

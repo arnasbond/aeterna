@@ -6,15 +6,33 @@ import { LT_PARISHES } from "../data/lt-parishes.js";
 import { getParish, listParishes } from "./aeterna-store.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
-const DEANERIES_PATH = join(__dir, "../data/lt-deaneries.geojson");
 
 let deaneriesCache: MapData["deaneries"] | null = null;
 
+const DEANERY_FILE_CANDIDATES = [
+  join(__dir, "../data/lt-deaneries.geojson"),
+  join(process.cwd(), "dist/data/lt-deaneries.geojson"),
+  join(process.cwd(), "src/data/lt-deaneries.geojson"),
+  join(process.cwd(), "data/lt-deaneries.geojson"),
+];
+
 async function loadDeaneries(): Promise<MapData["deaneries"]> {
   if (deaneriesCache) return deaneriesCache;
-  const raw = await readFile(DEANERIES_PATH, "utf8");
-  deaneriesCache = JSON.parse(raw) as MapData["deaneries"];
-  return deaneriesCache;
+
+  let lastErr: unknown;
+  for (const path of DEANERY_FILE_CANDIDATES) {
+    try {
+      const raw = await readFile(path, "utf8");
+      deaneriesCache = JSON.parse(raw) as MapData["deaneries"];
+      return deaneriesCache;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+
+  throw new Error(
+    `lt-deaneries.geojson nerastas. Paskutinė klaida: ${lastErr instanceof Error ? lastErr.message : String(lastErr)}`
+  );
 }
 
 function toMapPoint(p: Parish): ParishMapPoint {

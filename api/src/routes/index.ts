@@ -44,10 +44,20 @@ export async function apiRoutes(app: FastifyInstance) {
     return { success: true, data: p };
   });
 
-  app.get("/api/v1/map", async () => ({
-    success: true,
-    data: await getMapData(),
-  }));
+  app.get("/api/v1/map", async (req, reply) => {
+    try {
+      return { success: true, data: await getMapData() };
+    } catch (e) {
+      req.log.error(e);
+      return reply.status(500).send({
+        success: false,
+        error: {
+          message:
+            e instanceof Error ? e.message : "Nepavyko įkelti žemėlapio duomenų (seniūnijos GeoJSON)",
+        },
+      });
+    }
+  });
 
   app.get<{ Querystring: { deaneryId?: string } }>("/api/v1/map/parishes", async (req) => {
     const { deaneryId } = req.query;
