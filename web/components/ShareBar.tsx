@@ -9,15 +9,6 @@ import {
   type SharePayload,
 } from "@/lib/share";
 
-declare global {
-  interface Window {
-    AeternaApp?: {
-      sharePage: (title: string, text: string) => void;
-      downloadApp: () => void;
-    };
-  }
-}
-
 type Props = {
   url?: string;
   title: string;
