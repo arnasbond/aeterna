@@ -75,7 +75,7 @@ export function CandleSection() {
             {busy ? "Uždegiama…" : "Uždegti žvakutę ir pašventinti"}
           </button>
           <p className="ae-hint">
-            Demo: <strong>Ona Kazlauskienė</strong>, 1942-03-15 — 2024-11-02
+            Demo: <strong>Stasė Ramonienė</strong>, 1936-05-12 — 2024-12-24
           </p>
         </form>
       </div>

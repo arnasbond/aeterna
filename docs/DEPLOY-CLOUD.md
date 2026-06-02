@@ -50,7 +50,7 @@ cd android
 ## Kas įkelta į debesį
 
 - 88 parapijos + profiliai (iš `api/seeds/`)
-- Demo memorialas Ona
+- Demo memorialas Stasė (močiutė)
 - Klebono / admin panelės (test slaptažodis **išjungtas** production)
 - QR plokštelės, žemėlapis, wizard
 

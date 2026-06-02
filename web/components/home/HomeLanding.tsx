@@ -67,7 +67,7 @@ export function HomeLanding() {
           </p>
           <Link href={DEMO} className="vk-video-card">
             <img
-              src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=85"
+              src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=900&q=85"
               alt=""
             />
             <span className="vk-video-card__play" aria-hidden>

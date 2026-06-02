@@ -138,7 +138,7 @@ export default function ParishHubPage() {
           <Link href="/m/ona-demo" className="ae-card ae-parish-hub-card">
             <span className="ae-parish-hub-icon">▣</span>
             <h3>Demo memorialas</h3>
-            <p>Peržiūrėkite pavyzdinį profilį su GPS ir žvakutėmis (Vilniaus arkikatedra).</p>
+            <p>Šiltas demo profilis — močiutės Stasės atmintis su nuotraukomis ir žvakutėmis.</p>
           </Link>
         </div>
       </section>

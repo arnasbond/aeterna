@@ -98,6 +98,7 @@ async function loadMemorials(): Promise<Map<string, AeternaMemorial>> {
     const demoVersion = (existing as AeternaMemorial & { demoMediaVersion?: number }).demoMediaVersion ?? 0;
     const needsDemoRefresh =
       demoVersion < DEMO_MEDIA_VERSION ||
+      existing.fullName !== DEMO_AETERNA_MEMORIAL.fullName ||
       !existing.farewellMessage ||
       !existing.videoUrl ||
       existing.mediaGallery.length < DEMO_AETERNA_MEMORIAL.mediaGallery.length;
