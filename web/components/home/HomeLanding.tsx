@@ -1,38 +1,47 @@
 import Link from "next/link";
 import { DownloadAppButton } from "@/components/DownloadAppButton";
+import { HomeExplainerModal } from "@/components/home/HomeExplainerModal";
+import { HomeHeroInteractive } from "@/components/home/HomeHeroInteractive";
+import { HomeHowItWorksInteractive } from "@/components/home/HomeHowItWorksInteractive";
 
 const DEMO = "/m/ona-demo";
 const siteBase = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://aeterna-web-six.vercel.app";
 const demoQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&color=4a2f7a&bgcolor=ffffff&data=${encodeURIComponent(`${siteBase}${DEMO}`)}`;
 
 const BENEFITS = [
-  { title: "Memorialinis puslapis", text: "Nuotraukos, vaizdo įrašai ir gyvenimo istorijos" },
-  { title: "Kapo vieta žemėlapyje", text: "Tikslus adresas ir maršrutas kapinėse" },
-  { title: "QR kodas ant paminklo", text: "Metalinė plokštelė, atspari orui" },
-  { title: "Nuskanavus QR", text: "Telefone atsidaro visa atmintis" },
-  { title: "Virtuali žvakutė", text: "Žinutės ir pagerbimas artimiesiems" },
-  { title: "Parama parapijai", text: "20% nuo užsakymo — Jūsų bendruomenei" },
+  { icon: "✦", title: "Skaitmeninė atmintis", text: "Nuotraukos, vaizdo įrašai ir gyvenimo istorija" },
+  { icon: "📍", title: "Kapo vieta žemėlapyje", text: "Maršrutas kapinėse ir tikslus adresas" },
+  { icon: "⬡", title: "QR plokštelė ant paminklo", text: "Atspari orui — paruošta montavimui" },
+  { icon: "📱", title: "Nuskanavus telefonu", text: "Atsidaro visa memorialinė erdvė" },
+  { icon: "🕯️", title: "Virtuali žvakutė", text: "Pagerbimas ir auka parapijai" },
+  { icon: "⛪", title: "Parama parapijai", text: "Dalį sumos gauna Jūsų pasirinkta bendruomenė" },
 ] as const;
 
 export function HomeLanding() {
   return (
     <>
-      <section className="vk-hero">
-        <div className="vk-hero__bg" aria-hidden />
-        <div className="vk-container">
-          <div className="vk-hero__card">
-            <span className="vk-badge">Skaitmeninė atmintis šeimai</span>
+      <section className="vk-hero vk-hero--immersive">
+        <div
+          className="vk-hero__bg vk-hero__bg--immersive"
+          style={{
+            backgroundImage: `linear-gradient(105deg, rgba(250,248,252,0.92) 0%, rgba(250,248,252,0.75) 42%, rgba(250,248,252,0.2) 68%), url("https://images.unsplash.com/photo-1586104158098-0ef8fc4b67b4?auto=format&fit=crop&w=1600&q=80")`,
+          }}
+          aria-hidden
+        />
+        <div className="vk-container vk-hero__immersive-grid">
+          <div className="vk-hero__card vk-hero__card--immersive">
+            <span className="vk-badge">AETERNA — skaitmeninė atmintis</span>
             <h1>
-              Virtuali kapavietė ir <span>QR kodas kapui</span>
+              Virtuali atmintis ir <span>QR kodas ant kapo</span>
             </h1>
             <p className="vk-hero__lead">
-              Sukurkite vietą, kur artimųjų istorijos, nuotraukos ir prisiminimai išlieka pasiekiami visiems
-              šeimos nariams. Sujunkite paminklą su skaitmenine atmintimi — vienu QR nuskaitymu kapinėse.
+              Sukurkite vietą, kur artimųjų istorijos, nuotraukos ir prisiminimai lieka pasiekiami visiems
+              šeimos nariams. Sujunkite paminklą su skaitmenine erdve — vienu QR nuskaitymu kapinėse.
             </p>
             <ul className="vk-hero__list">
-              <li>Virtuali atmintis — nuotraukos, istorijos ir kapo vieta žemėlapyje</li>
-              <li>Memorialinė QR plokštelė ant paminklo — paruošta montavimui</li>
-              <li>Nuskanavus kodą — atveriama visa memorialinė erdvė telefone</li>
+              <li>Memorialinis puslapis — nuotraukos, istorijos ir vieta žemėlapyje</li>
+              <li>QR plokštelė ant paminklo — paruošta montavimui</li>
+              <li>Nuskanavus — telefone atveriama visa atmintis ir žvakutė</li>
             </ul>
             <div className="vk-hero__actions">
               <Link href="/wizard" className="vk-btn vk-btn--primary vk-btn--lg">
@@ -43,31 +52,22 @@ export function HomeLanding() {
               </Link>
             </div>
           </div>
-          <div className="vk-hero__visual" aria-hidden>
-            <img
-              src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=800&q=80"
-              alt=""
-              className="vk-hero__photo"
-            />
-            <div className="vk-hero__qr">
-              <img src={demoQrUrl} alt="" width={120} height={120} />
-              <span>Skenuokite demo</span>
-            </div>
-          </div>
+          <HomeHeroInteractive demoQrUrl={demoQrUrl} />
         </div>
+        <HomeExplainerModal />
       </section>
 
       <section className="vk-section vk-section--soft" id="video">
         <div className="vk-container vk-section--center">
           <span className="vk-badge">Vaizdo įrašas</span>
-          <h2 className="vk-title">Prisiminimai, kurie lieka gyvi</h2>
+          <h2 className="vk-title">Atmintis, kuri lieka gyva kartoms</h2>
           <p className="vk-subtitle">
-            Memorialinis puslapis su video, nuotraukomis ir palinkėjimu — taip matys artimieji po QR
-            skenavimo kapinėse.
+            Kodėl verta išsaugoti artimųjų istorijas skaitmeninėje erdvėje — ir kaip QR kodas ant kapo tai
+            padaro pasiekiamą bet kur, bet kada.
           </p>
           <Link href={DEMO} className="vk-video-card">
             <img
-              src="https://images.unsplash.com/photo-1758686253896-e6c76b6f7aa1?w=900&q=85"
+              src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=900&q=80"
               alt=""
             />
             <span className="vk-video-card__play" aria-hidden>
@@ -82,28 +82,10 @@ export function HomeLanding() {
         <div className="vk-container">
           <span className="vk-badge vk-badge--center">Kaip veikia</span>
           <h2 className="vk-title vk-title--center">Kaip veikia AETERNA kapinėse ir telefone?</h2>
-          <div className="vk-steps-3">
-            <article>
-              <span className="vk-step-num">1</span>
-              <h3>Nuskenuokite QR kodą</h3>
-              <p>Kapinėse pakanka telefono — kodas ant paminklo akimirksniu atveria memorialinį puslapį.</p>
-            </article>
-            <article>
-              <span className="vk-step-num">2</span>
-              <h3>Atverkite istoriją</h3>
-              <p>Viena skaitmeninė erdvė šeimai — nuotraukos, aprašymai ir vieta žemėlapyje.</p>
-            </article>
-            <article>
-              <span className="vk-step-num">3</span>
-              <h3>Prisiminkite kartu</h3>
-              <p>Galerija, video, virtuali žvakutė ir parama pasirinktai parapijai.</p>
-            </article>
-          </div>
-          <p className="vk-section__cta">
-            <Link href={DEMO} className="vk-btn vk-btn--primary">
-              Išbandykite dabar →
-            </Link>
+          <p className="vk-subtitle vk-subtitle--center">
+            Paspauskite žingsnį — pamatysite, ką mato lankytojas telefone.
           </p>
+          <HomeHowItWorksInteractive />
         </div>
       </section>
 
@@ -111,19 +93,20 @@ export function HomeLanding() {
         <div className="vk-container vk-qr-band__inner">
           <div className="vk-qr-band__code">
             <img src={demoQrUrl} alt="Demo QR kodas" width={200} height={200} />
+            <p className="vk-qr-band__scan-hint">Nuskenuokite telefonu</p>
           </div>
           <div>
             <span className="vk-badge">Išbandykite patys</span>
             <h2 className="vk-title">
               Nuskenuokite QR kodą
               <br />
-              <span className="vk-title__sub">ir peržiūrėkite demo kapavietę</span>
+              <span className="vk-title__sub">arba atidarykite demo naršyklėje</span>
             </h2>
             <ul className="vk-checklist">
               <li>Nuskenuokite QR kodą telefonu</li>
-              <li>Peržiūrėkite pavyzdinę virtualią kapavietę</li>
-              <li>Nereikia registracijos — tai demo profilis</li>
-              <li>Pamatysite nuotraukas, video, žvakes ir navigaciją</li>
+              <li>Peržiūrėkite močiutės Stasės demo memorialą</li>
+              <li>Registracija nebūtina — tai demonstracinis profilis</li>
+              <li>Nuotraukos, video, žvakutė ir navigacija iki kapo</li>
             </ul>
             <Link href={DEMO} className="vk-btn vk-btn--primary">
               Atidaryti demo kapavietę →
@@ -137,11 +120,14 @@ export function HomeLanding() {
           <span className="vk-badge vk-badge--center">Privalumai</span>
           <h2 className="vk-title vk-title--center">Kodėl verta rinktis AETERNA?</h2>
           <p className="vk-subtitle vk-subtitle--center">
-            Viskas, ko reikia virtualiai atminties ir QR kodui kapui:
+            Viskas, ko reikia skaitmeninei atminčiai ir QR kodui kapui:
           </p>
-          <div className="vk-benefits">
+          <div className="vk-benefits vk-benefits--icons">
             {BENEFITS.map((b) => (
               <article key={b.title} className="vk-benefit-card">
+                <span className="vk-benefit-card__icon" aria-hidden>
+                  {b.icon}
+                </span>
                 <h3>{b.title}</h3>
                 <p>{b.text}</p>
               </article>
@@ -154,6 +140,9 @@ export function HomeLanding() {
         <div className="vk-container">
           <span className="vk-badge vk-badge--center">Žingsniai</span>
           <h2 className="vk-title vk-title--center">Kaip sukurti atmintį ir gauti QR kodą?</h2>
+          <p className="vk-subtitle vk-subtitle--center">
+            Keturi paprasti žingsniai nuo registracijos iki plokštelės ant paminklo:
+          </p>
           <ol className="vk-steps-4">
             <li>
               <h3>1. Prisiregistruokite nemokamai</h3>
@@ -187,7 +176,7 @@ export function HomeLanding() {
 
       <section className="vk-section vk-final-cta">
         <div className="vk-container vk-section--center">
-          <h2 className="vk-title">Pradėkite virtualią atmintį jau šiandien</h2>
+          <h2 className="vk-title">Pradėkite skaitmeninę atmintį jau šiandien</h2>
           <p className="vk-subtitle">
             Sukurkite memorialą savo artimajam — su QR kodu, nuotraukomis, žvakute ir parama parapijai.
           </p>

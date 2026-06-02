@@ -428,6 +428,612 @@
   margin-top: 0.35rem;
 }
 
+/* Immersive hero — QR + telefonas (AETERNA) */
+.vk-hero--immersive {
+  padding: 0.5rem 0 0;
+  min-height: auto;
+}
+
+.vk-hero__bg--immersive {
+  opacity: 1;
+  background-position: center 30%;
+  background-size: cover;
+}
+
+.vk-hero__immersive-grid {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.25rem 0 5.5rem;
+}
+
+@media (min-width: 960px) {
+  .vk-hero__immersive-grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 2rem;
+    padding: 2.5rem 0 6rem;
+  }
+}
+
+.vk-hero__card--immersive {
+  position: relative;
+  z-index: 2;
+}
+
+/* Interaktyvi kapo + telefono scena */
+.ae-hero-scene {
+  position: relative;
+  z-index: 2;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ae-hero-scene__stone {
+  position: relative;
+  width: min(100%, 280px);
+  height: 200px;
+  margin: 0 auto;
+}
+
+.ae-hero-scene__stone-top {
+  position: absolute;
+  inset: 0 10% 0;
+  background: linear-gradient(160deg, #6b7280 0%, #4b5563 45%, #374151 100%);
+  border-radius: 8px 8px 4px 4px;
+  box-shadow: 0 16px 40px rgba(30, 20, 50, 0.25);
+}
+
+.ae-hero-scene__stone-top::before {
+  content: "";
+  position: absolute;
+  top: -18px;
+  left: 8%;
+  right: 8%;
+  height: 22px;
+  background: linear-gradient(180deg, #9ca3af, #6b7280);
+  border-radius: 6px 6px 0 0;
+}
+
+.ae-hero-scene__qr {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: none;
+  background: linear-gradient(145deg, #e8e4dc, #c9c4b8);
+  padding: 0.5rem 0.65rem 0.4rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ae-hero-scene__qr:hover {
+  transform: translateX(-50%) scale(1.04);
+}
+
+.ae-hero-scene__qr--pulse {
+  animation: ae-qr-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes ae-qr-pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 16px rgba(74, 47, 122, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(107, 78, 156, 0.25);
+  }
+}
+
+.ae-hero-scene__qr img {
+  display: block;
+  border-radius: 4px;
+}
+
+.ae-hero-scene__qr span {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #3d3832;
+  margin-top: 0.25rem;
+  letter-spacing: 0.04em;
+}
+
+.ae-hero-scene__scan-line {
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #7d5cad, transparent);
+  animation: ae-scan-sweep 0.9s ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes ae-scan-sweep {
+  0% {
+    top: 55%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    top: 25%;
+    opacity: 0;
+  }
+}
+
+.ae-hero-scene__phone {
+  position: absolute;
+  right: 0;
+  top: 8px;
+  width: 148px;
+  background: #1a1228;
+  border-radius: 22px;
+  padding: 8px;
+  box-shadow: 0 20px 50px rgba(26, 18, 40, 0.35);
+  border: 2px solid #3d2d55;
+  transition: transform 0.35s ease;
+}
+
+.ae-hero-scene__phone--on {
+  transform: translateY(-4px) rotate(-2deg);
+}
+
+.ae-hero-scene__phone-notch {
+  width: 40%;
+  height: 5px;
+  background: #0d0a14;
+  border-radius: 4px;
+  margin: 0 auto 6px;
+}
+
+.ae-hero-scene__phone-screen {
+  background: #f7f5f2;
+  border-radius: 14px;
+  min-height: 200px;
+  overflow: hidden;
+  font-size: 0.72rem;
+}
+
+.ae-hero-scene__phone-idle,
+.ae-hero-scene__phone-scan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 1rem;
+  text-align: center;
+  color: var(--ae-muted);
+}
+
+.ae-hero-scene__phone-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.ae-hero-scene__spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #e8dff5;
+  border-top-color: var(--vk-primary);
+  border-radius: 50%;
+  animation: ae-spin 0.7s linear infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes ae-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ae-hero-scene__phone-memorial {
+  background: #1a252b;
+  color: #f5f2ec;
+  min-height: 200px;
+  padding: 1rem 0.75rem;
+  text-align: center;
+}
+
+.ae-hero-scene__memorial-head {
+  margin-bottom: 0.65rem;
+}
+
+.ae-hero-scene__memorial-avatar {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 0.4rem;
+  border-radius: 50%;
+  background: url("https://images.unsplash.com/photo-1758686253896-e6c76b6f7aa1?w=200&q=80") center / cover;
+  border: 2px solid rgba(232, 220, 200, 0.4);
+}
+
+.ae-hero-scene__memorial-head strong {
+  display: block;
+  font-family: var(--font-dancing), cursive;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.ae-hero-scene__memorial-head small {
+  opacity: 0.75;
+}
+
+.ae-hero-scene__memorial-text {
+  font-size: 0.68rem;
+  line-height: 1.45;
+  opacity: 0.85;
+  margin: 0 0 0.65rem;
+}
+
+.ae-hero-scene__memorial-link {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #c9b896;
+  text-decoration: none;
+}
+
+.ae-hero-scene__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.ae-hero-scene__reset {
+  border: none;
+  background: transparent;
+  color: var(--vk-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@media (max-width: 959px) {
+  .ae-hero-scene__phone {
+    right: 50%;
+    transform: translateX(50%);
+    top: auto;
+    bottom: -10px;
+  }
+
+  .ae-hero-scene__phone--on {
+    transform: translateX(50%) translateY(-4px);
+  }
+
+  .ae-hero-scene {
+    min-height: 380px;
+    padding-bottom: 1rem;
+  }
+}
+
+/* Plaukiojantis „Kaip veikia“ mygtukas */
+.ae-explainer-float {
+  position: absolute;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(100% - 2rem, 520px);
+  padding: 0.85rem 1.25rem;
+  border: 1px solid #e8dff5;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(74, 47, 122, 0.15);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--vk-primary-dark);
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.ae-explainer-float:hover {
+  box-shadow: 0 16px 48px rgba(74, 47, 122, 0.22);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.ae-explainer-float__icon {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--vk-primary);
+  color: #fff;
+  font-size: 0.75rem;
+}
+
+/* Modal */
+.ae-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(20, 12, 35, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.ae-modal {
+  position: relative;
+  width: min(100%, 560px);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 1.25rem;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+}
+
+.ae-modal__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--vk-lavender);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--vk-primary-dark);
+}
+
+.ae-modal__title {
+  margin: 0 2rem 0.5rem 0;
+  font-size: 1.25rem;
+  color: var(--vk-primary-dark);
+}
+
+.ae-modal__lead {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: var(--ae-muted);
+  line-height: 1.55;
+}
+
+.ae-modal__video {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #1a252b;
+  margin-bottom: 1rem;
+}
+
+.ae-modal__video video {
+  display: block;
+  width: 100%;
+  max-height: 50vh;
+}
+
+.ae-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+/* Interaktyvūs „Kaip veikia“ žingsniai */
+.ae-how-interactive {
+  display: grid;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .ae-how-interactive {
+    grid-template-columns: 1fr 280px;
+    align-items: start;
+  }
+}
+
+.ae-how-interactive__steps {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ae-how-step {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 2px solid var(--vk-lavender-deep);
+  border-radius: 1rem;
+  padding: 1.15rem 1.25rem 1.15rem 1rem;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ae-how-step:hover {
+  border-color: var(--vk-primary);
+}
+
+.ae-how-step--active {
+  border-color: var(--vk-primary);
+  box-shadow: var(--vk-shadow);
+}
+
+.ae-how-step .vk-step-num {
+  margin-bottom: 0.65rem;
+}
+
+.ae-how-step h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  color: var(--vk-primary-dark);
+}
+
+.ae-how-step p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ae-muted);
+  line-height: 1.5;
+}
+
+.ae-how-interactive__phone-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.ae-how-phone__shell {
+  width: 200px;
+  background: #1a1228;
+  border-radius: 28px;
+  padding: 10px;
+  box-shadow: var(--vk-shadow);
+}
+
+.ae-how-phone__shell > div {
+  background: #f7f5f2;
+  border-radius: 20px;
+  min-height: 280px;
+  overflow: hidden;
+}
+
+.ae-how-phone__caption {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--vk-primary-dark);
+  margin: 0.75rem 0 0;
+}
+
+.ae-how-phone__view {
+  min-height: 280px;
+  padding: 1rem;
+}
+
+.ae-how-phone__view--scan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--ae-muted);
+  font-size: 0.85rem;
+}
+
+.ae-how-phone__qr-mini {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #fff 25%, #4a2f7a 25%, #4a2f7a 50%, #fff 50%, #fff 75%, #4a2f7a 75%);
+  background-size: 12px 12px;
+  border: 2px solid #c9c4b8;
+}
+
+.ae-how-phone__view--profile {
+  background: #1a252b;
+  color: #f5f2ec;
+  padding: 1.25rem 1rem;
+}
+
+.ae-how-phone__profile-bar {
+  height: 4px;
+  width: 40%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  margin: 0 auto 1rem;
+}
+
+.ae-how-phone__profile-name {
+  font-family: var(--font-dancing), cursive;
+  font-size: 1.35rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.ae-how-phone__profile-lines {
+  height: 60px;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0,
+    rgba(255, 255, 255, 0.12) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  border-radius: 4px;
+}
+
+.ae-how-phone__view--together {
+  padding: 0.75rem;
+}
+
+.ae-how-phone__tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.ae-how-phone__tab {
+  flex: 1;
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.35rem;
+  border-radius: 6px;
+  background: #e8e4de;
+  color: var(--ae-muted);
+}
+
+.ae-how-phone__tab--on {
+  background: var(--vk-primary);
+  color: #fff;
+}
+
+.ae-how-phone__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.35rem;
+  min-height: 180px;
+}
+
+.ae-how-phone__grid::before,
+.ae-how-phone__grid::after {
+  content: "";
+  background: #d4cfc6;
+  border-radius: 6px;
+}
+
+.vk-qr-band__scan-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--vk-primary);
+}
+
+.vk-benefits--icons .vk-benefit-card {
+  position: relative;
+  padding-top: 2.5rem;
+}
+
+.vk-benefit-card__icon {
+  position: absolute;
+  top: 1rem;
+  left: 1.25rem;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
 /* Sections */
 .vk-section {
   padding: 3.5rem 0;
