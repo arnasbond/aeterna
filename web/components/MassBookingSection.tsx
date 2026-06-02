@@ -70,8 +70,12 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
 
   return (
     <section id="misios" className="ae-section ae-section--gray">
-      <h2 className="ae-section-title">Šv. Mišių užsakymas nuotoliu</h2>
-      <p className="ae-section-lead">Pasirinkite parapijos administratoriaus patvirtintą laisvą laiką liturgijai.</p>
+      <header className="ae-section-header">
+        <h2 className="ae-section-title">Šv. Mišių užsakymas nuotoliu</h2>
+        <p className="ae-section-lead">
+          Pasirinkite parapijos administratoriaus patvirtintą laisvą laiką liturgijai.
+        </p>
+      </header>
       <div className="ae-mass-card">
         <form onSubmit={submit}>
           <div className="ae-field">

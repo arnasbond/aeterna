@@ -801,6 +801,10 @@
   color: var(--vk-primary-dark);
 }
 
+.vk-home-extra .ae-section-lead {
+  color: var(--ae-muted);
+}
+
 .vk-parish-band {
   background: linear-gradient(135deg, #5c3d8f 0%, #4a2f7a 100%);
   color: #fff;

@@ -1282,8 +1282,24 @@
 .ae-section-lead {
   text-align: center;
   color: var(--ae-muted);
-  margin: -1.5rem auto 2rem;
-  max-width: 28rem;
+  margin: 0.75rem auto 2rem;
+  max-width: 32rem;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+.ae-section-header {
+  margin-bottom: 2rem;
+}
+
+.ae-section-header .ae-section-title {
+  margin-bottom: 0;
+  line-height: 1.25;
+  padding: 0 0.5rem;
+}
+
+.ae-section-header .ae-section-lead {
+  margin-bottom: 0;
 }
 
 .ae-candle-section {
