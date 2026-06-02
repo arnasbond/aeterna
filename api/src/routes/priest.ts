@@ -58,10 +58,10 @@ export async function priestRoutes(app: FastifyInstance) {
 
   app.post<{ Body: PriestLoginInput }>("/api/v1/priest/login", async (req, reply) => {
     const { parishId, password } = req.body ?? {};
-    if (!parishId || !password) {
-      return reply.status(400).send({ success: false, error: { message: "parishId ir password privalomi" } });
+    if (!parishId) {
+      return reply.status(400).send({ success: false, error: { message: "parishId privalomas" } });
     }
-    const session = await priestLogin(parishId, password);
+    const session = await priestLogin(parishId, password ?? "");
     if (!session) {
       return reply.status(401).send({
         success: false,

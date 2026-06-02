@@ -53,11 +53,13 @@ export async function registerUser(input: UserRegisterInput): Promise<{ user: Us
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     throw new Error("Įrašykite teisingą el. paštą");
   }
-  if (password.length < 8) {
-    throw new Error("Slaptažodis turi būti bent 8 simbolių");
-  }
-  if (password !== confirm) {
-    throw new Error("Slaptažodžiai nesutampa");
+  if (config.requirePasswords) {
+    if (password.length < 8) {
+      throw new Error("Slaptažodis turi būti bent 8 simbolių");
+    }
+    if (password !== confirm) {
+      throw new Error("Slaptažodžiai nesutampa");
+    }
   }
 
   const users = await loadUsers();
@@ -70,7 +72,7 @@ export async function registerUser(input: UserRegisterInput): Promise<{ user: Us
     id: randomUUID(),
     email,
     fullName,
-    passwordHash: hashPassword(password),
+    passwordHash: hashPassword(password || "aeterna-test-bypass"),
     createdAt: now,
     updatedAt: now,
   };
@@ -86,9 +88,29 @@ export async function loginUser(
   email: string,
   password: string
 ): Promise<{ user: UserPublic; token: string } | null> {
-  const normalized = email.trim().toLowerCase();
+  const normalized = (email || "test@aeterna.local").trim().toLowerCase();
   const users = await loadUsers();
-  const user = users.find((u) => u.email === normalized);
+  let user = users.find((u) => u.email === normalized);
+
+  if (!config.requirePasswords) {
+    if (!user) {
+      const now = new Date().toISOString();
+      user = {
+        id: randomUUID(),
+        email: normalized,
+        fullName: normalized.split("@")[0] || "Testuotojas",
+        passwordHash: hashPassword("aeterna-test-bypass"),
+        createdAt: now,
+        updatedAt: now,
+      };
+      users.push(user);
+      await saveUsers();
+    }
+    const token = createHash("sha256").update(`user:${user.id}:${Date.now()}:${randomUUID()}`).digest("hex");
+    userTokens.set(token, user.id);
+    return { user: toPublic(user), token };
+  }
+
   if (!user || user.passwordHash !== hashPassword(password)) return null;
 
   const token = createHash("sha256").update(`user:${user.id}:${Date.now()}:${randomUUID()}`).digest("hex");

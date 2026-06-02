@@ -18,4 +18,9 @@ export const config = {
   testLoginEnabled:
     process.env.AETERNA_DISABLE_TEST_LOGIN !== "1" && process.env.NODE_ENV !== "production",
   testLoginPassword: process.env.AETERNA_TEST_LOGIN_PASSWORD || "12345678",
+  /**
+   * Slaptažodžių tikrinimas. Laikinai išjungta testavimui.
+   * Įjungti vėliau: AETERNA_REQUIRE_PASSWORDS=1 (ir web: NEXT_PUBLIC_AETERNA_REQUIRE_PASSWORDS=1)
+   */
+  requirePasswords: process.env.AETERNA_REQUIRE_PASSWORDS === "1",
 };

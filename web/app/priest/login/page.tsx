@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchParishes, getPriestToken, priestLogin, setPriestToken, type Parish } from "@/lib/api";
+import { requirePasswords } from "@/lib/auth-config";
 
 function PriestLoginForm() {
   const router = useRouter();
@@ -40,8 +41,9 @@ function PriestLoginForm() {
     <section className="ae-section ae-wizard">
       <h1 className="ae-section-title">Parapijos administratoriaus prisijungimas</h1>
       <p className="ae-hint" style={{ textAlign: "center", marginBottom: "1.5rem", maxWidth: "30rem", marginInline: "auto" }}>
-        Prisijunkite tik su administratoriaus patvirtintu laikinu slaptažodžiu. Jei jo neturite — pateikite
-        prieigos užklausą.
+        {requirePasswords
+          ? "Prisijunkite tik su administratoriaus patvirtintu laikinu slaptažodžiu. Jei jo neturite — pateikite prieigos užklausą."
+          : "Testavimo režimas: pasirinkite parapiją ir spaustite „Prisijungti“ — slaptažodis nereikalingas."}
       </p>
       <form onSubmit={submit}>
         <div className="ae-field">
@@ -54,23 +56,20 @@ function PriestLoginForm() {
             ))}
           </select>
         </div>
-        <div className="ae-field">
-          <label>Laikinas slaptažodis</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="XXXX-XXXX-XXXX"
-            required
-            autoComplete="one-time-code"
-          />
-        </div>
-        {err && <p className="ae-error">{err}</p>}
-        {process.env.NODE_ENV === "development" && (
-          <p className="ae-test-login-hint">
-            Testavimui (laikina): bet kuri parapija + slaptažodis <strong>12345678</strong>
-          </p>
+        {requirePasswords && (
+          <div className="ae-field">
+            <label>Laikinas slaptažodis</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="XXXX-XXXX-XXXX"
+              required
+              autoComplete="one-time-code"
+            />
+          </div>
         )}
+        {err && <p className="ae-error">{err}</p>}
         <button type="submit" className="ae-btn ae-btn--gold ae-btn--wide">
           Prisijungti
         </button>

@@ -8,6 +8,7 @@ import {
 } from "../services/aeterna-store.js";
 import type { CreateMemorialInput } from "../types/aeterna.js";
 import type { UpdateMemorialInput, UserLoginInput, UserRegisterInput } from "../types/user.js";
+import { config } from "../config.js";
 import {
   getUserById,
   getUserIdFromToken,
@@ -53,13 +54,13 @@ export async function userRoutes(app: FastifyInstance) {
 
   app.post<{ Body: UserLoginInput }>("/api/v1/auth/login", async (req, reply) => {
     const { email, password } = req.body ?? {};
-    if (!email?.trim() || !password) {
+    if (config.requirePasswords && (!email?.trim() || !password)) {
       return reply.status(400).send({
         success: false,
         error: { message: "El. paštas ir slaptažodis privalomi" },
       });
     }
-    const session = await loginUser(email, password);
+    const session = await loginUser(email ?? "", password ?? "");
     if (!session) {
       return reply.status(401).send({
         success: false,

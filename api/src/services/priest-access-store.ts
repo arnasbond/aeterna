@@ -176,6 +176,11 @@ export async function verifyPriestTemporaryPassword(
 }
 
 export function adminLogin(password: string): string | null {
+  if (!config.requirePasswords) {
+    const token = createHash("sha256").update(`admin:${Date.now()}:${randomBytes(8)}`).digest("hex");
+    adminTokens.set(token, Date.now() + 12 * 60 * 60 * 1000);
+    return token;
+  }
   if (password !== ADMIN_PASSWORD && !isTestLoginPassword(password)) return null;
   const token = createHash("sha256").update(`admin:${Date.now()}:${randomBytes(8)}`).digest("hex");
   adminTokens.set(token, Date.now() + 12 * 60 * 60 * 1000);

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { adminLogin, getAdminToken, setAdminToken } from "@/lib/api";
+import { requirePasswords } from "@/lib/auth-config";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -32,28 +33,26 @@ export default function AdminLoginPage() {
         <span className="ae-badge">Tik svetainės valdytojui</span>
         <h1 className="ae-section-title">Administratoriaus prisijungimas</h1>
         <p className="ae-admin-login-lead">
-          Čia patvirtinate parapijos administratorių prieigos užklausas ir sugeneruojate jiems laikiną
-          slaptažodį.
+          {requirePasswords
+            ? "Čia patvirtinate parapijos administratorių prieigos užklausas ir sugeneruojate jiems laikiną slaptažodį."
+            : "Testavimo režimas: spausti „Į administratoriaus skydelį“ — slaptažodis nereikalingas."}
         </p>
         <form onSubmit={submit}>
-          <div className="ae-field">
-            <label htmlFor="admin-password">Jūsų administratoriaus slaptažodis</label>
-            <input
-              id="admin-password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-              placeholder="Nustatytas api/.env faile"
-            />
-          </div>
-          {err && <p className="ae-error">{err}</p>}
-          {process.env.NODE_ENV === "development" && (
-            <p className="ae-test-login-hint">
-              Testavimui (laikina): slaptažodis <strong>12345678</strong>
-            </p>
+          {requirePasswords && (
+            <div className="ae-field">
+              <label htmlFor="admin-password">Jūsų administratoriaus slaptažodis</label>
+              <input
+                id="admin-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+                placeholder="Nustatytas api/.env faile"
+              />
+            </div>
           )}
+          {err && <p className="ae-error">{err}</p>}
           <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide">
             Į administratoriaus skydelį
           </button>

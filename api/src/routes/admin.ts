@@ -1,4 +1,5 @@
 import type { FastifyInstance, FastifyRequest } from "fastify";
+import { config } from "../config.js";
 import {
   adminLogin,
   approvePriestAccessRequest,
@@ -24,8 +25,8 @@ function requireAdmin(req: FastifyRequest, reply: { status: (n: number) => { sen
 
 export async function adminRoutes(app: FastifyInstance) {
   app.post<{ Body: { password?: string } }>("/api/v1/admin/login", async (req, reply) => {
-    const password = req.body?.password?.trim();
-    if (!password) {
+    const password = req.body?.password?.trim() ?? "";
+    if (config.requirePasswords && !password) {
       return reply.status(400).send({ success: false, error: { message: "Slaptažodis privalomas" } });
     }
     const token = adminLogin(password);

@@ -106,7 +106,9 @@ export async function priestLogin(
 ): Promise<{ token: string; parishId: string } | null> {
   if (!getParish(parishId)) return null;
   const ok =
-    isTestLoginPassword(password) || (await verifyPriestTemporaryPassword(parishId, password));
+    !config.requirePasswords ||
+    isTestLoginPassword(password) ||
+    (await verifyPriestTemporaryPassword(parishId, password));
   if (!ok) return null;
   const token = createHash("sha256").update(`${parishId}:${Date.now()}:${randomUUID()}`).digest("hex");
   priestTokens.set(token, parishId);

@@ -11,6 +11,7 @@ import {
   userLogin,
   userRegister,
 } from "@/lib/api";
+import { requirePasswords } from "@/lib/auth-config";
 
 type Tab = "login" | "register";
 
@@ -77,6 +78,12 @@ function AuthForm() {
         virtualią kapavietę ir galėsite ją redaguoti bet kada.
       </p>
 
+      {!requirePasswords && (
+        <p className="ae-auth-test-banner" role="status">
+          Testavimo režimas: galite spausti „Prisijungti“ be slaptažodžio. El. paštas neprivalomas.
+        </p>
+      )}
+
       <div className="ae-auth__tabs" role="tablist">
         <button
           type="button"
@@ -108,29 +115,31 @@ function AuthForm() {
         {tab === "login" ? (
           <form onSubmit={onLogin}>
             <div className="ae-field">
-              <label htmlFor="login-email">El. paštas</label>
+              <label htmlFor="login-email">El. paštas{!requirePasswords ? " (neprivaloma)" : ""}</label>
               <input
                 id="login-email"
                 type="email"
                 autoComplete="email"
-                placeholder="Įrašykite savo el. paštą"
+                placeholder={requirePasswords ? "Įrašykite savo el. paštą" : "Palikite tuščią — bus test@aeterna.local"}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
+                required={requirePasswords}
               />
             </div>
-            <div className="ae-field">
-              <label htmlFor="login-password">Slaptažodis</label>
-              <input
-                id="login-password"
-                type="password"
-                autoComplete="current-password"
-                placeholder="Įveskite slaptažodį"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
+            {requirePasswords && (
+              <div className="ae-field">
+                <label htmlFor="login-password">Slaptažodis</label>
+                <input
+                  id="login-password"
+                  type="password"
+                  autoComplete="current-password"
+                  placeholder="Įveskite slaptažodį"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+            )}
             {err && <p className="ae-error">{err}</p>}
             <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide" disabled={busy}>
               {busy ? "Jungiama…" : "Prisijungti"}
@@ -166,32 +175,36 @@ function AuthForm() {
                 required
               />
             </div>
-            <div className="ae-field">
-              <label htmlFor="reg-password">Naujas slaptažodis</label>
-              <input
-                id="reg-password"
-                type="password"
-                autoComplete="new-password"
-                placeholder="Bent 8 simboliai"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={8}
-              />
-            </div>
-            <div className="ae-field">
-              <label htmlFor="reg-password2">Pakartokite slaptažodį</label>
-              <input
-                id="reg-password2"
-                type="password"
-                autoComplete="new-password"
-                placeholder="Pakartokite naują slaptažodį"
-                value={passwordConfirm}
-                onChange={(e) => setPasswordConfirm(e.target.value)}
-                required
-                minLength={8}
-              />
-            </div>
+            {requirePasswords && (
+              <>
+                <div className="ae-field">
+                  <label htmlFor="reg-password">Naujas slaptažodis</label>
+                  <input
+                    id="reg-password"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="Bent 8 simboliai"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={8}
+                  />
+                </div>
+                <div className="ae-field">
+                  <label htmlFor="reg-password2">Pakartokite slaptažodį</label>
+                  <input
+                    id="reg-password2"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="Pakartokite naują slaptažodį"
+                    value={passwordConfirm}
+                    onChange={(e) => setPasswordConfirm(e.target.value)}
+                    required
+                    minLength={8}
+                  />
+                </div>
+              </>
+            )}
             {err && <p className="ae-error">{err}</p>}
             <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide" disabled={busy}>
               {busy ? "Kuriama paskyra…" : "Registruotis nemokamai"}

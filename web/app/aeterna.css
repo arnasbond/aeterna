@@ -719,6 +719,19 @@
   max-width: 28rem;
 }
 
+.ae-auth-test-banner {
+  margin: 0 auto 1rem;
+  max-width: 28rem;
+  padding: 0.65rem 0.85rem;
+  text-align: center;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #5c4a1a;
+  background: #fef9e7;
+  border: 1px solid #e8d48a;
+  border-radius: 8px;
+}
+
 .ae-auth__tabs {
   display: flex;
   gap: 0;
