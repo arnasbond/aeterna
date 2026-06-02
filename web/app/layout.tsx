@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Dancing_Script, Inter, Playfair_Display } from "next/font/google";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import "./globals.css";
@@ -8,6 +8,7 @@ import "./vk-theme.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+const dancing = Dancing_Script({ subsets: ["latin"], variable: "--font-dancing" });
 
 export const metadata: Metadata = {
   title: "AETERNA | Virtuali kapavietė su QR kodu ir parama parapijai",
@@ -26,7 +27,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="lt" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="lt" className={`${inter.variable} ${playfair.variable} ${dancing.variable}`}>
       <body className="aeterna-root">
         <SiteHeader />
         <main>{children}</main>

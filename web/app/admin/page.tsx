@@ -86,7 +86,7 @@ export default function AdminDashboardPage() {
       <div className="ae-priest-header">
         <div>
           <h1 className="ae-section-title" style={{ marginBottom: "0.25rem" }}>
-            Klebonų prieiga
+            Parapijos administratorių prieiga
           </h1>
           <p className="ae-hint">Laukia: {pending.length}</p>
         </div>
@@ -114,7 +114,8 @@ export default function AdminDashboardPage() {
             {issued.password}
           </p>
           <p className="ae-hint" style={{ margin: 0 }}>
-            Galioja iki {formatDt(issued.expiresAt)}. Perduokite klebonui saugiai. Po pirmo prisijungimo
+            Galioja iki {formatDt(issued.expiresAt)}. Perduokite parapijos administratoriui saugiai. Po pirmo
+            prisijungimo
             slaptažodis nebegalios.
           </p>
           <button type="button" className="ae-btn ae-btn--outline" style={{ marginTop: "1rem" }} onClick={() => setIssued(null)}>

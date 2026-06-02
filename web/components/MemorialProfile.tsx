@@ -1,27 +1,54 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
+import { MemorialGuestbook } from "@/components/MemorialGuestbook";
 import type { MemorialPublic } from "@/lib/api";
 
-function formatDate(d: string | null) {
-  if (!d) return "—";
-  try {
-    return new Date(d).toLocaleDateString("lt-LT", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  } catch {
-    return d;
+type Tab = "photos" | "video" | "life" | "guestbook";
+
+function formatYears(birth: string | null, death: string | null) {
+  const year = (d: string | null) => {
+    if (!d) return "—";
+    try {
+      return new Date(d).getFullYear();
+    } catch {
+      return d.slice(0, 4);
+    }
+  };
+  return `${year(birth)} – ${year(death)}`;
+}
+
+function splitBioForHero(biography: string, fullName: string) {
+  const paragraphs = biography.split("\n\n").map((p) => p.trim()).filter(Boolean);
+  if (paragraphs.length === 0) {
+    return { lead: `Gyvenimo kelias — ${fullName}`, heroParagraphs: [] as string[] };
   }
+  const first = paragraphs[0];
+  const dot = first.indexOf(". ");
+  if (dot > 0 && dot <= 120) {
+    const lead = first.slice(0, dot + 1);
+    const rest = first.slice(dot + 1).trim();
+    const heroParagraphs = rest ? [rest, ...paragraphs.slice(1)] : paragraphs.slice(1);
+    return { lead, heroParagraphs };
+  }
+  if (first.length <= 100) {
+    return { lead: first, heroParagraphs: paragraphs.slice(1) };
+  }
+  return {
+    lead: `Gyvenimo kelias — ${fullName}`,
+    heroParagraphs: paragraphs,
+  };
 }
 
 type Props = {
   memorial: MemorialPublic;
+  slug: string;
   children?: ReactNode;
 };
 
-export function MemorialProfile({ memorial, children }: Props) {
+export function MemorialProfile({ memorial, slug, children }: Props) {
+  const [tab, setTab] = useState<Tab>("photos");
   const [lightbox, setLightbox] = useState<string | null>(null);
   const [videoFailed, setVideoFailed] = useState(false);
 
@@ -31,113 +58,185 @@ export function MemorialProfile({ memorial, children }: Props) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [lightbox]);
+
   const portrait =
     memorial.portraitUrl ?? memorial.mediaGallery[0] ?? memorial.parish.image;
   const gallery = memorial.mediaGallery;
+  const { lead, heroParagraphs } = splitBioForHero(memorial.biography ?? "", memorial.fullName);
+  const bioParagraphs = memorial.biography
+    ? memorial.biography.split("\n\n").map((p) => p.trim()).filter(Boolean)
+    : [];
+  const firstName = memorial.fullName.split(" ")[0];
+
+  const tabs: { id: Tab; label: string }[] = [
+    { id: "photos", label: "Nuotraukos" },
+    { id: "video", label: "Video" },
+    { id: "life", label: "Gyvenimo įvykiai" },
+    { id: "guestbook", label: "Svečių knyga" },
+  ];
 
   return (
-    <article className="ae-memorial">
-      <section
-        className="ae-memorial-banner"
-        style={{ backgroundImage: `url(${portrait})` }}
-        aria-hidden
-      />
-      <header className="ae-memorial-head">
-        <div className="ae-memorial-portrait-wrap">
-          <img src={portrait} alt="" className="ae-memorial-portrait" referrerPolicy="no-referrer" />
-        </div>
-        <span className="ae-badge">{memorial.parish.diocese}</span>
-        <p className="ae-memorial-parish">{memorial.parish.title}</p>
-        <h1 className="ae-memorial-name">{memorial.fullName}</h1>
-        <p className="ae-memorial-dates">
-          <time dateTime={memorial.birthDate ?? undefined}>{formatDate(memorial.birthDate)}</time>
-          <span className="ae-memorial-dates__sep" aria-hidden>
-            —
-          </span>
-          <time dateTime={memorial.deathDate ?? undefined}>{formatDate(memorial.deathDate)}</time>
-        </p>
-        <p className="ae-memorial-tagline">Amžina atmintis ir šviesi palaima</p>
-      </header>
+    <article className="vk-memorial">
+      <section className="vk-memorial-hero">
+        <div className="vk-memorial-hero__inner vk-container">
+          <Link href={`/parishes/${memorial.parish.id}`} className="vk-memorial-back">
+            ← Atgal į kapavietę
+          </Link>
 
-      {memorial.farewellMessage && (
-        <blockquote className="ae-memorial-quote">
-          <p className="ae-memorial-quote__text">„{memorial.farewellMessage}"</p>
-          <footer className="ae-memorial-quote__sign">— palikta jums, {memorial.fullName.split(" ")[0]}</footer>
-        </blockquote>
-      )}
-
-      {memorial.videoUrl && (
-        <section className="ae-memorial-video" aria-label="Atminimo video">
-          <h2 className="ae-memorial-section-title">Šviesos akimirka</h2>
-          <div className="ae-memorial-video__frame">
-            {!videoFailed ? (
-              <video
-                key={memorial.videoUrl}
-                src={memorial.videoUrl}
-                poster={portrait}
-                controls
-                playsInline
-                preload="metadata"
-                className="ae-memorial-video__el"
-                onError={() => setVideoFailed(true)}
-              >
-                Jūsų naršyklė nepalaiko video.
-              </video>
-            ) : (
-              <p className="ae-memorial-video__fallback">
-                Video nepavyko įkelti.{" "}
-                <a href={memorial.videoUrl} target="_blank" rel="noopener noreferrer">
-                  Atidaryti vaizdo įrašą →
-                </a>
-              </p>
+          <div className="vk-memorial-frame">
+            <img
+              src={portrait}
+              alt=""
+              className="vk-memorial-portrait"
+              referrerPolicy="no-referrer"
+            />
+            <h1 className="vk-memorial-name">{memorial.fullName}</h1>
+            <p className="vk-memorial-years">{formatYears(memorial.birthDate, memorial.deathDate)}</p>
+            {lead && <p className="vk-memorial-lead">{lead}</p>}
+            {heroParagraphs.length > 0 && (
+              <div className="vk-memorial-bio">
+                {heroParagraphs.map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
+              </div>
             )}
+            <p className="vk-memorial-parish">{memorial.parish.title}</p>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {memorial.biography && (
-        <section className="ae-memorial-bio">
-          <h2 className="ae-memorial-section-title">Gyvenimo istorija</h2>
-          {memorial.biography.split("\n\n").map((para, i) => (
-            <p key={i}>{para}</p>
+      <div className="vk-container" style={{ padding: 0 }}>
+        <div className="vk-memorial-tabs" role="tablist" aria-label="Memorialo skiltys">
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={tab === t.id}
+              className={`vk-memorial-tab${tab === t.id ? " vk-memorial-tab--active" : ""}`}
+              onClick={() => setTab(t.id)}
+            >
+              {t.label}
+            </button>
           ))}
-        </section>
-      )}
+        </div>
+      </div>
 
-      {gallery.length > 0 && (
-        <section className="ae-memorial-photos" aria-label="Nuotraukų galerija">
-          <h2 className="ae-memorial-section-title">Prisiminimai</h2>
-          <div className="ae-memorial-photos__grid">
-            {gallery.map((url, i) => (
-              <button
-                key={i}
-                type="button"
-                className="ae-memorial-photos__item"
-                onClick={() => setLightbox(url)}
-              >
-                <img src={url} alt="" loading="lazy" referrerPolicy="no-referrer" />
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
+      <section className="vk-memorial-panel" role="tabpanel">
+        <div className="vk-memorial-panel__inner">
+          {tab === "photos" && (
+            <>
+              <h2 className="vk-memorial-panel__title">Nuotraukų galerija</h2>
+              {gallery.length > 0 ? (
+                <div className="vk-memorial-gallery">
+                  {gallery.map((url, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className="vk-memorial-gallery__item"
+                      onClick={() => setLightbox(url)}
+                    >
+                      <img src={url} alt="" loading="lazy" referrerPolicy="no-referrer" />
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="vk-memorial-empty">Nuotraukų dar nėra.</p>
+              )}
+            </>
+          )}
+
+          {tab === "video" && (
+            <>
+              <h2 className="vk-memorial-panel__title">Video</h2>
+              {memorial.videoUrl ? (
+                <div className="vk-memorial-video">
+                  {!videoFailed ? (
+                    <video
+                      key={memorial.videoUrl}
+                      src={memorial.videoUrl}
+                      poster={portrait}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      className="vk-memorial-video__el"
+                      onError={() => setVideoFailed(true)}
+                    >
+                      Jūsų naršyklė nepalaiko video.
+                    </video>
+                  ) : (
+                    <p className="vk-memorial-video__fallback">
+                      Video nepavyko įkelti.{" "}
+                      <a href={memorial.videoUrl} target="_blank" rel="noopener noreferrer">
+                        Atidaryti vaizdo įrašą →
+                      </a>
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <p className="vk-memorial-empty">Video įrašo nėra.</p>
+              )}
+            </>
+          )}
+
+          {tab === "life" && (
+            <>
+              <h2 className="vk-memorial-panel__title">Gyvenimo įvykiai</h2>
+              {memorial.farewellMessage && (
+                <blockquote className="vk-memorial-quote">
+                  <p>„{memorial.farewellMessage}"</p>
+                  <footer>— palikta jums, {firstName}</footer>
+                </blockquote>
+              )}
+              {bioParagraphs.length > 0 ? (
+                <ol className="vk-memorial-timeline">
+                  {bioParagraphs.map((para, i) => (
+                    <li key={i}>
+                      <p>{para}</p>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="vk-memorial-empty">Gyvenimo istorija dar neužpildyta.</p>
+              )}
+            </>
+          )}
+
+          {tab === "guestbook" && (
+            <>
+              <h2 className="vk-memorial-panel__title">Svečių knyga</h2>
+              <MemorialGuestbook slug={slug} />
+            </>
+          )}
+        </div>
+      </section>
 
       {lightbox && (
         <div
-          className="ae-memorial-lightbox"
+          className="vk-memorial-lightbox"
           role="dialog"
           aria-modal
           onClick={() => setLightbox(null)}
-          onKeyDown={(e) => e.key === "Escape" && setLightbox(null)}
         >
-          <button type="button" className="ae-memorial-lightbox__close" aria-label="Uždaryti">
+          <button
+            type="button"
+            className="vk-memorial-lightbox__close"
+            aria-label="Uždaryti"
+            onClick={() => setLightbox(null)}
+          >
             ×
           </button>
-          <img src={lightbox} alt="" />
+          <img src={lightbox} alt="" onClick={(e) => e.stopPropagation()} />
         </div>
       )}
 
-      {children}
+      {children && (
+        <section className="vk-memorial-tools">
+          <div className="vk-memorial-tools__inner">{children}</div>
+        </section>
+      )}
+
+      <p className="vk-memorial-support">Parama: {memorial.parish.supportGoal}</p>
     </article>
   );
 }

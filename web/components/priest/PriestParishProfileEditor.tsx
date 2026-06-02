@@ -63,7 +63,7 @@ export function PriestParishProfileEditor() {
             setMsg(res.message);
             await load();
           } catch {
-            /* klebonas gali importuoti rankiniu būdu */
+            /* parapijos administratorius gali importuoti rankiniu būdu */
           }
         }
       })
@@ -110,7 +110,7 @@ export function PriestParishProfileEditor() {
     return (
       <section className="ae-section">
         <p className="ae-hint" style={{ textAlign: "center" }}>
-          <Link href="/priest/login">Prisijunkite kaip klebonas</Link>
+          <Link href="/priest/login">Prisijunkite kaip parapijos administratorius</Link>
         </p>
       </section>
     );
@@ -209,7 +209,7 @@ export function PriestParishProfileEditor() {
 
         <div className="ae-parish-editor-row">
           <div className="ae-field">
-            <label>Klebonas</label>
+            <label>Parapijos administratorius</label>
             <input
               value={form.priestName ?? ""}
               onChange={(e) => setField("priestName", e.target.value)}

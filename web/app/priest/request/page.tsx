@@ -67,8 +67,8 @@ function RequestForm() {
     <section className="ae-section ae-wizard">
       <h1 className="ae-section-title">Prieigos užklausa</h1>
       <p className="ae-hint" style={{ textAlign: "center", marginBottom: "1.5rem", maxWidth: "32rem", marginInline: "auto" }}>
-        Klebonas gali prisijungti tik gavęs administratoriaus patvirtinimą ir laikiną slaptažodį el. paštu
-        arba kitu saugiu kanalu.
+        Parapijos administratorius gali prisijungti tik gavęs administratoriaus patvirtinimą ir laikiną
+        slaptažodį el. paštu arba kitu saugiu kanalu.
       </p>
       <form onSubmit={submit}>
         <div className="ae-field">
@@ -82,7 +82,7 @@ function RequestForm() {
           </select>
         </div>
         <div className="ae-field">
-          <label>Klebono vardas ir pavardė</label>
+          <label>Parapijos administratoriaus vardas ir pavardė</label>
           <input value={priestName} onChange={(e) => setPriestName(e.target.value)} required />
         </div>
         <div className="ae-field">
@@ -95,7 +95,7 @@ function RequestForm() {
         </div>
         <div className="ae-field">
           <label>Pastaba administratoriui</label>
-          <textarea rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Pvz. naujas klebonas nuo 2026 m." />
+          <textarea rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Pvz. naujas parapijos administratorius nuo 2026 m." />
         </div>
         {err && <p className="ae-error">{err}</p>}
         <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide" disabled={busy}>

@@ -12,7 +12,7 @@ const NAV = [
   { href: "/parishes", label: "Parapijos" },
   { href: "/#zvakute", label: "Žvakutė" },
   { href: "/prisijungti", label: "Prisijungti" },
-  { href: "/priest/login", label: "Klebonas" },
+  { href: "/priest/login", label: "Parapijos administratorius" },
 ] as const;
 
 export function SiteHeader() {

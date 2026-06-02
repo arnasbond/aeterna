@@ -158,8 +158,8 @@ export function HomeLanding() {
             <li>
               <h3>1. Prisiregistruokite nemokamai</h3>
               <p>
-                <Link href="/prisijungti">El. paštas ir slaptažodis</Link> — apsaugota paskyra, kaip Virtualus
-                Kapas.
+                <Link href="/prisijungti">El. paštas ir slaptažodis</Link> — apsaugota paskyra su redagavimu bet
+                kada.
               </p>
             </li>
             <li>

@@ -64,7 +64,7 @@ export function ParishProfilePublic({ parish }: Props) {
   if (!hasContent) {
     return (
       <p className="ae-hint" style={{ textAlign: "center" }}>
-        Klebonas dar nepildė išsamios parapijos informacijos. Oficiali svetainė — nuoroda aukščiau.
+        Parapijos administratorius dar nepildė išsamios parapijos informacijos. Oficiali svetainė — nuoroda aukščiau.
       </p>
     );
   }
@@ -100,7 +100,7 @@ export function ParishProfilePublic({ parish }: Props) {
         <Block title="Kontaktai">
           {p.priestName && (
             <p>
-              <strong>Klebonas:</strong> {p.priestName}
+              <strong>Parapijos administratorius:</strong> {p.priestName}
             </p>
           )}
           {p.deputyPriestName && (

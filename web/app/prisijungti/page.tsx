@@ -74,11 +74,7 @@ function AuthForm() {
       <h1 className="ae-section-title">Prisijungimas ir registracija</h1>
       <p className="ae-auth__lead">
         Susikurkite nemokamą paskyrą el. paštu ir saugiu slaptažodžiu — taip apsaugosite savo
-        virtualią kapavietę ir galėsite ją redaguoti bet kada, kaip{" "}
-        <a href="https://virtualuskapas.lt/prisijungti" target="_blank" rel="noreferrer">
-          Virtualus Kapas
-        </a>
-        .
+        virtualią kapavietę ir galėsite ją redaguoti bet kada.
       </p>
 
       <div className="ae-auth__tabs" role="tablist">

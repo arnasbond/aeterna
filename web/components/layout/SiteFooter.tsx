@@ -59,7 +59,7 @@ export function SiteFooter() {
             <li>
               <Link href="/prisijungti">Prisijungti / Registruotis</Link>
               <Link href="/paskyra">Mano paskyra</Link>
-              <Link href="/priest/login">Klebono prisijungimas</Link>
+              <Link href="/priest/login">Parapijos administratoriaus prisijungimas</Link>
             </li>
             <li>
               <Link href="/admin/login">Administratorius</Link>

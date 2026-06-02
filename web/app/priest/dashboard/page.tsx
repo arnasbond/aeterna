@@ -68,7 +68,7 @@ export default function PriestDashboardPage() {
     <section className="ae-section">
       <div className="ae-priest-header">
         <div>
-          <h1>Klebono skydas</h1>
+          <h1>Parapijos administratoriaus skydas</h1>
           <p className="ae-hint">{dash.parish.title}</p>
         </div>
         <button type="button" className="ae-btn ae-btn--outline" onClick={logout}>

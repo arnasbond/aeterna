@@ -32,7 +32,8 @@ export default function AdminLoginPage() {
         <span className="ae-badge">Tik svetainės valdytojui</span>
         <h1 className="ae-section-title">Administratoriaus prisijungimas</h1>
         <p className="ae-admin-login-lead">
-          Čia patvirtinate klebonų prieigos užklausas ir sugeneruojate jiems laikiną slaptažodį.
+          Čia patvirtinate parapijos administratorių prieigos užklausas ir sugeneruojate jiems laikiną
+          slaptažodį.
         </p>
         <form onSubmit={submit}>
           <div className="ae-field">
@@ -62,7 +63,7 @@ export default function AdminLoginPage() {
         </p>
       </div>
       <p style={{ textAlign: "center", marginTop: "1.5rem" }}>
-        <Link href="/priest/login">Klebono prisijungimas</Link>
+        <Link href="/priest/login">Parapijos administratoriaus prisijungimas</Link>
         {" · "}
         <Link href="/">Pradžia</Link>
       </p>

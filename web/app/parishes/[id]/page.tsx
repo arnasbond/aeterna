@@ -96,7 +96,7 @@ export default function ParishHubPage() {
               href={`/priest/login?parish=${encodeURIComponent(parish.id)}`}
               className="ae-btn ae-btn--gold"
             >
-              Klebono prisijungimas
+              Parapijos administratoriaus prisijungimas
             </Link>
             <Link
               href={`/priest/request?parish=${encodeURIComponent(parish.id)}`}

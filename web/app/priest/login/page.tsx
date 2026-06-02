@@ -38,7 +38,7 @@ function PriestLoginForm() {
 
   return (
     <section className="ae-section ae-wizard">
-      <h1 className="ae-section-title">Klebono prisijungimas</h1>
+      <h1 className="ae-section-title">Parapijos administratoriaus prisijungimas</h1>
       <p className="ae-hint" style={{ textAlign: "center", marginBottom: "1.5rem", maxWidth: "30rem", marginInline: "auto" }}>
         Prisijunkite tik su administratoriaus patvirtintu laikinu slaptažodžiu. Jei jo neturite — pateikite
         prieigos užklausą.

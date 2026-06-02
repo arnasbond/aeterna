@@ -56,7 +56,7 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
     setMsg(null);
     try {
       await bookMass({ massId: selectedId, intentions, donorName, amountCents: 1500 });
-      setMsg("Mišios užsakytos. Klebonas patvirtins intenciją liturgijoje.");
+      setMsg("Mišios užsakytos. Parapijos administratorius patvirtins intenciją liturgijoje.");
       setIntentions("");
       const next = await fetchAvailableMasses(parishId);
       setSlots(next);
@@ -71,7 +71,7 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
   return (
     <section id="misios" className="ae-section ae-section--gray">
       <h2 className="ae-section-title">Šv. Mišių užsakymas nuotoliu</h2>
-      <p className="ae-section-lead">Pasirinkite klebono patvirtintą laisvą laiką liturgijai.</p>
+      <p className="ae-section-lead">Pasirinkite parapijos administratoriaus patvirtintą laisvą laiką liturgijai.</p>
       <div className="ae-mass-card">
         <form onSubmit={submit}>
           <div className="ae-field">
@@ -91,7 +91,7 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
           <div className="ae-field">
             <label>Laisvas laikas</label>
             {slots.length === 0 ? (
-              <p className="ae-hint">Šiuo metu nėra laisvų laikų — klebonas gali pridėti skydelyje.</p>
+              <p className="ae-hint">Šiuo metu nėra laisvų laikų — parapijos administratorius gali pridėti skydelyje.</p>
             ) : (
               <div className="ae-mass-slots">
                 {slots.map((s) => (

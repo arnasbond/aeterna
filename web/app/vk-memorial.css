@@ -1,0 +1,561 @@
+/* Memorialinis profilis — Virtualus Kapas stilius */
+
+.vk-memorial-page {
+  --vk-mem-bg: #1a252b;
+  --vk-mem-border: rgba(232, 220, 200, 0.55);
+  --vk-mem-text: #f5f2ec;
+  --vk-mem-muted: rgba(245, 242, 236, 0.72);
+  --vk-mem-panel: #f7f5f2;
+  --vk-mem-tab-active: #1a252b;
+  background: var(--vk-mem-bg);
+}
+
+.vk-memorial-page main {
+  padding: 0;
+  max-width: none;
+}
+
+.vk-memorial-page .vk-header {
+  padding-top: 0.5rem;
+  background: var(--vk-mem-bg);
+}
+
+.vk-memorial-page .vk-header__inner {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+.vk-memorial-page .vk-logo {
+  color: var(--vk-mem-text);
+}
+
+.vk-memorial-page .vk-logo__text small {
+  color: var(--vk-mem-muted);
+}
+
+.vk-memorial-page .vk-nav-desktop a {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.vk-memorial-page .vk-nav-desktop a:hover {
+  color: #fff;
+}
+
+.vk-memorial-page .vk-menu-toggle {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.vk-memorial-page .vk-header__cta {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.vk-memorial-page .vk-footer {
+  background: #141c21;
+  color: rgba(255, 255, 255, 0.75);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vk-memorial-page .vk-footer a {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.vk-memorial-page .vk-footer h3 {
+  color: #fff;
+}
+
+/* —— Profilis —— */
+.vk-memorial {
+  color: var(--vk-mem-text);
+}
+
+.vk-memorial-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.75rem 0 0;
+  padding: 0.35rem 0;
+  font-size: 0.9rem;
+  color: var(--vk-mem-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.vk-memorial-back:hover {
+  color: #fff;
+}
+
+.vk-memorial-hero {
+  padding: 0 1rem 2rem;
+}
+
+.vk-memorial-hero__inner {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.vk-memorial-frame {
+  position: relative;
+  margin-top: 0.5rem;
+  padding: 2.25rem 1.35rem 2rem;
+  border: 1px solid var(--vk-mem-border);
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(232, 220, 200, 0.15);
+  text-align: center;
+}
+
+.vk-memorial-frame::before,
+.vk-memorial-frame::after {
+  content: "";
+  position: absolute;
+  width: 5.5rem;
+  height: 5.5rem;
+  opacity: 0.35;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.vk-memorial-frame::before {
+  top: -0.25rem;
+  left: -0.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='none'%3E%3Cpath d='M20 80c15-25 35-40 55-45 5 18 0 38-15 55-22 8-42 2-40-10z' fill='%23e8dcc8' opacity='.5'/%3E%3Ccircle cx='35' cy='45' r='8' fill='%23e8dcc8'/%3E%3Ccircle cx='52' cy='32' r='6' fill='%23e8dcc8'/%3E%3Ccircle cx='68' cy='38' r='7' fill='%23e8dcc8'/%3E%3Cpath stroke='%23e8dcc8' stroke-width='1.2' d='M30 70 Q50 50 75 55'/%3E%3C/svg%3E");
+}
+
+.vk-memorial-frame::after {
+  top: 0.5rem;
+  right: 0.25rem;
+  width: 4rem;
+  height: 4rem;
+  opacity: 0.25;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' fill='none'%3E%3Cpath stroke='%23e8dcc8' stroke-width='1' d='M10 60 Q40 20 70 35 M70 35 L62 28 M70 35 L65 45'/%3E%3Cpath stroke='%23e8dcc8' stroke-width='.8' d='M25 50 Q35 35 50 40'/%3E%3C/svg%3E");
+}
+
+.vk-memorial-portrait {
+  width: 7.5rem;
+  height: 7.5rem;
+  margin: 0 auto 1.1rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(232, 220, 200, 0.45);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.vk-memorial-name {
+  font-family: var(--font-dancing), "Brush Script MT", cursive;
+  font-size: clamp(2.1rem, 8vw, 2.85rem);
+  font-weight: 400;
+  line-height: 1.15;
+  margin: 0 0 0.35rem;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.vk-memorial-years {
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  color: var(--vk-mem-muted);
+  letter-spacing: 0.08em;
+}
+
+.vk-memorial-lead {
+  margin: 0 0 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.55;
+  color: #fff;
+}
+
+.vk-memorial-bio {
+  text-align: center;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--vk-mem-muted);
+}
+
+.vk-memorial-bio p {
+  margin: 0 0 1rem;
+}
+
+.vk-memorial-bio p:last-child {
+  margin-bottom: 0;
+}
+
+.vk-memorial-parish {
+  margin-top: 1.25rem;
+  font-size: 0.78rem;
+  color: rgba(245, 242, 236, 0.45);
+  letter-spacing: 0.04em;
+}
+
+/* Skirtukai */
+.vk-memorial-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0 0.5rem;
+  background: var(--vk-mem-panel);
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.vk-memorial-tab {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.85rem 0.5rem;
+  border: none;
+  background: transparent;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #5a5348;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+@media (min-width: 480px) {
+  .vk-memorial-tab {
+    font-size: 0.82rem;
+    padding: 0.95rem 0.75rem;
+  }
+}
+
+.vk-memorial-tab:hover {
+  color: var(--vk-mem-tab-active);
+}
+
+.vk-memorial-tab--active {
+  color: var(--vk-mem-tab-active);
+  border-bottom-color: var(--vk-mem-tab-active);
+  background: #fff;
+}
+
+/* Skirtukų turinys */
+.vk-memorial-panel {
+  background: var(--vk-mem-panel);
+  padding: 2rem 1.25rem 2.5rem;
+  min-height: 12rem;
+}
+
+.vk-memorial-panel__inner {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.vk-memorial-panel__title {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2a2520;
+  margin: 0 0 1.25rem;
+}
+
+.vk-memorial-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.65rem;
+}
+
+@media (min-width: 520px) {
+  .vk-memorial-gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+.vk-memorial-gallery__item {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #e8e4de;
+  aspect-ratio: 1;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.vk-memorial-gallery__item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.vk-memorial-gallery__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vk-memorial-video {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #1a252b;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.vk-memorial-video__el {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+}
+
+.vk-memorial-video__fallback {
+  margin: 0;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+.vk-memorial-video__fallback a {
+  color: #c9b896;
+}
+
+.vk-memorial-empty {
+  text-align: center;
+  color: #6b6560;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Gyvenimo įvykiai */
+.vk-memorial-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vk-memorial-timeline li {
+  position: relative;
+  padding: 0 0 1.5rem 1.5rem;
+  border-left: 2px solid #d4cfc6;
+  margin-left: 0.5rem;
+}
+
+.vk-memorial-timeline li:last-child {
+  padding-bottom: 0;
+  border-left-color: transparent;
+}
+
+.vk-memorial-timeline li::before {
+  content: "";
+  position: absolute;
+  left: -0.45rem;
+  top: 0.35rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--vk-mem-bg);
+  border: 2px solid #8a8278;
+}
+
+.vk-memorial-timeline p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #3d3832;
+}
+
+.vk-memorial-quote {
+  margin: 0 0 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: #fff;
+  border-radius: 8px;
+  border-left: 3px solid #8a8278;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.vk-memorial-quote p {
+  margin: 0 0 0.75rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: #3d3832;
+}
+
+.vk-memorial-quote footer {
+  font-size: 0.85rem;
+  color: #6b6560;
+  text-align: right;
+}
+
+/* Svečių knyga */
+.vk-memorial-guestbook .ae-candles-list {
+  margin: 0;
+  padding: 0;
+}
+
+.vk-memorial-guestbook .ae-candles-list__title {
+  text-align: center;
+  font-size: 1rem;
+  color: #2a2520;
+  margin: 0 0 1rem;
+}
+
+.vk-memorial-guestbook .ae-candle-item {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.65rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.vk-memorial-candle-form {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.vk-memorial-candle-form h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  text-align: center;
+  color: #2a2520;
+}
+
+.vk-memorial-candle-form > p {
+  margin: 0 0 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6b6560;
+}
+
+.vk-memorial-candle-form .ae-field {
+  margin-bottom: 0.85rem;
+}
+
+.vk-memorial-candle-form label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: #3d3832;
+}
+
+.vk-memorial-candle-form input,
+.vk-memorial-candle-form select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #d4cfc6;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.vk-memorial-candle-form .ae-btn {
+  width: 100%;
+  margin-top: 0.5rem;
+  background: var(--vk-mem-bg);
+  color: #fff;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.vk-memorial-candle-form .ae-btn:disabled {
+  opacity: 0.6;
+}
+
+.vk-memorial-candle-form .ae-error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+}
+
+/* Lightbox */
+.vk-memorial-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.vk-memorial-lightbox img {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.vk-memorial-lightbox__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* Veiksmai apačioje */
+.vk-memorial-tools {
+  background: #141c21;
+  padding: 2rem 1.25rem 2.5rem;
+  color: var(--vk-mem-muted);
+}
+
+.vk-memorial-tools__inner {
+  max-width: 28rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.vk-memorial-tools .ae-btn--gold {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.vk-memorial-tools .ae-hint {
+  color: var(--vk-mem-muted);
+  text-align: center;
+}
+
+.vk-memorial-support {
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(245, 242, 236, 0.45);
+  margin: 1.5rem auto 0;
+  max-width: 32rem;
+  padding: 0 1rem;
+}
+
+.vk-memorial-page .ae-share-bar {
+  justify-content: center;
+}
+
+.vk-memorial-page .ae-share-bar button {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.vk-memorial-page .ae-section {
+  color: var(--vk-mem-text);
+  background: var(--vk-mem-bg);
+  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

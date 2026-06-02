@@ -8,7 +8,6 @@ import { GeoFixButton } from "@/components/GeoFixButton";
 import { MemorialProfile } from "@/components/MemorialProfile";
 import { NavigateToGrave } from "@/components/NavigateToGrave";
 import { ShareBar } from "@/components/ShareBar";
-import { VirtualCandles } from "@/components/VirtualCandles";
 import { fetchMemorial, fetchUserMemorial, getUserToken, type MemorialPublic } from "@/lib/api";
 import { getSiteOrigin } from "@/lib/site";
 
@@ -50,10 +49,7 @@ function MemorialInner({ slug }: { slug: string }) {
   const location = geo ?? memorial.geoLocation;
 
   return (
-    <MemorialProfile memorial={memorial}>
-      <VirtualCandles slug={slug} />
-
-      <div className="ae-memorial-footer-actions">
+    <MemorialProfile memorial={memorial} slug={slug}>
         {canEdit && (
           <Link href={`/paskyra/atmintis/${slug}`} className="ae-btn ae-btn--gold" style={{ width: "100%" }}>
             Redaguoti mano paskyroje
@@ -75,11 +71,6 @@ function MemorialInner({ slug }: { slug: string }) {
           <GeoFixButton slug={slug} onFixed={(lat, lng) => setGeo({ lat, lng })} />
         )}
         <DownloadAppButton showHint />
-      </div>
-
-      <p className="ae-memorial-support">
-        Parama: {memorial.parish.supportGoal}
-      </p>
     </MemorialProfile>
   );
 }
