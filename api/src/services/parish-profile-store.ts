@@ -1,13 +1,11 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
-import { config } from "../config.js";
 import { getParish, listParishes } from "./aeterna-store.js";
 import type { Parish } from "../types/aeterna.js";
 import type { ParishProfile, ParishProfileInput } from "../types/parish-profile.js";
 import { importProfileFromWebsite } from "./website-profile-import.js";
 import { resolveParishImageUrl } from "../lib/parish-image.js";
+import { loadJsonStore, saveJsonStore } from "./persistent-json-store.js";
 
-const PROFILES_FILE = join(config.dataDir, "parish-profiles.json");
+const STORE_KEY = "parish-profiles";
 
 let profilesCache: Map<string, ParishProfile> | null = null;
 
@@ -49,22 +47,24 @@ export function emptyParishProfile(parishId: string): ParishProfile {
   };
 }
 
+async function loadProfilesArray(): Promise<ParishProfile[]> {
+  return loadJsonStore<ParishProfile[]>(STORE_KEY, []);
+}
+
 async function loadProfiles(): Promise<Map<string, ParishProfile>> {
   if (profilesCache) return profilesCache;
-  await mkdir(config.dataDir, { recursive: true });
-  try {
-    const arr = JSON.parse(await readFile(PROFILES_FILE, "utf8")) as ParishProfile[];
-    profilesCache = new Map(arr.map((p) => [p.parishId, p]));
-  } catch {
-    profilesCache = new Map();
-    await saveProfiles();
-  }
+  const arr = await loadProfilesArray();
+  profilesCache = new Map(arr.map((p) => [p.parishId, p]));
   return profilesCache;
 }
 
 async function saveProfiles(): Promise<void> {
   if (!profilesCache) return;
-  await writeFile(PROFILES_FILE, JSON.stringify([...profilesCache.values()], null, 2));
+  await saveJsonStore(STORE_KEY, [...profilesCache.values()]);
+}
+
+export function invalidateParishProfilesCache() {
+  profilesCache = null;
 }
 
 export async function getParishProfile(parishId: string): Promise<ParishProfile> {

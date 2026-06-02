@@ -1,6 +1,7 @@
 import { access, copyFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { config } from "./config.js";
+import { ensureParishProfilesFromSeed } from "./services/parish-profiles-seed.js";
 
 const SEED_FILES = [
   "parish-profiles.json",
@@ -32,5 +33,10 @@ export async function bootstrapDataDir(): Promise<void> {
     } catch {
       /* optional seed */
     }
+  }
+
+  const { restored, count } = await ensureParishProfilesFromSeed();
+  if (restored && process.env.NODE_ENV !== "test") {
+    console.log(`[bootstrap] Atkurti parapijų profiliai iš seeds: ${count}`);
   }
 }

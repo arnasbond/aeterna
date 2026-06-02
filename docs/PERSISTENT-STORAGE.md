@@ -8,6 +8,14 @@ Pranešimai tarp parapijos administratoriaus ir AETERNA admin saugomi JSON forma
 
 Patikrinimas: https://api-three-chi-63.vercel.app/health → `"jsonStore": "kv"`
 
+**KV taip pat saugo:** parapijų profilius iš oficialių svetainių (`parish-profiles` raktas). Atkurti iš seeds:
+
+```powershell
+cd api
+npx vercel env pull .env.production.local --environment=production
+npm run restore:parish-profiles
+```
+
 ### Naujai (kitam projektui arba lokaliai)
 
 ```powershell

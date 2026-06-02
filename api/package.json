@@ -9,7 +9,8 @@
     "build": "tsc && node scripts/copy-static-data.mjs",
     "vercel-build": "npm run build",
     "import:parishes": "tsx scripts/import-katalikai-parishes.ts",
-    "import:parish-profiles": "tsx scripts/import-parish-profiles.ts"
+    "import:parish-profiles": "tsx scripts/import-parish-profiles.ts",
+    "restore:parish-profiles": "tsx scripts/restore-parish-profiles.ts"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.1",
