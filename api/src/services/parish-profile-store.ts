@@ -1,10 +1,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { config } from "../config.js";
-import { getParish } from "./aeterna-store.js";
+import { getParish, listParishes } from "./aeterna-store.js";
 import type { Parish } from "../types/aeterna.js";
 import type { ParishProfile, ParishProfileInput } from "../types/parish-profile.js";
 import { importProfileFromWebsite } from "./website-profile-import.js";
+import { resolveParishImageUrl } from "../lib/parish-image.js";
 
 const PROFILES_FILE = join(config.dataDir, "parish-profiles.json");
 
@@ -77,7 +78,22 @@ export async function getParishDetail(id: string): Promise<ParishDetail | null> 
   const parish = getParish(id);
   if (!parish) return null;
   const profile = await getParishProfile(id);
-  return { ...parish, profile };
+  const image = resolveParishImageUrl(parish.image, profile.galleryUrls, parish.diocese);
+  return { ...parish, image, profile };
+}
+
+/** Parapijų sąrašui — miniatiūra iš galerijos arba veikiantis numatytasis vaizdas. */
+export async function listParishesForPublic(): Promise<Parish[]> {
+  const map = await loadProfiles();
+  return listParishes().map((p) => {
+    const profile = map.get(p.id);
+    const image = resolveParishImageUrl(
+      p.image,
+      profile?.galleryUrls,
+      p.diocese
+    );
+    return image === p.image ? p : { ...p, image };
+  });
 }
 
 function mergeProfile(

@@ -30,7 +30,7 @@ export default function ParishesPage() {
       <div className="ae-parish-grid">
         {list.map((p) => (
           <article key={p.id} className="ae-card ae-parish-card">
-            <img src={p.image} alt="" loading="lazy" />
+            <img src={p.image} alt="" loading="lazy" referrerPolicy="no-referrer" />
             <span className="ae-badge">{p.diocese}</span>
             <h3 style={{ margin: "0 0 0.5rem", fontSize: "1.1rem" }}>{p.title}</h3>
             <p style={{ fontSize: "0.9rem", color: "var(--ae-muted)", margin: "0 0 1rem" }}>

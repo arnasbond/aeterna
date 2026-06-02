@@ -1,5 +1,10 @@
 import type { ReactNode } from "react";
 import type { ParishDetail } from "@/lib/api";
+import {
+  isDisplayableParishImage,
+  PARISH_FALLBACK_IMAGE,
+  parishCardImage,
+} from "@/lib/parish-image";
 
 type Props = {
   parish: ParishDetail;
@@ -27,28 +32,14 @@ function TextBlock({ text }: { text: string }) {
 }
 
 export function parishHeroImage(parish: ParishDetail): string {
-  const fromGallery = parish.profile.galleryUrls.find((u) => isDisplayableImage(u));
-  return fromGallery || parish.image;
-}
-
-function isDisplayableImage(url: string): boolean {
-  const s = url.trim();
-  if (!/^https?:\/\//i.test(s)) return false;
-  if (/facebook\.|instagram\.|twitter\.|youtube\.|linkedin\.|favicon|icon|\.gif(\?|$)/i.test(s)) return false;
-  try {
-    const u = new URL(s);
-    if (!u.pathname || u.pathname === "/" || u.pathname.length < 4) return false;
-  } catch {
-    return false;
-  }
-  return true;
+  return parishCardImage(parish.image, parish.profile.galleryUrls);
 }
 
 export function parishGalleryImages(parish: ParishDetail): string[] {
-  const fromProfile = parish.profile.galleryUrls.filter(isDisplayableImage);
+  const fromProfile = parish.profile.galleryUrls.filter(isDisplayableParishImage);
   if (fromProfile.length > 0) return fromProfile;
-  if (parish.image) return [parish.image];
-  return [];
+  if (parish.image && isDisplayableParishImage(parish.image)) return [parish.image];
+  return [PARISH_FALLBACK_IMAGE];
 }
 
 export function ParishProfilePublic({ parish }: Props) {
@@ -94,7 +85,7 @@ export function ParishProfilePublic({ parish }: Props) {
                 rel="noreferrer"
                 className="ae-parish-gallery__item"
               >
-                <img src={src} alt="" loading="lazy" />
+                <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer" />
               </a>
             ))}
           </div>

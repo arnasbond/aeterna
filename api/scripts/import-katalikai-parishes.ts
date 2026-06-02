@@ -13,22 +13,9 @@ const HTML_PATH = join(__dir, "katalikai-53.html");
 const OUT_JSON = join(__dir, "../src/data/katalikai-parishes.json");
 const OUT_TS = join(__dir, "../src/data/lt-parishes.ts");
 
-const DIOCESE_IMAGE: Record<string, string> = {
-  "Kauno arkivyskupija":
-    "https://images.unsplash.com/photo-1551884830-bf36c308ed29?auto=format&fit=crop&w=800&q=80",
-  "Kaišiadorių vyskupija":
-    "https://images.unsplash.com/photo-1548013146-7249fcee8f75?auto=format&fit=crop&w=800&q=80",
-  "Panevėžio vyskupija":
-    "https://images.unsplash.com/photo-1548013146-7249fcee8f75?auto=format&fit=crop&w=800&q=80",
-  "Šiaulių vyskupija":
-    "https://images.unsplash.com/photo-1548013146-7249fcee8f75?auto=format&fit=crop&w=800&q=80",
-  "Telšių vyskupija":
-    "https://images.unsplash.com/photo-1548013146-7249fcee8f75?auto=format&fit=crop&w=800&q=80",
-  "Vilkaviškio vyskupija":
-    "https://images.unsplash.com/photo-1548013146-7249fcee8f75?auto=format&fit=crop&w=800&q=80",
-  "Vilniaus arkivyskupija":
-    "https://images.unsplash.com/photo-1551884830-bf36c308ed29?auto=format&fit=crop&w=800&q=80",
-};
+import { DIOCESE_FALLBACK_IMAGE } from "../src/lib/parish-image.js";
+
+const DIOCESE_IMAGE: Record<string, string> = DIOCESE_FALLBACK_IMAGE;
 
 function slugify(title: string): string {
   const base = normalizeLt(title).replace(/\s+/g, "-").slice(0, 72);

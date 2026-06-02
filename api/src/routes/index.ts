@@ -26,14 +26,14 @@ import {
 import { priestRoutes } from "./priest.js";
 import { adminRoutes } from "./admin.js";
 import { getMapData, getParishesByDeanery, searchParishes } from "../services/map-store.js";
-import { getParishDetail } from "../services/parish-profile-store.js";
+import { getParishDetail, listParishesForPublic } from "../services/parish-profile-store.js";
 
 const DEFAULT_PLAN_CENTS = 14900;
 
 export async function apiRoutes(app: FastifyInstance) {
   app.get("/api/v1/parishes", async () => ({
     success: true,
-    data: listParishes(),
+    data: await listParishesForPublic(),
   }));
 
   app.get<{ Params: { id: string } }>("/api/v1/parishes/:id", async (req, reply) => {

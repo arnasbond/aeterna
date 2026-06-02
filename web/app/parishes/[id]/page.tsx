@@ -56,7 +56,11 @@ export default function ParishHubPage() {
     <>
       <section className="ae-parish-hero">
         <div className="ae-parish-hero__media">
-          <img src={parishHeroImage(parish)} alt={parish.title} />
+          <img
+            src={parishHeroImage(parish)}
+            alt={parish.title}
+            referrerPolicy="no-referrer"
+          />
         </div>
         <div className="ae-parish-hero__body">
           <span className="ae-badge">{parish.diocese}</span>
