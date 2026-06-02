@@ -27,7 +27,7 @@ export function DownloadAppButton({ variant = "button", className = "", showHint
 
   if (variant === "link") {
     return (
-      <a href={pageUrl} className={`ae-download-app ae-download-app--link ${className}`.trim()}>
+      <a href={pageUrl} className={`vk-download-link ${className}`.trim()}>
         Atsisiųsti programėlę
       </a>
     );

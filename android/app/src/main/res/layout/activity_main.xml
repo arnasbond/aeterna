@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fcfbf7">
+    android:background="#faf8fc">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#4a6741"
+            android:background="#4a2f7a"
             app:title="@string/app_name"
             app:titleTextColor="#FFFFFF"
             app:subtitleTextColor="#E8F0E6" />
