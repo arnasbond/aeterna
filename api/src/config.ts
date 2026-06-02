@@ -14,6 +14,11 @@ export const config = {
     .map((s) => s.trim())
     .filter(Boolean),
   dataDir: dataRoot,
+  /** Vercel KV / Upstash REST (nuolatinei JSON saugyklai) */
+  kvRestUrl: process.env.KV_REST_API_URL?.replace(/\/$/, "") || "",
+  kvRestToken: process.env.KV_REST_API_TOKEN || "",
+  /** Vercel Blob (alternatyva KV) */
+  blobReadWriteToken: process.env.BLOB_READ_WRITE_TOKEN || "",
   /** Laikinas testinis prisijungimas — išjungti: AETERNA_DISABLE_TEST_LOGIN=1 */
   testLoginEnabled:
     process.env.AETERNA_DISABLE_TEST_LOGIN !== "1" && process.env.NODE_ENV !== "production",

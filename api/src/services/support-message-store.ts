@@ -1,7 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import { randomUUID } from "node:crypto";
-import { config } from "../config.js";
 import type {
   CreateSupportThreadInput,
   SupportAuthorRole,
@@ -12,31 +9,16 @@ import type {
   UpdateSupportThreadInput,
 } from "../types/support-message.js";
 import { getParish } from "./aeterna-store.js";
+import { loadJsonStore, saveJsonStore } from "./persistent-json-store.js";
 
-const STORE_FILE = join(config.dataDir, "support-messages.json");
+const STORE_KEY = "support-messages";
 
 type StoreData = {
   threads: SupportThread[];
-  messages: SupportMessage[];
+  messages: StoredMessage[];
 };
 
-let cache: StoreData | null = null;
-
-async function load(): Promise<StoreData> {
-  if (cache) return cache;
-  await mkdir(config.dataDir, { recursive: true });
-  try {
-    cache = JSON.parse(await readFile(STORE_FILE, "utf8")) as StoreData;
-  } catch {
-    cache = { threads: [], messages: [] };
-    await save();
-  }
-  return cache;
-}
-
-async function save(): Promise<void> {
-  await writeFile(STORE_FILE, JSON.stringify(cache ?? { threads: [], messages: [] }, null, 2));
-}
+const EMPTY_STORE: StoreData = { threads: [], messages: [] };
 
 function now() {
   return new Date().toISOString();
@@ -57,9 +39,16 @@ function recountThread(threadId: string, data: StoreData) {
   data.threads[idx] = threadWithCounts(data.threads[idx], data.messages);
 }
 
-async function getData(): Promise<{ threads: SupportThread[]; messages: StoredMessage[] }> {
-  const raw = await load();
-  return raw as { threads: SupportThread[]; messages: StoredMessage[] };
+async function load(): Promise<StoreData> {
+  return loadJsonStore(STORE_KEY, EMPTY_STORE);
+}
+
+async function save(data: StoreData): Promise<void> {
+  await saveJsonStore(STORE_KEY, data);
+}
+
+async function getData(): Promise<StoreData> {
+  return load();
 }
 
 export async function listThreadsForParish(parishId: string): Promise<SupportThread[]> {
@@ -142,8 +131,7 @@ export async function createThreadForParish(
   data.threads.push(thread);
   data.messages.push(message);
   recountThread(threadId, data);
-  cache = data;
-  await save();
+  await save(data);
 
   return getThread(threadId, parishId) as Promise<{ thread: SupportThread; messages: SupportMessage[] }>;
 }
@@ -179,8 +167,7 @@ export async function postMessage(
   thread.updatedAt = ts;
   if (thread.status === "resolved") thread.status = "in_progress";
   recountThread(threadId, data);
-  cache = data;
-  await save();
+  await save(data);
 
   return getThread(threadId, parishId) as Promise<{ thread: SupportThread; messages: SupportMessage[] }>;
 }
@@ -202,8 +189,7 @@ export async function updateThreadStatus(
   }
 
   recountThread(threadId, data);
-  cache = data;
-  await save();
+  await save(data);
   return threadWithCounts(thread, data.messages);
 }
 
@@ -224,8 +210,7 @@ export async function markThreadRead(
   }
 
   recountThread(threadId, data);
-  cache = data;
-  await save();
+  await save(data);
 }
 
 export async function unreadCountForParish(parishId: string): Promise<number> {

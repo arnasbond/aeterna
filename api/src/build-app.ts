@@ -4,6 +4,7 @@ import { config } from "./config.js";
 import { bootstrapDataDir } from "./bootstrap-data.js";
 import { apiRoutes } from "./routes/index.js";
 import { appUpdateRoutes } from "./routes/app-update.js";
+import { jsonStoreBackend } from "./services/persistent-json-store.js";
 
 export async function buildApp(): Promise<FastifyInstance> {
   await bootstrapDataDir();
@@ -22,6 +23,7 @@ export async function buildApp(): Promise<FastifyInstance> {
     status: "ok",
     app: "AETERNA API",
     env: process.env.NODE_ENV || "development",
+    jsonStore: jsonStoreBackend(),
   }));
 
   app.get("/api/v1", async () => ({
