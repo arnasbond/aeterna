@@ -1,14 +1,12 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash, randomUUID } from "node:crypto";
-import { join } from "node:path";
 import { config } from "../config.js";
 import type { UserAccount, UserPublic, UserRegisterInput } from "../types/user.js";
+import { loadJsonStore, saveJsonStore } from "./persistent-json-store.js";
+import { createUserSession, resolveUserIdFromToken } from "./user-session-store.js";
 
-const USERS_FILE = join(config.dataDir, "users.json");
+const USERS_KEY = "users";
 const PASSWORD_SALT = process.env.AETERNA_USER_PASSWORD_SALT || "aeterna-user-v1";
 export const MAX_MEMORIALS_PER_USER = 7;
-
-const userTokens = new Map<string, string>();
 
 let usersCache: UserAccount[] | null = null;
 
@@ -27,18 +25,12 @@ function toPublic(user: UserAccount): UserPublic {
 
 async function loadUsers(): Promise<UserAccount[]> {
   if (usersCache) return usersCache;
-  await mkdir(config.dataDir, { recursive: true });
-  try {
-    usersCache = JSON.parse(await readFile(USERS_FILE, "utf8")) as UserAccount[];
-  } catch {
-    usersCache = [];
-    await saveUsers();
-  }
+  usersCache = await loadJsonStore<UserAccount[]>(USERS_KEY, []);
   return usersCache;
 }
 
 async function saveUsers(): Promise<void> {
-  await writeFile(USERS_FILE, JSON.stringify(usersCache ?? [], null, 2));
+  await saveJsonStore(USERS_KEY, usersCache ?? []);
 }
 
 export async function registerUser(input: UserRegisterInput): Promise<{ user: UserPublic; token: string }> {
@@ -77,10 +69,10 @@ export async function registerUser(input: UserRegisterInput): Promise<{ user: Us
     updatedAt: now,
   };
   users.push(user);
+  usersCache = users;
   await saveUsers();
 
-  const token = createHash("sha256").update(`user:${user.id}:${Date.now()}:${randomUUID()}`).digest("hex");
-  userTokens.set(token, user.id);
+  const token = await createUserSession(user.id);
   return { user: toPublic(user), token };
 }
 
@@ -104,23 +96,21 @@ export async function loginUser(
         updatedAt: now,
       };
       users.push(user);
+      usersCache = users;
       await saveUsers();
     }
-    const token = createHash("sha256").update(`user:${user.id}:${Date.now()}:${randomUUID()}`).digest("hex");
-    userTokens.set(token, user.id);
+    const token = await createUserSession(user.id);
     return { user: toPublic(user), token };
   }
 
   if (!user || user.passwordHash !== hashPassword(password)) return null;
 
-  const token = createHash("sha256").update(`user:${user.id}:${Date.now()}:${randomUUID()}`).digest("hex");
-  userTokens.set(token, user.id);
+  const token = await createUserSession(user.id);
   return { user: toPublic(user), token };
 }
 
-export function getUserIdFromToken(token: string | undefined): string | null {
-  if (!token) return null;
-  return userTokens.get(token) ?? null;
+export async function getUserIdFromToken(token: string | undefined): Promise<string | null> {
+  return resolveUserIdFromToken(token);
 }
 
 export async function getUserById(id: string): Promise<UserPublic | null> {
@@ -157,12 +147,10 @@ export async function oauthLoginUser(input: {
       updatedAt: now,
     };
     users.push(user);
+    usersCache = users;
     await saveUsers();
   }
 
-  const token = createHash("sha256")
-    .update(`user-oauth:${user.id}:${provider}:${Date.now()}:${randomUUID()}`)
-    .digest("hex");
-  userTokens.set(token, user.id);
+  const token = await createUserSession(user.id);
   return { user: toPublic(user), token, provider };
 }

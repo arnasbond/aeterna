@@ -7,9 +7,9 @@ import {
 import {
   adminLogin,
   approvePriestAccessRequest,
-  getAdminFromToken,
   listPriestAccessRequests,
   rejectPriestAccessRequest,
+  resolveAdminFromToken,
 } from "../services/priest-access-store.js";
 
 function adminToken(req: FastifyRequest): string | undefined {
@@ -19,8 +19,8 @@ function adminToken(req: FastifyRequest): string | undefined {
   return typeof h === "string" ? h : undefined;
 }
 
-function requireAdmin(req: FastifyRequest, reply: { status: (n: number) => { send: (b: unknown) => unknown } }) {
-  if (!getAdminFromToken(adminToken(req))) {
+async function requireAdmin(req: FastifyRequest, reply: { status: (n: number) => { send: (b: unknown) => unknown } }) {
+  if (!(await resolveAdminFromToken(adminToken(req)))) {
     reply.status(401).send({ success: false, error: { message: "Reikalingas administratoriaus prisijungimas" } });
     return false;
   }
@@ -33,7 +33,7 @@ export async function adminRoutes(app: FastifyInstance) {
     if (config.requirePasswords && !password) {
       return reply.status(400).send({ success: false, error: { message: "Slaptažodis privalomas" } });
     }
-    const token = adminLogin(password);
+    const token = await adminLogin(password);
     if (!token) {
       return reply.status(401).send({ success: false, error: { message: "Neteisingas administratoriaus slaptažodis" } });
     }
@@ -41,13 +41,13 @@ export async function adminRoutes(app: FastifyInstance) {
   });
 
   app.get("/api/v1/admin/priest-requests", async (req, reply) => {
-    if (!requireAdmin(req, reply)) return;
+    if (!(await requireAdmin(req, reply))) return;
     const list = await listPriestAccessRequests();
     return { success: true, data: list };
   });
 
   app.post<{ Params: { id: string } }>("/api/v1/admin/priest-requests/:id/approve", async (req, reply) => {
-    if (!requireAdmin(req, reply)) return;
+    if (!(await requireAdmin(req, reply))) return;
     try {
       const result = await approvePriestAccessRequest(req.params.id);
       return {
@@ -69,7 +69,7 @@ export async function adminRoutes(app: FastifyInstance) {
   });
 
   app.post<{ Params: { id: string } }>("/api/v1/admin/priest-requests/:id/reject", async (req, reply) => {
-    if (!requireAdmin(req, reply)) return;
+    if (!(await requireAdmin(req, reply))) return;
     try {
       const request = await rejectPriestAccessRequest(req.params.id);
       return { success: true, data: request };
@@ -82,12 +82,12 @@ export async function adminRoutes(app: FastifyInstance) {
   });
 
   app.get("/api/v1/admin/memorials/pending", async (req, reply) => {
-    if (!requireAdmin(req, reply)) return;
+    if (!(await requireAdmin(req, reply))) return;
     return { success: true, data: await listPendingMemorials() };
   });
 
   app.post<{ Params: { slug: string } }>("/api/v1/admin/memorials/:slug/approve", async (req, reply) => {
-    if (!requireAdmin(req, reply)) return;
+    if (!(await requireAdmin(req, reply))) return;
     const row = await setMemorialModeration(req.params.slug, "approved");
     if (!row) {
       return reply.status(404).send({ success: false, error: { message: "Memorialas nerastas" } });
@@ -96,7 +96,7 @@ export async function adminRoutes(app: FastifyInstance) {
   });
 
   app.post<{ Params: { slug: string } }>("/api/v1/admin/memorials/:slug/reject", async (req, reply) => {
-    if (!requireAdmin(req, reply)) return;
+    if (!(await requireAdmin(req, reply))) return;
     const row = await setMemorialModeration(req.params.slug, "rejected");
     if (!row) {
       return reply.status(404).send({ success: false, error: { message: "Memorialas nerastas" } });

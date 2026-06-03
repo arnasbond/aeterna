@@ -1,7 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import { randomUUID } from "node:crypto";
-import { config } from "../config.js";
 import {
   DEMO_AETERNA_MEMORIAL,
   DEMO_MEDIA_VERSION,
@@ -15,9 +12,10 @@ import type {
   Parish,
   ParishSummary,
 } from "../types/aeterna.js";
+import { loadJsonStore, saveJsonStore } from "./persistent-json-store.js";
 
-const MEMORIALS_FILE = join(config.dataDir, "aeterna-memorials.json");
-const ORDERS_FILE = join(config.dataDir, "aeterna-orders.json");
+const MEMORIALS_KEY = "aeterna-memorials";
+const ORDERS_KEY = "aeterna-orders";
 
 const PARISH_COMMISSION_BPS = Number(process.env.AETERNA_PARISH_COMMISSION_BPS || 2000);
 
@@ -80,14 +78,12 @@ function seedMemorials(): Map<string, AeternaMemorial> {
 
 async function loadMemorials(): Promise<Map<string, AeternaMemorial>> {
   if (memorialsCache) return memorialsCache;
-  await mkdir(config.dataDir, { recursive: true });
-  try {
-    const raw = await readFile(MEMORIALS_FILE, "utf8");
-    const arr = JSON.parse(raw) as AeternaMemorial[];
-    memorialsCache = new Map(arr.map((r) => [r.slug, r]));
-  } catch {
+  const arr = await loadJsonStore<AeternaMemorial[]>(MEMORIALS_KEY, []);
+  if (arr.length === 0) {
     memorialsCache = seedMemorials();
     await saveMemorials();
+  } else {
+    memorialsCache = new Map(arr.map((r) => [r.slug, r]));
   }
   if (!memorialsCache.has(DEMO_MEMORIAL_SLUG)) {
     const seeded = seedMemorials().get(DEMO_MEMORIAL_SLUG)!;
@@ -123,22 +119,17 @@ async function loadMemorials(): Promise<Map<string, AeternaMemorial>> {
 
 async function saveMemorials(): Promise<void> {
   if (!memorialsCache) return;
-  await writeFile(MEMORIALS_FILE, JSON.stringify([...memorialsCache.values()], null, 2));
+  await saveJsonStore(MEMORIALS_KEY, [...memorialsCache.values()]);
 }
 
 async function loadOrders(): Promise<OrderRow[]> {
   if (ordersCache) return ordersCache;
-  await mkdir(config.dataDir, { recursive: true });
-  try {
-    ordersCache = JSON.parse(await readFile(ORDERS_FILE, "utf8")) as OrderRow[];
-  } catch {
-    ordersCache = [];
-  }
+  ordersCache = await loadJsonStore<OrderRow[]>(ORDERS_KEY, []);
   return ordersCache;
 }
 
 async function saveOrders(): Promise<void> {
-  await writeFile(ORDERS_FILE, JSON.stringify(ordersCache ?? [], null, 2));
+  await saveJsonStore(ORDERS_KEY, ordersCache ?? []);
 }
 
 export function listParishes(): Parish[] {

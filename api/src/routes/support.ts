@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { resolvePriestParishId } from "../services/mass-candle-store.js";
-import { getAdminFromToken } from "../services/priest-access-store.js";
+import { resolveAdminFromToken } from "../services/priest-access-store.js";
 import {
   createThreadForParish,
   getThread,
@@ -41,8 +41,8 @@ async function requirePriest(req: FastifyRequest, reply: FastifyReply): Promise<
   return parishId;
 }
 
-function requireAdmin(req: FastifyRequest, reply: FastifyReply): boolean {
-  if (!getAdminFromToken(adminToken(req))) {
+async function requireAdmin(req: FastifyRequest, reply: FastifyReply): Promise<boolean> {
+  if (!(await resolveAdminFromToken(adminToken(req)))) {
     reply.status(401).send({ success: false, error: { message: "Reikalingas administratoriaus prisijungimas" } });
     return false;
   }
@@ -124,12 +124,12 @@ export async function priestSupportRoutes(app: FastifyInstance) {
 
 export async function adminSupportRoutes(app: FastifyInstance) {
   app.get("/api/v1/admin/support/unread", async (req, reply) => {
-    if (!requireAdmin(req, reply)) return;
+    if (!(await requireAdmin(req, reply))) return;
     return { success: true, data: { count: await unreadCountForAdmin() } };
   });
 
   app.get<{ Querystring: { parishId?: string } }>("/api/v1/admin/support/threads", async (req, reply) => {
-    if (!requireAdmin(req, reply)) return;
+    if (!(await requireAdmin(req, reply))) return;
     const { parishId } = req.query;
     if (parishId) {
       return { success: true, data: await listThreadsForParish(parishId) };
@@ -140,7 +140,7 @@ export async function adminSupportRoutes(app: FastifyInstance) {
   app.post<{ Body: CreateSupportThreadInput & { parishId: string; authorName?: string } }>(
     "/api/v1/admin/support/threads",
     async (req, reply) => {
-      if (!requireAdmin(req, reply)) return;
+      if (!(await requireAdmin(req, reply))) return;
       const { parishId } = req.body ?? {};
       if (!parishId) {
         return reply.status(400).send({ success: false, error: { message: "parishId privalomas" } });
@@ -159,7 +159,7 @@ export async function adminSupportRoutes(app: FastifyInstance) {
   );
 
   app.get<{ Params: { id: string } }>("/api/v1/admin/support/threads/:id", async (req, reply) => {
-    if (!requireAdmin(req, reply)) return;
+    if (!(await requireAdmin(req, reply))) return;
     const data = await getThread(req.params.id);
     if (!data) {
       return reply.status(404).send({ success: false, error: { message: "Pokalbis nerastas" } });
@@ -171,7 +171,7 @@ export async function adminSupportRoutes(app: FastifyInstance) {
   app.post<{ Params: { id: string }; Body: PostSupportMessageInput }>(
     "/api/v1/admin/support/threads/:id/messages",
     async (req, reply) => {
-      if (!requireAdmin(req, reply)) return;
+      if (!(await requireAdmin(req, reply))) return;
       try {
         const data = await postMessage(
           req.params.id,
@@ -192,7 +192,7 @@ export async function adminSupportRoutes(app: FastifyInstance) {
   app.patch<{ Params: { id: string }; Body: UpdateSupportThreadInput }>(
     "/api/v1/admin/support/threads/:id",
     async (req, reply) => {
-      if (!requireAdmin(req, reply)) return;
+      if (!(await requireAdmin(req, reply))) return;
       const thread = await updateThreadStatus(req.params.id, req.body ?? {});
       if (!thread) {
         return reply.status(404).send({ success: false, error: { message: "Pokalbis nerastas" } });
@@ -202,7 +202,7 @@ export async function adminSupportRoutes(app: FastifyInstance) {
   );
 
   app.patch<{ Params: { id: string } }>("/api/v1/admin/support/threads/:id/read", async (req, reply) => {
-    if (!requireAdmin(req, reply)) return;
+    if (!(await requireAdmin(req, reply))) return;
     await markThreadRead(req.params.id, "admin");
     return { success: true, data: { ok: true } };
   });

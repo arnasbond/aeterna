@@ -504,6 +504,56 @@ export async function fetchMemorialCandles(slug: string) {
   return parse<VirtualCandle[]>(r);
 }
 
+export type GuestbookEntry = {
+  id: string;
+  memorialSlug: string;
+  authorName: string;
+  message: string;
+  status: "pending" | "approved" | "rejected";
+  createdAt: string;
+  reviewedAt: string | null;
+};
+
+export async function fetchMemorialGuestbook(slug: string) {
+  const r = await fetch(`${base()}/api/v1/memorials/${encodeURIComponent(slug)}/guestbook`, {
+    cache: "no-store",
+  });
+  return parse<GuestbookEntry[]>(r);
+}
+
+export async function postMemorialGuestbook(slug: string, payload: { authorName: string; message: string }) {
+  const r = await fetch(`${base()}/api/v1/memorials/${encodeURIComponent(slug)}/guestbook`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  return parse<{ id: string; message: string }>(r);
+}
+
+export async function fetchOwnerGuestbook(slug: string) {
+  const r = await fetch(`${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}/guestbook`, {
+    headers: userHeaders(),
+    cache: "no-store",
+  });
+  return parse<GuestbookEntry[]>(r);
+}
+
+export async function moderateGuestbookEntry(
+  slug: string,
+  entryId: string,
+  status: "approved" | "rejected"
+) {
+  const r = await fetch(
+    `${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}/guestbook/${encodeURIComponent(entryId)}`,
+    {
+      method: "PATCH",
+      headers: { ...userHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    }
+  );
+  return parse<GuestbookEntry>(r);
+}
+
 export async function submitPriestAccessRequest(payload: {
   parishId: string;
   priestName: string;

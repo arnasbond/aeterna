@@ -23,6 +23,8 @@ import {
   lightCandle,
   listCandlesForMemorial,
 } from "../services/mass-candle-store.js";
+import { addGuestbookEntry, listApprovedGuestbook } from "../services/guestbook-store.js";
+import type { CreateGuestbookInput } from "../types/guestbook.js";
 import { priestRoutes } from "./priest.js";
 import { adminRoutes } from "./admin.js";
 import { adminSupportRoutes, priestSupportRoutes } from "./support.js";
@@ -100,7 +102,7 @@ export async function apiRoutes(app: FastifyInstance) {
     try {
       const auth = req.headers.authorization;
       const token = auth?.startsWith("Bearer ") ? auth.slice(7) : undefined;
-      const userId = getUserIdFromToken(token);
+      const userId = await getUserIdFromToken(token);
       const memorial = await createMemorial(body, userId);
       return { success: true, data: memorial };
     } catch (e) {
@@ -124,7 +126,7 @@ export async function apiRoutes(app: FastifyInstance) {
     }
     const auth = req.headers.authorization;
     const token = auth?.startsWith("Bearer ") ? auth.slice(7) : undefined;
-    const userId = getUserIdFromToken(token);
+    const userId = await getUserIdFromToken(token);
     const row = await setMemorialLocation(req.params.slug, lat, lng, userId);
     if (!row) {
       return reply.status(404).send({
@@ -207,6 +209,39 @@ export async function apiRoutes(app: FastifyInstance) {
     }
     return { success: true, data: { slug, profileUrl: `/m/${slug}` } };
   });
+
+  app.get<{ Params: { slug: string } }>("/api/v1/memorials/:slug/guestbook", async (req, reply) => {
+    const memorial = await getMemorialPublic(req.params.slug);
+    if (!memorial) {
+      return reply.status(404).send({ success: false, error: { message: "Profilis nerastas" } });
+    }
+    return { success: true, data: await listApprovedGuestbook(req.params.slug) };
+  });
+
+  app.post<{ Params: { slug: string }; Body: CreateGuestbookInput }>(
+    "/api/v1/memorials/:slug/guestbook",
+    async (req, reply) => {
+      const memorial = await getMemorialPublic(req.params.slug);
+      if (!memorial) {
+        return reply.status(404).send({ success: false, error: { message: "Profilis nerastas" } });
+      }
+      try {
+        const row = await addGuestbookEntry(req.params.slug, req.body ?? { authorName: "", message: "" });
+        return {
+          success: true,
+          data: {
+            id: row.id,
+            message: "Ačiū. Jūsų užuojauta perduota šeimai — bus rodoma po patvirtinimo.",
+          },
+        };
+      } catch (e) {
+        return reply.status(400).send({
+          success: false,
+          error: { message: e instanceof Error ? e.message : "Nepavyko išsaugoti" },
+        });
+      }
+    }
+  );
 
   app.post<{ Body: LightCandleInput }>("/api/v1/candles/light", async (req, reply) => {
     try {

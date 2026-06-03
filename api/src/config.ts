@@ -28,4 +28,7 @@ export const config = {
    * Įjungti vėliau: AETERNA_REQUIRE_PASSWORDS=1 (ir web: NEXT_PUBLIC_AETERNA_REQUIRE_PASSWORDS=1)
    */
   requirePasswords: process.env.AETERNA_REQUIRE_PASSWORDS === "1",
+  /** Resend.com — el. pašto OTP klebonams */
+  resendApiKey: process.env.RESEND_API_KEY || "",
+  emailFrom: process.env.AETERNA_EMAIL_FROM || "AETERNA <onboarding@resend.dev>",
 };

@@ -1,6 +1,8 @@
 import { createHash, randomInt, randomUUID } from "node:crypto";
 import { config } from "../config.js";
 import { loadJsonStore, saveJsonStore } from "./persistent-json-store.js";
+import { getParish } from "./aeterna-store.js";
+import { sendPriestOtpEmail } from "./email-service.js";
 import { isApprovedPriestEmail } from "./priest-access-store.js";
 import { createPriestSession } from "./priest-session-store.js";
 
@@ -59,13 +61,19 @@ export async function requestPriestOtp(
   });
   await saveOtps(entries);
 
-  const showDev =
-    !config.requirePasswords || config.testLoginEnabled || process.env.AETERNA_OTP_DEV === "1";
-  const message = showDev
-    ? `Kodas sugeneruotas (testavimo režimas: ${code}). Production — el. laiškas.`
-    : "Jei el. paštas patvirtintas, prisijungimo kodas išsiųstas (MVP: tikrinama serverio žurnale).";
+  const parish = getParish(parishId);
+  const emailed = await sendPriestOtpEmail(normalized, code, parish?.title ?? parishId);
 
-  if (!showDev) {
+  const showDev =
+    !emailed &&
+    (!config.requirePasswords || config.testLoginEnabled || process.env.AETERNA_OTP_DEV === "1");
+  const message = emailed
+    ? "Prisijungimo kodas išsiųstas el. paštu."
+    : showDev
+      ? `Kodas sugeneruotas (testavimo režimas: ${code}).`
+      : "Jei el. paštas patvirtintas, prisijungimo kodas išsiųstas.";
+
+  if (!emailed && !showDev) {
     console.info(`[priest-otp] ${normalized} @ ${parishId} code=${code}`);
   }
 

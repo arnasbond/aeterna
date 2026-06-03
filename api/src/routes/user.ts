@@ -6,6 +6,10 @@ import {
   setMemorialLocation,
   updateMemorialByOwner,
 } from "../services/aeterna-store.js";
+import {
+  listGuestbookForOwner,
+  setGuestbookEntryStatus,
+} from "../services/guestbook-store.js";
 import type { CreateMemorialInput } from "../types/aeterna.js";
 import type { UpdateMemorialInput, UserLoginInput, UserRegisterInput } from "../types/user.js";
 import { config } from "../config.js";
@@ -24,12 +28,12 @@ function userTokenFromRequest(req: FastifyRequest): string | undefined {
   return typeof h === "string" ? h : undefined;
 }
 
-function userIdFromRequest(req: FastifyRequest): string | null {
+async function userIdFromRequest(req: FastifyRequest): Promise<string | null> {
   return getUserIdFromToken(userTokenFromRequest(req));
 }
 
-function requireUser(req: FastifyRequest, reply: FastifyReply): string | null {
-  const id = userIdFromRequest(req);
+async function requireUser(req: FastifyRequest, reply: FastifyReply): Promise<string | null> {
+  const id = await userIdFromRequest(req);
   if (!id) {
     reply.status(401).send({
       success: false,
@@ -93,7 +97,7 @@ export async function userRoutes(app: FastifyInstance) {
   });
 
   app.get("/api/v1/auth/me", async (req, reply) => {
-    const userId = requireUser(req, reply);
+    const userId = await requireUser(req, reply);
     if (!userId) return;
     const user = await getUserById(userId);
     if (!user) {
@@ -103,7 +107,7 @@ export async function userRoutes(app: FastifyInstance) {
   });
 
   app.get("/api/v1/user/memorials", async (req, reply) => {
-    const userId = requireUser(req, reply);
+    const userId = await requireUser(req, reply);
     if (!userId) return;
     const list = await listMemorialsByUserId(userId);
     return {
@@ -124,7 +128,7 @@ export async function userRoutes(app: FastifyInstance) {
   });
 
   app.get<{ Params: { slug: string } }>("/api/v1/user/memorials/:slug", async (req, reply) => {
-    const userId = requireUser(req, reply);
+    const userId = await requireUser(req, reply);
     if (!userId) return;
     const row = await getMemorialBySlug(req.params.slug);
     if (!row || row.userId !== userId) {
@@ -136,7 +140,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.patch<{ Params: { slug: string }; Body: UpdateMemorialInput }>(
     "/api/v1/user/memorials/:slug",
     async (req, reply) => {
-      const userId = requireUser(req, reply);
+      const userId = await requireUser(req, reply);
       if (!userId) return;
       const row = await updateMemorialByOwner(req.params.slug, userId, req.body ?? {});
       if (!row) {
@@ -150,7 +154,7 @@ export async function userRoutes(app: FastifyInstance) {
   );
 
   app.post<{ Body: CreateMemorialInput }>("/api/v1/user/memorials", async (req, reply) => {
-    const userId = requireUser(req, reply);
+    const userId = await requireUser(req, reply);
     if (!userId) return;
     const body = req.body;
     if (!body?.parishId || !body?.fullName?.trim()) {
@@ -174,7 +178,7 @@ export async function userRoutes(app: FastifyInstance) {
     Params: { slug: string };
     Body: { lat?: number; lng?: number };
   }>("/api/v1/user/memorials/:slug/location", async (req, reply) => {
-    const userId = requireUser(req, reply);
+    const userId = await requireUser(req, reply);
     if (!userId) return;
     const { lat, lng } = req.body ?? {};
     if (typeof lat !== "number" || typeof lng !== "number") {
@@ -191,5 +195,35 @@ export async function userRoutes(app: FastifyInstance) {
       });
     }
     return { success: true, data: { geoLocation: row.geoLocation } };
+  });
+
+  app.get<{ Params: { slug: string } }>("/api/v1/user/memorials/:slug/guestbook", async (req, reply) => {
+    const userId = await requireUser(req, reply);
+    if (!userId) return;
+    const list = await listGuestbookForOwner(req.params.slug, userId);
+    if (list.length === 0) {
+      const row = await getMemorialBySlug(req.params.slug);
+      if (!row || row.userId !== userId) {
+        return reply.status(404).send({ success: false, error: { message: "Profilis nerastas" } });
+      }
+    }
+    return { success: true, data: list };
+  });
+
+  app.patch<{
+    Params: { slug: string; id: string };
+    Body: { status?: "approved" | "rejected" };
+  }>("/api/v1/user/memorials/:slug/guestbook/:id", async (req, reply) => {
+    const userId = await requireUser(req, reply);
+    if (!userId) return;
+    const status = req.body?.status;
+    if (status !== "approved" && status !== "rejected") {
+      return reply.status(400).send({ success: false, error: { message: "status: approved arba rejected" } });
+    }
+    const row = await setGuestbookEntryStatus(req.params.slug, req.params.id, userId, status);
+    if (!row) {
+      return reply.status(404).send({ success: false, error: { message: "Įrašas nerastas" } });
+    }
+    return { success: true, data: row };
   });
 }

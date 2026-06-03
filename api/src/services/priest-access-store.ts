@@ -3,6 +3,7 @@ import { config } from "../config.js";
 import type { PriestAccessRequest, PriestAccessRequestInput } from "../types/aeterna.js";
 import { getParish } from "./aeterna-store.js";
 import { loadJsonStore, saveJsonStore } from "./persistent-json-store.js";
+import { createAdminSession, getAdminFromTokenSync, resolveAdminFromToken as resolveAdminSessionInKv } from "./admin-session-store.js";
 
 /** Laikina — pašalinti prieš production (žr. config.testLoginEnabled) */
 export function isTestLoginPassword(password: string): boolean {
@@ -15,8 +16,6 @@ const CREDENTIALS_KEY = "priest-credentials";
 const ADMIN_PASSWORD = process.env.AETERNA_ADMIN_PASSWORD || "admin-aeterna-2026";
 const PASSWORD_SALT = process.env.AETERNA_PASSWORD_SALT || "aeterna-priest-v1";
 const TEMP_PASSWORD_TTL_MS = Number(process.env.PRIEST_TEMP_PASSWORD_HOURS || 72) * 60 * 60 * 1000;
-
-const adminTokens = new Map<string, number>();
 
 type PriestCredential = {
   id: string;
@@ -170,24 +169,18 @@ export async function verifyPriestTemporaryPassword(
   return true;
 }
 
-export function adminLogin(password: string): string | null {
+export async function adminLogin(password: string): Promise<string | null> {
   if (!config.requirePasswords) {
-    const token = createHash("sha256").update(`admin:${Date.now()}:${randomBytes(8)}`).digest("hex");
-    adminTokens.set(token, Date.now() + 12 * 60 * 60 * 1000);
-    return token;
+    return createAdminSession();
   }
   if (password !== ADMIN_PASSWORD && !isTestLoginPassword(password)) return null;
-  const token = createHash("sha256").update(`admin:${Date.now()}:${randomBytes(8)}`).digest("hex");
-  adminTokens.set(token, Date.now() + 12 * 60 * 60 * 1000);
-  return token;
+  return createAdminSession();
 }
 
 export function getAdminFromToken(token: string | undefined): boolean {
-  if (!token) return false;
-  const exp = adminTokens.get(token);
-  if (!exp || exp < Date.now()) {
-    adminTokens.delete(token);
-    return false;
-  }
-  return true;
+  return getAdminFromTokenSync(token);
+}
+
+export async function resolveAdminFromToken(token: string | undefined): Promise<boolean> {
+  return resolveAdminSessionInKv(token);
 }

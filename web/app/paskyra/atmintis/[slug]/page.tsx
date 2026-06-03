@@ -5,9 +5,12 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   clearUserToken,
+  fetchOwnerGuestbook,
   fetchUserMemorial,
   getUserToken,
+  moderateGuestbookEntry,
   updateUserMemorial,
+  type GuestbookEntry,
   type OwnedMemorialDetail,
 } from "@/lib/api";
 
@@ -27,6 +30,8 @@ export default function EditMemorialPage() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [guestbook, setGuestbook] = useState<GuestbookEntry[]>([]);
+  const [modBusy, setModBusy] = useState<string | null>(null);
 
   useEffect(() => {
     if (!slug || !getUserToken()) {
@@ -44,7 +49,9 @@ export default function EditMemorialPage() {
         setFarewellMessage(m.farewellMessage ?? "");
         setVideoUrl(m.videoUrl ?? "");
         setPortraitUrl(m.portraitUrl ?? "");
+        return fetchOwnerGuestbook(slug);
       })
+      .then((gb) => setGuestbook(gb))
       .catch((e) => {
         if (!getUserToken()) {
           router.replace(`/prisijungti?next=${encodeURIComponent(`/paskyra/atmintis/${slug}`)}`);
@@ -144,6 +151,56 @@ export default function EditMemorialPage() {
           {busy ? "Saugoma…" : "Išsaugoti pakeitimus"}
         </button>
       </form>
+
+      {guestbook.some((g) => g.status === "pending") && (
+        <div className="ae-card" style={{ marginTop: "2rem", padding: "1.25rem" }}>
+          <h2 style={{ margin: "0 0 1rem", fontSize: "1.05rem" }}>Užuojautų moderavimas</h2>
+          <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+            {guestbook
+              .filter((g) => g.status === "pending")
+              .map((g) => (
+                <li key={g.id} style={{ borderTop: "1px solid #eee", padding: "0.75rem 0" }}>
+                  <strong>{g.authorName}</strong>
+                  <p style={{ margin: "0.35rem 0", whiteSpace: "pre-wrap", fontSize: "0.92rem" }}>{g.message}</p>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                    <button
+                      type="button"
+                      className="ae-btn ae-btn--primary"
+                      disabled={modBusy === g.id}
+                      onClick={async () => {
+                        setModBusy(g.id);
+                        try {
+                          await moderateGuestbookEntry(slug, g.id, "approved");
+                          setGuestbook(await fetchOwnerGuestbook(slug));
+                        } finally {
+                          setModBusy(null);
+                        }
+                      }}
+                    >
+                      Patvirtinti
+                    </button>
+                    <button
+                      type="button"
+                      className="ae-btn ae-btn--outline"
+                      disabled={modBusy === g.id}
+                      onClick={async () => {
+                        setModBusy(g.id);
+                        try {
+                          await moderateGuestbookEntry(slug, g.id, "rejected");
+                          setGuestbook(await fetchOwnerGuestbook(slug));
+                        } finally {
+                          setModBusy(null);
+                        }
+                      }}
+                    >
+                      Atmesti
+                    </button>
+                  </div>
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
 
       <p className="ae-hint" style={{ textAlign: "center", marginTop: "1.5rem" }}>
         <button
