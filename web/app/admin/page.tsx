@@ -48,7 +48,10 @@ export default function AdminDashboardPage() {
       router.replace("/admin/login");
       return;
     }
-    load().catch(() => router.replace("/admin/login"));
+    load().catch(() => {
+      clearAdminToken();
+      router.replace("/admin/login");
+    });
   }, [router]);
 
   async function approve(id: string) {

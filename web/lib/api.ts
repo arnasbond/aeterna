@@ -625,18 +625,18 @@ export async function fetchPendingMemorials() {
 }
 
 export async function approveMemorial(slug: string) {
-  const r = await fetch(`${base()}/api/v1/admin/memorials/${encodeURIComponent(slug)}/approve`, {
-    method: "POST",
-    headers: adminHeaders(),
-  });
+  const r = await fetch(
+    `${base()}/api/v1/admin/memorials/${encodeURIComponent(slug)}/approve`,
+    adminPostInit()
+  );
   return parse<{ slug: string; moderationStatus: string }>(r);
 }
 
 export async function rejectMemorial(slug: string) {
-  const r = await fetch(`${base()}/api/v1/admin/memorials/${encodeURIComponent(slug)}/reject`, {
-    method: "POST",
-    headers: adminHeaders(),
-  });
+  const r = await fetch(
+    `${base()}/api/v1/admin/memorials/${encodeURIComponent(slug)}/reject`,
+    adminPostInit()
+  );
   return parse<{ slug: string; moderationStatus: string }>(r);
 }
 
@@ -658,6 +658,14 @@ function adminHeaders(): HeadersInit {
   return t ? { Authorization: `Bearer ${t}` } : {};
 }
 
+function adminPostInit(): RequestInit {
+  return {
+    method: "POST",
+    headers: { ...adminHeaders(), "Content-Type": "application/json" },
+    body: "{}",
+  };
+}
+
 export async function adminLogin(password: string) {
   const r = await fetch(`${base()}/api/v1/admin/login`, {
     method: "POST",
@@ -676,10 +684,10 @@ export async function fetchPriestAccessRequests() {
 }
 
 export async function approvePriestRequest(id: string) {
-  const r = await fetch(`${base()}/api/v1/admin/priest-requests/${encodeURIComponent(id)}/approve`, {
-    method: "POST",
-    headers: adminHeaders(),
-  });
+  const r = await fetch(
+    `${base()}/api/v1/admin/priest-requests/${encodeURIComponent(id)}/approve`,
+    adminPostInit()
+  );
   return parse<{
     request: PriestAccessRequest;
     temporaryPassword: string;
@@ -689,10 +697,10 @@ export async function approvePriestRequest(id: string) {
 }
 
 export async function rejectPriestRequest(id: string) {
-  const r = await fetch(`${base()}/api/v1/admin/priest-requests/${encodeURIComponent(id)}/reject`, {
-    method: "POST",
-    headers: adminHeaders(),
-  });
+  const r = await fetch(
+    `${base()}/api/v1/admin/priest-requests/${encodeURIComponent(id)}/reject`,
+    adminPostInit()
+  );
   return parse<PriestAccessRequest>(r);
 }
 

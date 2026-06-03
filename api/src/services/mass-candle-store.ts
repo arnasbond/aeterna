@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { config } from "../config.js";
+import { DEMO_PARISH_ID } from "../data/lt-parishes.js";
 import type {
   LightCandleInput,
   MassBookingInput,
@@ -29,7 +30,7 @@ let massesCache: MassSchedule[] | null = null;
 let candlesCache: VirtualCandle[] | null = null;
 
 function seedMasses(): MassSchedule[] {
-  const parishId = "parish-vilnius-cathedral";
+  const parishId = DEMO_PARISH_ID;
   const base = new Date();
   base.setDate(base.getDate() + ((7 - base.getDay()) % 7) + 7);
   const d = base.toISOString().slice(0, 10);
