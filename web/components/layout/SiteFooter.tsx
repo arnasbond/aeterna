@@ -27,10 +27,13 @@ export function SiteFooter() {
               <Link href="/#kaip-veikia">Kaip veikia</Link>
             </li>
             <li>
-              <Link href="/m/ona-demo">Demo kapavietė</Link>
+              <Link href="/m/ona-demo">Pavyzdinis metraštis</Link>
             </li>
             <li>
-              <Link href="/qr-ploksteles">QR plokštelės</Link>
+              <Link href="/qr-ploksteles">Atminimo plokštelės</Link>
+            </li>
+            <li>
+              <Link href="/#apie">Apie iniciatyvą</Link>
             </li>
           </ul>
         </div>

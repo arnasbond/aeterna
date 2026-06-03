@@ -4,10 +4,16 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const NAV = [
+  { href: "/#apie", label: "Apie iniciatyvą" },
+  { href: "/qr-ploksteles", label: "Atminimo plokštelės", highlight: true },
   { href: "/parishes", label: "Parapijos" },
   { href: "/#misios", label: "Šv. Mišių užsakymas" },
   { href: "/#zvakute", label: "Uždegti žvakutę" },
 ] as const;
+
+const EXAMPLE = "/m/ona-demo";
+const EXAMPLE_LABEL = "Kaip atrodo skaitmeninis atminimas";
+const EXAMPLE_LABEL_SHORT = "Gyvas pavyzdys";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -23,21 +29,29 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="ch-header">
+      <header className="ch-header ch-header--compact">
         <div className="ch-header__inner">
-          <Link href="/" className="ch-logo" onClick={close}>
+          <Link href="/" className="ch-logo chronicle-serif" onClick={close}>
             <strong>AETERNA</strong>
           </Link>
 
           <nav className="ch-nav" aria-label="Pagrindinis meniu">
             {NAV.map((item) => (
-              <Link key={item.href} href={item.href}>
+              <Link
+                key={item.href}
+                href={item.href}
+                className={"highlight" in item && item.highlight ? "ch-nav__plates" : undefined}
+              >
                 {item.label}
               </Link>
             ))}
           </nav>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="ch-header__actions">
+            <Link href={EXAMPLE} className="ch-header__example" onClick={close} title={EXAMPLE_LABEL}>
+              <span className="ch-header__example-long">{EXAMPLE_LABEL}</span>
+              <span className="ch-header__example-short">{EXAMPLE_LABEL_SHORT}</span>
+            </Link>
             <Link href="/wizard" className="ch-header__cta">
               Sukurti atminimo puslapį
             </Link>
@@ -60,10 +74,18 @@ export function SiteHeader() {
         <div className="ch-mobile-drawer__backdrop" onClick={close} aria-hidden />
         <div className="ch-mobile-drawer__panel">
           {NAV.map((item) => (
-            <Link key={item.href} href={item.href} onClick={close}>
+            <Link
+              key={item.href}
+              href={item.href}
+              className={"highlight" in item && item.highlight ? "ch-mobile-drawer__plates" : undefined}
+              onClick={close}
+            >
               {item.label}
             </Link>
           ))}
+          <Link href={EXAMPLE} onClick={close}>
+            {EXAMPLE_LABEL}
+          </Link>
           <Link href="/wizard" className="ch-btn ch-btn--primary ch-btn--block" style={{ marginTop: "1rem" }} onClick={close}>
             Sukurti atminimo puslapį
           </Link>

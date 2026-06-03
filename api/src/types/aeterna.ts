@@ -77,6 +77,7 @@ export type CreateMemorialInput = {
   birthDate?: string;
   deathDate?: string;
   biography?: string;
+  portraitUrl?: string;
   mediaGallery?: string[];
   videoUrl?: string;
   privacyStatus?: "public" | "private";

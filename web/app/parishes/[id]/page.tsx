@@ -141,8 +141,8 @@ export default function ParishHubPage() {
           </a>
           <Link href="/m/ona-demo" className="ae-card ae-parish-hub-card">
             <span className="ae-parish-hub-icon">▣</span>
-            <h3>Demo memorialas</h3>
-            <p>Šiltas demo profilis — močiutės Stasės atmintis su nuotraukomis ir žvakutėmis.</p>
+            <h3>Pavyzdinis metraštis</h3>
+            <p>Šiltas gyvas pavyzdys — močiutės Stasės atmintis su nuotraukomis ir žvakutėmis.</p>
           </Link>
         </div>
       </section>

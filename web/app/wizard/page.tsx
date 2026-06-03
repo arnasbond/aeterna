@@ -9,6 +9,7 @@ import {
   fetchParishes,
   fetchUserMe,
   getUserToken,
+  uploadMemorialFile,
   type Parish,
 } from "@/lib/api";
 import { formatPrice, getPlateTier, MEMORIAL_PACKAGE_CENTS, packageTotalCents, type PlateTierId } from "@/lib/qr-plates";
@@ -55,7 +56,10 @@ function WizardInner() {
   const [birthDate, setBirthDate] = useState("");
   const [deathDate, setDeathDate] = useState("");
   const [biography, setBiography] = useState("");
+  const [portraitUrl, setPortraitUrl] = useState("");
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
   const [videoUrl, setVideoUrl] = useState("");
+  const [mediaBusy, setMediaBusy] = useState(false);
   const [parishId, setParishId] = useState(preParish);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -84,6 +88,51 @@ function WizardInner() {
     );
   }
 
+  async function handlePortraitFile(file: File | null) {
+    if (!file) return;
+    setMediaBusy(true);
+    setErr(null);
+    try {
+      const url = await uploadMemorialFile(file);
+      setPortraitUrl(url);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Nepavyko įkelti portreto");
+    } finally {
+      setMediaBusy(false);
+    }
+  }
+
+  async function handleGalleryFiles(files: FileList | null) {
+    if (!files?.length) return;
+    setMediaBusy(true);
+    setErr(null);
+    try {
+      const uploaded: string[] = [];
+      for (const file of Array.from(files)) {
+        uploaded.push(await uploadMemorialFile(file));
+      }
+      setGalleryUrls((prev) => [...prev, ...uploaded]);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Nepavyko įkelti nuotraukų");
+    } finally {
+      setMediaBusy(false);
+    }
+  }
+
+  async function handleVideoFile(file: File | null) {
+    if (!file) return;
+    setMediaBusy(true);
+    setErr(null);
+    try {
+      const url = await uploadMemorialFile(file);
+      setVideoUrl(url);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Nepavyko įkelti vaizdo įrašo");
+    } finally {
+      setMediaBusy(false);
+    }
+  }
+
   async function finish() {
     setBusy(true);
     setErr(null);
@@ -94,6 +143,8 @@ function WizardInner() {
         birthDate: birthDate || undefined,
         deathDate: deathDate || undefined,
         biography,
+        portraitUrl: portraitUrl || undefined,
+        mediaGallery: galleryUrls.length ? galleryUrls : undefined,
         videoUrl: videoUrl || undefined,
       });
       const pay = await checkout(parishId, packageTotalCents(plateTier?.id ?? null));
@@ -191,12 +242,71 @@ function WizardInner() {
           <>
             <h2 style={{ fontSize: "1.2rem" }}>2. Media</h2>
             <p style={{ fontSize: "0.9rem", color: "var(--ae-muted)", marginBottom: "1rem" }}>
-              Video nuoroda (YouTube / Vimeo). Nuotraukų įkėlimas — netrukus.
+              Įkelkite nuotraukas ir vaizdo įrašą tiesiai iš telefono galerijos. Failai saugomi saugioje debesų
+              saugykloje.
             </p>
-            <div className="ae-field">
-              <label>Video nuoroda</label>
-              <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} />
+
+            <div className="ae-field ae-wizard-upload">
+              <label>Portreto nuotrauka</label>
+              <label className="ae-wizard-upload__btn">
+                📁 Įkelti nuotrauką iš telefono galerijos
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  disabled={mediaBusy}
+                  onChange={(e) => {
+                    void handlePortraitFile(e.target.files?.[0] ?? null);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+              {portraitUrl && (
+                <p className="ae-wizard-upload__ok">✓ Portretas įkeltas</p>
+              )}
             </div>
+
+            <div className="ae-field ae-wizard-upload">
+              <label>Albumo nuotraukos</label>
+              <label className="ae-wizard-upload__btn">
+                📁 Įkelti nuotrauką iš telefono galerijos
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  hidden
+                  disabled={mediaBusy}
+                  onChange={(e) => {
+                    void handleGalleryFiles(e.target.files);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+              {galleryUrls.length > 0 && (
+                <p className="ae-wizard-upload__ok">✓ Įkelta nuotraukų: {galleryUrls.length}</p>
+              )}
+            </div>
+
+            <div className="ae-field ae-wizard-upload">
+              <label>Vaizdo įrašas (nebūtina)</label>
+              <label className="ae-wizard-upload__btn">
+                📁 Įkelti vaizdo įrašą iš telefono galerijos
+                <input
+                  type="file"
+                  accept="video/*"
+                  hidden
+                  disabled={mediaBusy}
+                  onChange={(e) => {
+                    void handleVideoFile(e.target.files?.[0] ?? null);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+              {videoUrl && <p className="ae-wizard-upload__ok">✓ Vaizdo įrašas įkeltas</p>}
+            </div>
+
+            {mediaBusy && <p className="ae-hint">Įkeliama…</p>}
+
             <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(1)}>
               Atgal
             </button>
@@ -204,6 +314,7 @@ function WizardInner() {
               type="button"
               className="ae-btn ae-btn--primary"
               style={{ width: "100%", marginTop: "0.5rem" }}
+              disabled={mediaBusy}
               onClick={() => advance(3)}
             >
               Toliau

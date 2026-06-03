@@ -3,15 +3,15 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const DEMO = "/m/ona-demo";
+const EXAMPLE = "/m/ona-demo";
 
 type Scene = "idle" | "scanning" | "memorial";
 
 type Props = {
-  demoQrUrl: string;
+  exampleQrUrl: string;
 };
 
-export function HomeHeroInteractive({ demoQrUrl }: Props) {
+export function HomeHeroInteractive({ exampleQrUrl }: Props) {
   const [scene, setScene] = useState<Scene>("idle");
 
   function simulateScan() {
@@ -34,7 +34,7 @@ export function HomeHeroInteractive({ demoQrUrl }: Props) {
           onClick={simulateScan}
           aria-label="Simuliuoti QR kodo skenavimą"
         >
-          <img src={demoQrUrl} alt="" width={72} height={72} />
+          <img src={exampleQrUrl} alt="" width={72} height={72} />
           <span>QR ant kapo</span>
         </button>
         {scene === "scanning" && <span className="ae-hero-scene__scan-line" aria-hidden />}
@@ -65,8 +65,8 @@ export function HomeHeroInteractive({ demoQrUrl }: Props) {
                 <small>1936 – 2024</small>
               </div>
               <p className="ae-hero-scene__memorial-text">Amžina atmintis šeimai — nuotraukos, video, žvakutė.</p>
-              <Link href={DEMO} className="ae-hero-scene__memorial-link">
-                Atidaryti demo →
+            <Link href={EXAMPLE} className="ae-hero-scene__memorial-link">
+                Apžiūrėti metraštį →
               </Link>
             </div>
           )}

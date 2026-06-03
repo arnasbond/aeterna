@@ -4,12 +4,16 @@ import { config } from "./config.js";
 import { bootstrapDataDir } from "./bootstrap-data.js";
 import { apiRoutes } from "./routes/index.js";
 import { appUpdateRoutes } from "./routes/app-update.js";
+import { mediaRoutes } from "./routes/media.js";
 import { jsonStoreBackend } from "./services/persistent-json-store.js";
 
 export async function buildApp(): Promise<FastifyInstance> {
   await bootstrapDataDir();
 
-  const app = Fastify({ logger: process.env.NODE_ENV !== "production" });
+  const app = Fastify({
+    logger: process.env.NODE_ENV !== "production",
+    bodyLimit: 10 * 1024 * 1024,
+  });
 
   await app.register(cors, {
     origin:
@@ -36,6 +40,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   }));
 
   await apiRoutes(app);
+  await mediaRoutes(app);
   await appUpdateRoutes(app);
   await app.ready();
   return app;

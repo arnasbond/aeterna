@@ -44,7 +44,7 @@ export default function DownloadAppPage() {
       <ol className="ae-download-page__steps">
         <li>Atsisiųskite APK ir atidarykite failą.</li>
         <li>Jei reikia — įjunkite „Įdiegti nežinomą programą“ šiam naršyklės ar failų šaltiniui.</li>
-        <li>Po įdiegimo atidarykite AETERNA — demo memorialas pasiekiamas iš karto.</li>
+        <li>Po įdiegimo atidarykite AETERNA — pavyzdinis metraštis pasiekiamas iš karto.</li>
       </ol>
 
       <div className="ae-download-page__share">
@@ -58,7 +58,7 @@ export default function DownloadAppPage() {
 
       <p style={{ textAlign: "center", marginTop: "2rem" }}>
         <Link href="/m/ona-demo" className="ae-btn ae-btn--outline">
-          Demo memorialas
+          Kaip atrodo skaitmeninis atminimas
         </Link>
       </p>
     </section>

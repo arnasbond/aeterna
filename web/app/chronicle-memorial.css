@@ -2,7 +2,9 @@
 
 .chronicle-memorial-page {
   --ch-card: #fcfbf7;
+  --ch-ivory: #fcfbf7;
   --ae-card: #fcfbf7;
+  --ch-line: rgba(212, 175, 55, 0.2);
   background: #fcfbf7;
   min-height: 100vh;
 }
@@ -31,10 +33,22 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.35);
-  margin-bottom: 0.65rem;
-  min-height: 2.25rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  margin-bottom: 0.5rem;
+  min-height: 2rem;
+}
+
+@media (max-width: 767px) {
+  .ch-memorial-top {
+    padding: 0.35rem 0;
+    margin-bottom: 0.35rem;
+    min-height: 1.75rem;
+  }
+
+  .ch-memorial {
+    padding-top: 0;
+  }
 }
 
 .ch-memorial-top .ch-logo strong {
@@ -120,7 +134,9 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
   margin: 1.25rem 0;
   padding: 1rem 1.15rem;
   border-left: 3px solid #d4af37;
-  background: rgba(30, 58, 30, 0.04);
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-left: 3px solid #d4af37;
   font-style: italic;
 }
 
@@ -159,7 +175,7 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
 .ch-memorial-board {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(212, 175, 55, 0.35);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .ch-memorial-board h2 {
@@ -198,27 +214,96 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
   cursor: pointer;
 }
 
-/* Seamless ivory — no white card panels on memorial */
+/* Seamless ivory — integrated layout, no white blocks */
 .chronicle-memorial-page .ch-parish-card,
 .chronicle-memorial-page .ch-candle-glow,
 .chronicle-memorial-page .ch-sheet,
+.chronicle-memorial-page .ch-mass-book-form,
 .chronicle-memorial-page .vk-memorial-guestbook .ae-candle-item,
-.chronicle-memorial-page .vk-memorial-candle-form {
+.chronicle-memorial-page .vk-memorial-candle-form,
+.chronicle-memorial-page .ae-candles-list {
   background: #fcfbf7;
   box-shadow: none;
 }
 
 .chronicle-memorial-page .ch-parish-card,
 .chronicle-memorial-page .ch-candle-glow,
+.chronicle-memorial-page .ch-mass-book-form,
 .chronicle-memorial-page .vk-memorial-guestbook .ae-candle-item,
 .chronicle-memorial-page .vk-memorial-candle-form {
-  border: 1px solid rgba(212, 175, 55, 0.28);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 8px;
+}
+
+.chronicle-memorial-page .ch-sheet {
+  border-top: 2px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 -8px 32px rgba(30, 58, 30, 0.08);
+}
+
+.chronicle-memorial-page .ch-mass-book-form {
+  margin-top: 1rem;
+  padding: 1rem;
 }
 
 .chronicle-memorial-page .vk-memorial-candle-form {
   margin-top: 1rem;
   padding: 1rem 0 0;
   border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+.chronicle-memorial-page .vk-memorial-guestbook .ae-candle-item {
+  padding: 0.85rem 0;
+  margin-bottom: 0.5rem;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.chronicle-memorial-page .vk-memorial-guestbook .ae-candle-item:last-child {
+  border-bottom: none;
+}
+
+.chronicle-memorial-page .vk-memorial-candle-form .ch-btn,
+.chronicle-memorial-page .vk-memorial-candle-form .ae-btn {
+  background: transparent;
+  color: var(--ch-emerald, #1e3a1e);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.ch-fee-disclaimer {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--ch-muted, #5a6569);
+}
+
+.ch-sheet__lead {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ch-muted);
+}
+
+.ch-sheet__form {
+  margin-top: 1rem;
+}
+
+.ch-sheet__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0.75rem 0 0.35rem;
+}
+
+.ch-sheet__custom-field {
+  margin-top: 0.5rem;
+}
+
+.ch-sheet__cancel {
+  margin-top: 0.5rem;
 }
 
 .chronicle-memorial-page .vk-memorial-candle-form h3 {
@@ -244,4 +329,33 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
 
 .chronicle-memorial-page .ch-amount-pill {
   background: #fcfbf7;
+}
+
+.ch-memorial-video {
+  margin: 1.75rem 0;
+}
+
+.ch-memorial-video h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+
+.ch-memorial-video__wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: #000;
+}
+
+.ch-memorial-video__wrap iframe,
+.ch-memorial-video__wrap video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  object-fit: contain;
 }

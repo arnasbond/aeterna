@@ -7,6 +7,7 @@ import { MemorialMassCalendar } from "@/components/memorial/MemorialMassCalendar
 import { MemorialGuestbook } from "@/components/MemorialGuestbook";
 import { VirtualCandles } from "@/components/VirtualCandles";
 import { parishCardImage } from "@/lib/parish-image";
+import { youtubeEmbedSrc } from "@/lib/video";
 import type { MemorialPublic } from "@/lib/api";
 
 function formatYears(birth: string | null, death: string | null) {
@@ -21,12 +22,14 @@ function formatYears(birth: string | null, death: string | null) {
   return `${year(birth)} – ${year(death)}`;
 }
 
-function epitaphFromBio(biography: string, fullName: string) {
+function epitaphFromBio(biography: string): string | null {
+  if (!biography?.trim()) return null;
   const first = biography.split("\n\n").map((p) => p.trim()).filter(Boolean)[0] ?? "";
+  if (!first) return null;
   const dot = first.indexOf(". ");
   if (dot > 0 && dot <= 140) return first.slice(0, dot + 1);
   if (first.length <= 120) return first;
-  return `Amžina atmintis — ${fullName}`;
+  return null;
 }
 
 type Props = {
@@ -45,12 +48,13 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
     memorial.portraitUrl ?? memorial.mediaGallery[0] ?? memorial.parish.image;
   const gallery = memorial.mediaGallery;
   const firstName = memorial.fullName.split(" ")[0];
-  const epitaph = epitaphFromBio(memorial.biography ?? "", memorial.fullName);
+  const epitaph = epitaphFromBio(memorial.biography ?? "");
   const bioParagraphs = memorial.biography
     ? memorial.biography.split("\n\n").map((p) => p.trim()).filter(Boolean)
     : [];
   const parishImg = parishCardImage(memorial.parish.image, []);
   const location = geo ?? memorial.geoLocation;
+  const videoEmbed = memorial.videoUrl ? youtubeEmbedSrc(memorial.videoUrl) : null;
 
   useEffect(() => {
     if (!lightbox) return;
@@ -74,7 +78,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
   return (
     <article className="ch-memorial">
       <header className="ch-memorial-top">
-        <Link href="/" className="ch-logo">
+        <Link href="/" className="ch-logo chronicle-serif">
           <strong>AETERNA</strong>
         </Link>
         <Link href={`/parishes/${memorial.parish.id}`} className="ch-memorial-top__parish">
@@ -84,7 +88,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
 
       <section className="ch-memorial-hero">
         <div className="ch-memorial-arch">
-          <img src={portrait} alt="" className="ch-memorial-arch__img" referrerPolicy="no-referrer" />
+          <img src={portrait} alt={memorial.fullName} className="ch-memorial-arch__img" referrerPolicy="no-referrer" />
         </div>
         <h1 className="ch-memorial-name chronicle-serif">{memorial.fullName}</h1>
         <p className="ch-memorial-years">{formatYears(memorial.birthDate, memorial.deathDate)}</p>
@@ -127,6 +131,25 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
         <blockquote className="ch-memorial-quote">
           <p>„{memorial.farewellMessage}"</p>
         </blockquote>
+      )}
+
+      {memorial.videoUrl && (
+        <section className="ch-memorial-video">
+          <h2 className="chronicle-serif">Vaizdo įrašas</h2>
+          <div className="ch-memorial-video__wrap">
+            {videoEmbed ? (
+              <iframe
+                src={videoEmbed}
+                title={`${memorial.fullName} — vaizdo įrašas`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowFullScreen
+                loading="lazy"
+              />
+            ) : (
+              <video src={memorial.videoUrl} controls playsInline preload="metadata" />
+            )}
+          </div>
+        </section>
       )}
 
       {gallery.length > 0 && (

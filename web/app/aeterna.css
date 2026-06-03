@@ -2741,3 +2741,32 @@
   border: 1px solid #ccc;
   font: inherit;
 }
+
+.ae-wizard-upload__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  margin-top: 0.35rem;
+  border: 2px dashed rgba(107, 78, 156, 0.35);
+  border-radius: 10px;
+  background: rgba(240, 234, 248, 0.5);
+  color: var(--ae-primary-dark, #4a2f7a);
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.ae-wizard-upload__btn:hover {
+  border-color: var(--ae-primary, #6b4e9c);
+  background: rgba(240, 234, 248, 0.9);
+}
+
+.ae-wizard-upload__ok {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: #166534;
+}

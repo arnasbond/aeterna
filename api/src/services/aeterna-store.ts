@@ -235,6 +235,7 @@ export async function createMemorial(
     birthDate: input.birthDate ?? null,
     deathDate: input.deathDate ?? null,
     biography: input.biography ?? "",
+    portraitUrl: input.portraitUrl ?? input.mediaGallery?.[0] ?? null,
     mediaGallery: input.mediaGallery ?? [],
     videoUrl: input.videoUrl ?? null,
     geoLocation: null,

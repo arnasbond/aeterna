@@ -24,7 +24,7 @@ const STEPS = [
   },
 ] as const;
 
-const DEMO = "/m/ona-demo";
+const EXAMPLE = "/m/ona-demo";
 
 function PhonePreview({ screen }: { screen: (typeof STEPS)[number]["screen"] }) {
   if (screen === "scan") {
@@ -87,8 +87,8 @@ export function HomeHowItWorksInteractive() {
       </div>
 
       <p className="vk-section__cta">
-        <Link href={DEMO} className="vk-btn vk-btn--primary">
-          Išbandykite demo kapavietę →
+        <Link href={EXAMPLE} className="vk-btn vk-btn--primary">
+          Pamatyti gyvą pavyzdį →
         </Link>
       </p>
     </div>

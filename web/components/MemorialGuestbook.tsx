@@ -94,7 +94,7 @@ export function MemorialGuestbook({ slug }: { slug: string }) {
         </div>
         {msgErr && <p className="ae-error">{msgErr}</p>}
         {msgOk && <p style={{ color: "#166534", fontSize: "0.85rem", margin: "0.5rem 0 0" }}>{msgOk}</p>}
-        <button type="submit" className="ae-btn ae-btn--outline" disabled={msgBusy}>
+        <button type="submit" className="ch-btn ch-btn--outline ch-btn--block" disabled={msgBusy}>
           {msgBusy ? "Siunčiama…" : "Siųsti užuojautą"}
         </button>
       </form>

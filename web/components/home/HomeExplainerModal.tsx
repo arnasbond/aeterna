@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const DEMO = "/m/ona-demo";
+const EXAMPLE = "/m/ona-demo";
 
 export function HomeExplainerModal() {
   const [open, setOpen] = useState(false);
@@ -62,8 +62,8 @@ export function HomeExplainerModal() {
               />
             </div>
             <div className="ae-modal__actions">
-              <Link href={DEMO} className="vk-btn vk-btn--primary" onClick={() => setOpen(false)}>
-                Atidaryti demo memorialą
+              <Link href={EXAMPLE} className="vk-btn vk-btn--primary" onClick={() => setOpen(false)}>
+                Kaip atrodo skaitmeninis atminimas
               </Link>
               <Link href="/wizard" className="vk-btn vk-btn--outline" onClick={() => setOpen(false)}>
                 Sukurti atmintį

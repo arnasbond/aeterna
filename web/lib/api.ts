@@ -162,9 +162,40 @@ export type CreateMemorialPayload = {
   birthDate?: string;
   deathDate?: string;
   biography?: string;
+  portraitUrl?: string;
+  mediaGallery?: string[];
   videoUrl?: string;
   privacyStatus?: "public" | "private";
 };
+
+export async function uploadMemorialFile(file: File): Promise<string> {
+  const base64 = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const raw = reader.result;
+      if (typeof raw !== "string") {
+        reject(new Error("Nepavyko nuskaityti failo"));
+        return;
+      }
+      const data = raw.includes(",") ? raw.split(",")[1]! : raw;
+      resolve(data);
+    };
+    reader.onerror = () => reject(new Error("Nepavyko nuskaityti failo"));
+    reader.readAsDataURL(file);
+  });
+
+  const r = await fetch(`${base()}/api/v1/media/upload`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      filename: file.name,
+      contentType: file.type || "application/octet-stream",
+      data: base64,
+    }),
+  });
+  const data = await parse<{ url: string }>(r);
+  return data.url;
+}
 
 export async function createMemorial(payload: CreateMemorialPayload) {
   const token = getUserToken();

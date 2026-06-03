@@ -57,8 +57,13 @@
 
 @media (max-width: 767px) {
   .ch-header__inner {
-    padding: 0.4rem 0.75rem;
+    padding: 0.5rem 0.75rem;
     gap: 0.45rem;
+  }
+
+  .ch-header--compact .ch-header__inner {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   .ch-logo strong {
@@ -98,6 +103,10 @@
   text-transform: uppercase;
 }
 
+.ch-logo.chronicle-serif strong {
+  font-family: var(--font-playfair), "Merriweather", Georgia, serif;
+}
+
 .ch-nav {
   display: none;
   justify-content: center;
@@ -117,6 +126,91 @@
 .ch-nav a:hover {
   color: var(--ch-emerald);
   border-bottom-color: var(--ch-gold-soft);
+}
+
+.ch-nav__qr {
+  color: var(--ch-emerald) !important;
+  background: rgba(212, 175, 55, 0.12);
+  padding: 0.35rem 0.65rem !important;
+  border-radius: 999px;
+  border-bottom: none !important;
+  font-weight: 700;
+}
+
+.ch-nav__plates {
+  color: var(--ch-emerald) !important;
+  background: rgba(212, 175, 55, 0.15);
+  padding: 0.4rem 0.75rem !important;
+  border-radius: 999px;
+  border-bottom: none !important;
+  font-weight: 700;
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.35);
+}
+
+.ch-nav__qr:hover,
+.ch-nav__plates:hover {
+  background: rgba(212, 175, 55, 0.25);
+  border-bottom: none !important;
+}
+
+.ch-header__example {
+  display: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ch-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ch-header__example-short {
+  display: none;
+}
+
+.ch-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ch-mobile-drawer__plates {
+  font-weight: 700;
+  color: var(--ch-emerald);
+  background: rgba(212, 175, 55, 0.1);
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+}
+
+.ch-header__example:hover {
+  color: var(--ch-emerald);
+}
+
+@media (min-width: 900px) {
+  .ch-header__example {
+    display: inline-flex;
+  }
+
+  .ch-header__example-long {
+    display: inline;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 899px) {
+  .ch-header__example {
+    display: inline-flex;
+  }
+
+  .ch-header__example-long {
+    display: none;
+  }
+
+  .ch-header__example-short {
+    display: inline;
+  }
+}
+
+.ch-mobile-drawer__qr {
+  font-weight: 700;
+  color: var(--ch-emerald);
 }
 
 .ch-header__cta {
@@ -276,11 +370,11 @@
   max-width: 32rem;
   max-height: 90vh;
   overflow-y: auto;
-  background: var(--ch-card);
+  background: #fcfbf7;
   border-radius: 16px 16px 0 0;
   padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
-  border-top: 2px solid var(--ch-gold-soft);
-  box-shadow: 0 -12px 40px rgba(30, 58, 30, 0.12);
+  border-top: 2px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 -8px 32px rgba(30, 58, 30, 0.08);
 }
 
 .ch-sheet__handle {
@@ -306,24 +400,30 @@
 .ch-amount-pill {
   flex: 1;
   min-width: 5.5rem;
-  min-height: 3.25rem;
-  padding: 0.85rem 1rem;
-  border: 2px solid var(--ch-line);
-  background: var(--ch-ivory);
+  min-height: 3.5rem;
+  padding: 0.9rem 1rem;
+  border: 2px solid rgba(212, 175, 55, 0.2);
+  background: #fcfbf7;
   border-radius: 999px;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   cursor: pointer;
   color: var(--ch-charcoal);
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s, color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
 .ch-amount-pill--active {
-  border-color: var(--ch-gold);
-  background: rgba(212, 175, 55, 0.08);
-  color: var(--ch-emerald);
+  border-color: #d4af37;
+  background: #1e3a1e;
+  color: #fcfbf7;
   box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.45);
+}
+
+.ch-amount-pill--custom {
+  flex: 1.2;
+  font-size: 0.92rem;
+  letter-spacing: 0.01em;
 }
 
 .ch-fee-note {
@@ -374,10 +474,11 @@
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
-  padding: 0.85rem 1rem;
-  background: var(--ch-card);
-  border: 1px solid var(--ch-line);
-  border-radius: 8px;
+  padding: 0.85rem 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 0;
   margin-bottom: 0.5rem;
 }
 
@@ -402,12 +503,23 @@
 /* —— Parish card —— */
 .ch-parish-card {
   margin: 1.5rem 0;
-  padding: 1.15rem;
-  background: var(--ch-card);
-  border: 1px solid var(--ch-line);
-  border-radius: 8px;
+  padding: 1.15rem 0;
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 0;
   display: grid;
   gap: 0.75rem;
+}
+
+.ch-mass-book-form {
+  margin-top: 1rem;
+  padding: 1rem 0 0;
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 0;
 }
 
 .ch-parish-card__row {

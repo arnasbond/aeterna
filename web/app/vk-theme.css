@@ -1482,3 +1482,57 @@
     transition: none !important;
   }
 }
+
+/* —— Apie iniciatyvą —— */
+.vk-about-initiative {
+  background: linear-gradient(180deg, #faf8fc 0%, #f5f0fa 100%);
+}
+
+.vk-about-initiative__inner {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .vk-about-initiative__inner {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+.vk-about-initiative__lead {
+  text-align: left;
+  max-width: 38rem;
+}
+
+.vk-about-initiative__list {
+  margin: 1.25rem 0;
+}
+
+.vk-about-initiative__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.vk-btn--qr-highlight {
+  border-color: var(--vk-primary);
+  color: var(--vk-primary-dark);
+  font-weight: 700;
+}
+
+.vk-about-initiative__quote {
+  margin: 0;
+  padding: 1.5rem 1.25rem;
+  border-left: 4px solid #d4af37;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 0 12px 12px 0;
+  font-style: italic;
+  line-height: 1.7;
+  color: #4a2f7a;
+}
+
+.vk-about-initiative__quote p {
+  margin: 0;
+}

@@ -102,7 +102,7 @@ export function MemorialMassCalendar({ parishId, deceasedName }: Props) {
       </div>
 
       {showForm && selected && (
-        <form onSubmit={submit} style={{ marginTop: "1rem", padding: "1rem", background: "var(--ch-card)", border: "1px solid var(--ch-line)", borderRadius: 8 }}>
+        <form onSubmit={submit} className="ch-mass-book-form">
           <p style={{ margin: "0 0 0.75rem", fontWeight: 600 }}>{formatSlot(selected.dateTime)}</p>
           <div className="ae-field">
             <label>Maldos prašymas / intencija</label>

@@ -75,7 +75,7 @@ export function CandleSection() {
             {busy ? "Uždegiama…" : "Uždegti žvakutę ir pašventinti"}
           </button>
           <p className="ae-hint">
-            Demo: <strong>Stasė</strong>, 1936-05-12 — 2024-12-24
+            Pavyzdys: <strong>Stasė</strong>, 1936-05-12 — 2024-12-24
           </p>
         </form>
       </div>

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { DownloadAppButton } from "@/components/DownloadAppButton";
+import { AboutInitiative } from "@/components/home/AboutInitiative";
 import { HomeExplainerModal } from "@/components/home/HomeExplainerModal";
 import { HomeHeroInteractive } from "@/components/home/HomeHeroInteractive";
 import { HomeHowItWorksInteractive } from "@/components/home/HomeHowItWorksInteractive";
 
-const DEMO = "/m/ona-demo";
+const EXAMPLE = "/m/ona-demo";
 const siteBase = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://aeterna-web-six.vercel.app";
-const demoQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&color=4a2f7a&bgcolor=ffffff&data=${encodeURIComponent(`${siteBase}${DEMO}`)}`;
+const exampleQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&color=4a2f7a&bgcolor=ffffff&data=${encodeURIComponent(`${siteBase}${EXAMPLE}`)}`;
 
 const BENEFITS = [
   { icon: "✦", title: "Skaitmeninė atmintis", text: "Nuotraukos, vaizdo įrašai ir gyvenimo istorija" },
@@ -47,15 +48,17 @@ export function HomeLanding() {
               <Link href="/wizard" className="vk-btn vk-btn--primary vk-btn--lg">
                 Sukurti atmintį <span aria-hidden>→</span>
               </Link>
-              <Link href={DEMO} className="vk-btn vk-btn--outline vk-btn--lg">
-                Peržiūrėti demo
+              <Link href={EXAMPLE} className="vk-btn vk-btn--outline vk-btn--lg">
+                Kaip atrodo skaitmeninis atminimas
               </Link>
             </div>
           </div>
-          <HomeHeroInteractive demoQrUrl={demoQrUrl} />
+          <HomeHeroInteractive exampleQrUrl={exampleQrUrl} />
         </div>
         <HomeExplainerModal />
       </section>
+
+      <AboutInitiative />
 
       <section className="vk-section vk-section--soft" id="video">
         <div className="vk-container vk-section--center">
@@ -65,7 +68,7 @@ export function HomeLanding() {
             Kodėl verta išsaugoti artimųjų istorijas skaitmeninėje erdvėje — ir kaip QR kodas ant kapo tai
             padaro pasiekiamą bet kur, bet kada.
           </p>
-          <Link href={DEMO} className="vk-video-card">
+          <Link href={EXAMPLE} className="vk-video-card">
             <img
               src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=900&q=80"
               alt=""
@@ -73,7 +76,7 @@ export function HomeLanding() {
             <span className="vk-video-card__play" aria-hidden>
               ▶
             </span>
-            <span className="vk-video-card__label">Peržiūrėti demo memorialą</span>
+            <span className="vk-video-card__label">Pamatyti gyvą pavyzdį</span>
           </Link>
         </div>
       </section>
@@ -92,7 +95,7 @@ export function HomeLanding() {
       <section className="vk-section vk-section--lavender vk-qr-band">
         <div className="vk-container vk-qr-band__inner">
           <div className="vk-qr-band__code">
-            <img src={demoQrUrl} alt="Demo QR kodas" width={200} height={200} />
+            <img src={exampleQrUrl} alt="QR kodas memorialiniam puslapiui" width={200} height={200} />
             <p className="vk-qr-band__scan-hint">Nuskenuokite telefonu</p>
           </div>
           <div>
@@ -100,16 +103,16 @@ export function HomeLanding() {
             <h2 className="vk-title">
               Nuskenuokite QR kodą
               <br />
-              <span className="vk-title__sub">arba atidarykite demo naršyklėje</span>
+              <span className="vk-title__sub">arba apžiūrėkite metraštį naršyklėje</span>
             </h2>
             <ul className="vk-checklist">
               <li>Nuskenuokite QR kodą telefonu</li>
-              <li>Peržiūrėkite močiutės Stasės demo memorialą</li>
-              <li>Registracija nebūtina — tai demonstracinis profilis</li>
+              <li>Peržiūrėkite močiutės Stasės memorialinį metraštį</li>
+              <li>Registracija nebūtina — tai gyvas pavyzdys</li>
               <li>Nuotraukos, video, žvakutė ir navigacija iki kapo</li>
             </ul>
-            <Link href={DEMO} className="vk-btn vk-btn--primary">
-              Atidaryti demo kapavietę →
+            <Link href={EXAMPLE} className="vk-btn vk-btn--primary">
+              Apžiūrėti metraštį →
             </Link>
           </div>
         </div>
