@@ -1,6 +1,8 @@
 /* Memorial profile — ivory chronicle (mobile-first) */
 
 .chronicle-memorial-page {
+  --ch-card: #fcfbf7;
+  --ae-card: #fcfbf7;
   background: #fcfbf7;
   min-height: 100vh;
 }
@@ -28,13 +30,16 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 0;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
   border-bottom: 1px solid rgba(212, 175, 55, 0.35);
-  margin-bottom: 1rem;
+  margin-bottom: 0.65rem;
+  min-height: 2.25rem;
 }
 
 .ch-memorial-top .ch-logo strong {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
 }
 
 .ch-memorial-top__parish {
@@ -61,7 +66,7 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
   border-radius: 50% 50% 0 0 / 18% 18% 0 0;
   border: 1px solid rgba(212, 175, 55, 0.5);
   box-shadow: 0 8px 28px rgba(30, 58, 30, 0.08);
-  background: #fffef9;
+  background: #fcfbf7;
 }
 
 .ch-memorial-arch__img {
@@ -191,4 +196,52 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
   height: 2.5rem;
   border-radius: 50%;
   cursor: pointer;
+}
+
+/* Seamless ivory — no white card panels on memorial */
+.chronicle-memorial-page .ch-parish-card,
+.chronicle-memorial-page .ch-candle-glow,
+.chronicle-memorial-page .ch-sheet,
+.chronicle-memorial-page .vk-memorial-guestbook .ae-candle-item,
+.chronicle-memorial-page .vk-memorial-candle-form {
+  background: #fcfbf7;
+  box-shadow: none;
+}
+
+.chronicle-memorial-page .ch-parish-card,
+.chronicle-memorial-page .ch-candle-glow,
+.chronicle-memorial-page .vk-memorial-guestbook .ae-candle-item,
+.chronicle-memorial-page .vk-memorial-candle-form {
+  border: 1px solid rgba(212, 175, 55, 0.28);
+}
+
+.chronicle-memorial-page .vk-memorial-candle-form {
+  margin-top: 1rem;
+  padding: 1rem 0 0;
+  border-radius: 0;
+}
+
+.chronicle-memorial-page .vk-memorial-candle-form h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  text-align: left;
+  color: var(--ch-charcoal, #2c3338);
+}
+
+.chronicle-memorial-page .vk-memorial-candle-form > p {
+  margin: 0 0 1rem;
+  text-align: left;
+  font-size: 0.85rem;
+  color: var(--ch-muted, #5a6569);
+}
+
+.chronicle-memorial-page .ae-field input,
+.chronicle-memorial-page .ae-field textarea,
+.chronicle-memorial-page .ae-field select {
+  background: #fcfbf7;
+  border-color: rgba(212, 175, 55, 0.35);
+}
+
+.chronicle-memorial-page .ch-amount-pill {
+  background: #fcfbf7;
 }

@@ -78,12 +78,13 @@ export function MemorialCandleSheet({ slug, parishTitle, open, onClose, onSucces
           </div>
 
           <p style={{ fontSize: "0.85rem", fontWeight: 600, margin: "0.75rem 0 0.35rem" }}>Aukos suma</p>
-          <div className="ch-amount-pills">
+          <div className="ch-amount-pills" role="group" aria-label="Aukos suma eurais">
             {AMOUNTS.map((a) => (
               <button
                 key={a}
                 type="button"
                 className={`ch-amount-pill${amount === a ? " ch-amount-pill--active" : ""}`}
+                aria-pressed={amount === a}
                 onClick={() => setAmount(a)}
               >
                 {a} €
