@@ -46,7 +46,10 @@ export default function PriestDashboardPage() {
       router.replace("/priest/login");
       return;
     }
-    refresh().catch(() => router.replace("/priest/login"));
+    refresh().catch(() => {
+      clearPriestToken();
+      router.replace("/priest/login");
+    });
   }, [router]);
 
   async function addSlot(e: React.FormEvent) {

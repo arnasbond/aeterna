@@ -5,7 +5,9 @@ import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
+  clearPriestToken,
   fetchParishes,
+  fetchPriestDashboard,
   getPriestToken,
   priestLogin,
   priestRequestOtp,
@@ -30,15 +32,41 @@ function PriestLoginForm() {
   const [devHint, setDevHint] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
 
   useEffect(() => {
-    if (getPriestToken()) router.replace("/priest/dashboard");
-    fetchParishes().then((p) => {
-      setParishes(p);
-      const fromUrl = searchParams.get("parish");
-      const preferred = fromUrl && p.some((x) => x.id === fromUrl) ? fromUrl : p[0]?.id;
-      if (preferred) setParishId(preferred);
-    });
+    let cancelled = false;
+
+    async function init() {
+      const token = getPriestToken();
+      if (token) {
+        try {
+          await fetchPriestDashboard();
+          if (!cancelled) {
+            router.replace("/priest/dashboard");
+            return;
+          }
+        } catch {
+          clearPriestToken();
+        }
+      }
+
+      try {
+        const p = await fetchParishes();
+        if (cancelled) return;
+        setParishes(p);
+        const fromUrl = searchParams.get("parish");
+        const preferred = fromUrl && p.some((x) => x.id === fromUrl) ? fromUrl : p[0]?.id;
+        if (preferred) setParishId(preferred);
+      } finally {
+        if (!cancelled) setCheckingSession(false);
+      }
+    }
+
+    init();
+    return () => {
+      cancelled = true;
+    };
   }, [router, searchParams]);
 
   async function submitPassword(e: React.FormEvent) {
@@ -100,6 +128,16 @@ function PriestLoginForm() {
   }
 
   const otpMode = requirePasswords && !usePassword;
+
+  if (checkingSession) {
+    return (
+      <section className="ae-section">
+        <p className="ae-hint" style={{ textAlign: "center" }}>
+          Kraunama…
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="ae-section ae-wizard">
