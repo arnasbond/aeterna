@@ -480,6 +480,18 @@ export function clearPriestToken() {
   localStorage.removeItem(priestTokenKey);
 }
 
+/** Validates priest token against the same endpoints the dashboard uses. */
+export async function validatePriestSession(): Promise<boolean> {
+  if (!getPriestToken()) return false;
+  try {
+    await Promise.all([fetchPriestDashboard(), fetchPriestMasses()]);
+    return true;
+  } catch {
+    clearPriestToken();
+    return false;
+  }
+}
+
 function priestHeaders(): HeadersInit {
   const t = getPriestToken();
   return t ? { Authorization: `Bearer ${t}` } : {};

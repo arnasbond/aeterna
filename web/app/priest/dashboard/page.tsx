@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SupportInbox } from "@/components/support/SupportInbox";
 import {
   clearPriestToken,
@@ -11,9 +11,9 @@ import {
   fetchPriestDashboard,
   fetchPriestMasses,
   formatEuro,
-  getPriestToken,
   type MassSlot,
   type PriestDashboard,
+  validatePriestSession,
 } from "@/lib/api";
 
 type Tab = "masses" | "intentions" | "finance";
@@ -29,11 +29,13 @@ function formatDt(dt: string) {
 
 export default function PriestDashboardPage() {
   const router = useRouter();
+  const initStarted = useRef(false);
   const [tab, setTab] = useState<Tab>("masses");
   const [dash, setDash] = useState<PriestDashboard | null>(null);
   const [masses, setMasses] = useState<MassSlot[]>([]);
   const [newDt, setNewDt] = useState("");
   const [err, setErr] = useState<string | null>(null);
+  const [booting, setBooting] = useState(true);
 
   async function refresh() {
     const [d, m] = await Promise.all([fetchPriestDashboard(), fetchPriestMasses()]);
@@ -42,14 +44,33 @@ export default function PriestDashboardPage() {
   }
 
   useEffect(() => {
-    if (!getPriestToken()) {
-      router.replace("/priest/login");
-      return;
+    if (initStarted.current) return;
+    initStarted.current = true;
+
+    let cancelled = false;
+
+    async function boot() {
+      const ok = await validatePriestSession();
+      if (cancelled) return;
+      if (!ok) {
+        router.replace("/priest/login");
+        return;
+      }
+      try {
+        await refresh();
+        if (!cancelled) setBooting(false);
+      } catch {
+        if (!cancelled) {
+          clearPriestToken();
+          router.replace("/priest/login");
+        }
+      }
     }
-    refresh().catch(() => {
-      clearPriestToken();
-      router.replace("/priest/login");
-    });
+
+    boot();
+    return () => {
+      cancelled = true;
+    };
   }, [router]);
 
   async function addSlot(e: React.FormEvent) {
@@ -71,10 +92,18 @@ export default function PriestDashboardPage() {
 
   function logout() {
     clearPriestToken();
-    router.push("/priest/login");
+    router.replace("/priest/login");
   }
 
-  if (!dash) return <section className="ae-section">Kraunama…</section>;
+  if (booting || !dash) {
+    return (
+      <section className="ae-section ae-auth-gate">
+        <p className="ae-hint" style={{ textAlign: "center" }}>
+          Kraunama…
+        </p>
+      </section>
+    );
+  }
 
   const booked = masses.filter((m) => m.status === "booked" || m.status === "pending");
   const available = masses.filter((m) => m.status === "available");

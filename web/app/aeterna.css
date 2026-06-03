@@ -624,6 +624,10 @@
   margin: 0 auto;
 }
 
+.ae-auth-gate {
+  min-height: 16rem;
+}
+
 .ae-section--white {
   background: #fff;
 }

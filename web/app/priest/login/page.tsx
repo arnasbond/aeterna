@@ -1,27 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
-  clearPriestToken,
   fetchParishes,
-  fetchPriestDashboard,
   getPriestToken,
   priestLogin,
   priestRequestOtp,
   priestVerifyOtp,
   setPriestToken,
+  validatePriestSession,
   type Parish,
 } from "@/lib/api";
 import { requirePasswords } from "@/lib/auth-config";
 
 type Step = "form" | "code";
+type View = "loading" | "ready" | "redirecting";
 
-function PriestLoginForm() {
+function parishFromLocation(): string | null {
+  if (typeof window === "undefined") return null;
+  return new URLSearchParams(window.location.search).get("parish");
+}
+
+export default function PriestLoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const initStarted = useRef(false);
+  const [view, setView] = useState<View>("loading");
   const [parishes, setParishes] = useState<Parish[]>([]);
   const [parishId, setParishId] = useState("");
   const [email, setEmail] = useState("");
@@ -32,22 +37,21 @@ function PriestLoginForm() {
   const [devHint, setDevHint] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [checkingSession, setCheckingSession] = useState(true);
 
   useEffect(() => {
+    if (initStarted.current) return;
+    initStarted.current = true;
+
     let cancelled = false;
 
     async function init() {
-      const token = getPriestToken();
-      if (token) {
-        try {
-          await fetchPriestDashboard();
-          if (!cancelled) {
-            router.replace("/priest/dashboard");
-            return;
-          }
-        } catch {
-          clearPriestToken();
+      if (getPriestToken()) {
+        setView("redirecting");
+        const ok = await validatePriestSession();
+        if (cancelled) return;
+        if (ok) {
+          router.replace("/priest/dashboard");
+          return;
         }
       }
 
@@ -55,11 +59,15 @@ function PriestLoginForm() {
         const p = await fetchParishes();
         if (cancelled) return;
         setParishes(p);
-        const fromUrl = searchParams.get("parish");
+        const fromUrl = parishFromLocation();
         const preferred = fromUrl && p.some((x) => x.id === fromUrl) ? fromUrl : p[0]?.id;
         if (preferred) setParishId(preferred);
-      } finally {
-        if (!cancelled) setCheckingSession(false);
+        setView("ready");
+      } catch (e) {
+        if (!cancelled) {
+          setErr(e instanceof Error ? e.message : "Nepavyko įkelti parapijų");
+          setView("ready");
+        }
       }
     }
 
@@ -67,7 +75,7 @@ function PriestLoginForm() {
     return () => {
       cancelled = true;
     };
-  }, [router, searchParams]);
+  }, [router]);
 
   async function submitPassword(e: React.FormEvent) {
     e.preventDefault();
@@ -76,7 +84,8 @@ function PriestLoginForm() {
     try {
       const session = await priestLogin(parishId, password);
       setPriestToken(session.token);
-      router.push("/priest/dashboard");
+      setView("redirecting");
+      router.replace("/priest/dashboard");
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Prisijungimas nepavyko");
     } finally {
@@ -107,7 +116,8 @@ function PriestLoginForm() {
     try {
       const session = await priestVerifyOtp(parishId, email, code);
       setPriestToken(session.token);
-      router.push("/priest/dashboard");
+      setView("redirecting");
+      router.replace("/priest/dashboard");
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Neteisingas kodas");
     } finally {
@@ -118,20 +128,22 @@ function PriestLoginForm() {
   async function quickLogin(e: React.FormEvent) {
     e.preventDefault();
     setErr(null);
+    setBusy(true);
     try {
       const session = await priestLogin(parishId, "");
       setPriestToken(session.token);
-      router.push("/priest/dashboard");
+      setView("redirecting");
+      router.replace("/priest/dashboard");
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Prisijungimas nepavyko");
+    } finally {
+      setBusy(false);
     }
   }
 
-  const otpMode = requirePasswords && !usePassword;
-
-  if (checkingSession) {
+  if (view === "loading" || view === "redirecting") {
     return (
-      <section className="ae-section">
+      <section className="ae-section ae-auth-gate">
         <p className="ae-hint" style={{ textAlign: "center" }}>
           Kraunama…
         </p>
@@ -139,8 +151,10 @@ function PriestLoginForm() {
     );
   }
 
+  const otpMode = requirePasswords && !usePassword;
+
   return (
-    <section className="ae-section ae-wizard">
+    <section className="ae-section ae-wizard ae-auth-gate">
       <h1 className="ae-section-title">Parapijos administratoriaus prisijungimas</h1>
       <p className="ae-hint" style={{ textAlign: "center", marginBottom: "1.5rem", maxWidth: "30rem", marginInline: "auto" }}>
         {requirePasswords
@@ -163,8 +177,8 @@ function PriestLoginForm() {
             </select>
           </div>
           {err && <p className="ae-error">{err}</p>}
-          <button type="submit" className="ae-btn ae-btn--gold ae-btn--wide">
-            Prisijungti
+          <button type="submit" className="ae-btn ae-btn--gold ae-btn--wide" disabled={busy}>
+            {busy ? "Jungiamasi…" : "Prisijungti"}
           </button>
         </form>
       ) : otpMode && step === "form" ? (
@@ -266,7 +280,7 @@ function PriestLoginForm() {
           </div>
           {err && <p className="ae-error">{err}</p>}
           <button type="submit" className="ae-btn ae-btn--gold ae-btn--wide" disabled={busy}>
-            Prisijungti
+            {busy ? "Jungiamasi…" : "Prisijungti"}
           </button>
           <button
             type="button"
@@ -295,21 +309,5 @@ function PriestLoginForm() {
         </Link>
       </p>
     </section>
-  );
-}
-
-export default function PriestLoginPage() {
-  return (
-    <Suspense
-      fallback={
-        <section className="ae-section">
-          <p className="ae-hint" style={{ textAlign: "center" }}>
-            Kraunama…
-          </p>
-        </section>
-      }
-    >
-      <PriestLoginForm />
-    </Suspense>
   );
 }
