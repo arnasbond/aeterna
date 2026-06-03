@@ -72,11 +72,20 @@ function AuthForm() {
 
   return (
     <section className="ae-section ae-auth">
-      <h1 className="ae-section-title">Prisijungimas ir registracija</h1>
+      <h1 className="ae-section-title chronicle-serif">Šeimos administratorius</h1>
       <p className="ae-auth__lead">
-        Susikurkite nemokamą paskyrą el. paštu ir saugiu slaptažodžiu — taip apsaugosite savo
-        virtualią kapavietę ir galėsite ją redaguoti bet kada.
+        Prisijunkite el. paštu arba socialiniais tinklais — redaguokite biografiją, nuotraukas ir
+        moderuokite užuojautas savo artimojo memorialiniame puslapyje.
       </p>
+
+      <div className="ae-auth__social" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "1rem" }}>
+        <button type="button" className="ch-btn ch-btn--outline ch-btn--block" disabled title="Netrukus">
+          Tęsti su Google (netrukus)
+        </button>
+        <button type="button" className="ch-btn ch-btn--outline ch-btn--block" disabled title="Netrukus">
+          Tęsti su Facebook (netrukus)
+        </button>
+      </div>
 
       {!requirePasswords && (
         <p className="ae-auth-test-banner" role="status">

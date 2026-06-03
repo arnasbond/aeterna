@@ -86,10 +86,12 @@ export default function AdminDashboardPage() {
     <section className="ae-section">
       <div className="ae-priest-header">
         <div>
-          <h1 className="ae-section-title" style={{ marginBottom: "0.25rem" }}>
-            Administratoriaus skydas
+          <h1 className="ae-section-title chronicle-serif" style={{ marginBottom: "0.25rem" }}>
+            Super Admin — platformos savininkas
           </h1>
-          <p className="ae-hint">Parapijos administratorių prieiga · laukia: {pending.length}</p>
+          <p className="ae-hint">
+            Parapijos, banko rekvizitai, memorialų patvirtinimas, apimtis · laukia: {pending.length}
+          </p>
         </div>
         <button type="button" className="ae-btn ae-btn--outline" onClick={logout}>
           Atsijungti

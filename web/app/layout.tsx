@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import "./globals.css";
 import "./aeterna.css";
+import "./chronicle.css";
 import "./vk-theme.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#4a2f7a",
+  themeColor: "#1E3A1E",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",

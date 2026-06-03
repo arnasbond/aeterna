@@ -1,0 +1,461 @@
+/* AETERNA Chronicle — premium digital memorial & parish ecosystem */
+
+.aeterna-root,
+.chronicle-page {
+  --ch-ivory: #fcfbf7;
+  --ch-emerald: #1e3a1e;
+  --ch-emerald-soft: #2d5230;
+  --ch-gold: #d4af37;
+  --ch-gold-soft: rgba(212, 175, 55, 0.5);
+  --ch-charcoal: #2c3338;
+  --ch-muted: #5a6569;
+  --ch-card: #fffef9;
+  --ch-line: rgba(212, 175, 55, 0.35);
+}
+
+.aeterna-root {
+  --ae-primary: var(--ch-emerald);
+  --ae-primary-dark: var(--ch-emerald);
+  --ae-accent: var(--ch-gold);
+  --ae-bg: var(--ch-ivory);
+  --ae-text: var(--ch-charcoal);
+  --ae-muted: var(--ch-muted);
+  --ae-card: var(--ch-card);
+  background: var(--ch-ivory);
+  color: var(--ch-charcoal);
+  line-height: 1.65;
+}
+
+.aeterna-root h1,
+.aeterna-root h2,
+.aeterna-root h3,
+.chronicle-serif {
+  font-family: var(--font-playfair), "Merriweather", Georgia, serif;
+  color: var(--ch-charcoal);
+  font-weight: 600;
+}
+
+/* —— Header (4 elements) —— */
+.ch-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(252, 251, 247, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--ch-line);
+}
+
+.ch-header__inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+}
+
+.ch-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--ch-emerald);
+}
+
+.ch-logo strong {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.ch-nav {
+  display: none;
+  justify-content: center;
+  gap: 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.ch-nav a {
+  color: var(--ch-muted);
+  text-decoration: none;
+  padding: 0.35rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.ch-nav a:hover {
+  color: var(--ch-emerald);
+  border-bottom-color: var(--ch-gold-soft);
+}
+
+.ch-header__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  background: var(--ch-emerald);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  border-radius: 4px;
+  white-space: nowrap;
+  border: 1px solid var(--ch-emerald);
+}
+
+.ch-header__cta:hover {
+  background: var(--ch-emerald-soft);
+}
+
+.ch-menu-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0.5rem;
+  border: 1px solid var(--ch-line);
+  background: var(--ch-card);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ch-menu-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--ch-emerald);
+}
+
+@media (min-width: 768px) {
+  .ch-nav {
+    display: flex;
+  }
+  .ch-menu-btn {
+    display: none;
+  }
+}
+
+.ch-mobile-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.ch-mobile-drawer--open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.ch-mobile-drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(44, 51, 56, 0.45);
+}
+
+.ch-mobile-drawer__panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: min(100%, 18rem);
+  background: var(--ch-ivory);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-left: 1px solid var(--ch-line);
+}
+
+.ch-mobile-drawer__panel a {
+  padding: 0.75rem 0;
+  color: var(--ch-charcoal);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid var(--ch-line);
+}
+
+/* —— Buttons —— */
+.ch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.85rem 1.15rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.ch-btn--primary {
+  background: var(--ch-emerald);
+  color: #fff;
+  border-color: var(--ch-emerald);
+}
+
+.ch-btn--outline {
+  background: transparent;
+  color: var(--ch-emerald);
+  border-color: var(--ch-gold-soft);
+}
+
+.ch-btn--gold {
+  background: transparent;
+  color: var(--ch-emerald);
+  border-color: var(--ch-gold);
+}
+
+.ch-btn--block {
+  width: 100%;
+}
+
+.ch-btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin: 1rem 0;
+}
+
+@media (max-width: 380px) {
+  .ch-btn-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* —— Bottom sheet / modal —— */
+.ch-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(44, 51, 56, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.ch-sheet {
+  width: 100%;
+  max-width: 32rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--ch-card);
+  border-radius: 16px 16px 0 0;
+  padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+  border-top: 2px solid var(--ch-gold-soft);
+  box-shadow: 0 -12px 40px rgba(30, 58, 30, 0.12);
+}
+
+.ch-sheet__handle {
+  width: 2.5rem;
+  height: 4px;
+  background: var(--ch-line);
+  border-radius: 4px;
+  margin: 0 auto 1rem;
+}
+
+.ch-sheet h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+}
+
+.ch-amount-pills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0.75rem 0;
+}
+
+.ch-amount-pill {
+  flex: 1;
+  min-width: 4rem;
+  padding: 0.65rem;
+  border: 1px solid var(--ch-line);
+  background: var(--ch-ivory);
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--ch-charcoal);
+}
+
+.ch-amount-pill--active {
+  border-color: var(--ch-gold);
+  background: rgba(30, 58, 30, 0.06);
+  color: var(--ch-emerald);
+}
+
+.ch-fee-note {
+  font-size: 0.78rem;
+  color: var(--ch-muted);
+  margin: 0.5rem 0 1rem;
+}
+
+/* —— Mass calendar grid —— */
+.ch-mass-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.ch-mass-slot {
+  padding: 0.65rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--ch-line);
+  font-size: 0.75rem;
+  text-align: center;
+  cursor: pointer;
+  background: var(--ch-ivory);
+  color: var(--ch-charcoal);
+}
+
+.ch-mass-slot--free {
+  border-color: rgba(30, 58, 30, 0.35);
+  background: rgba(30, 58, 30, 0.08);
+  color: var(--ch-emerald);
+  font-weight: 600;
+}
+
+.ch-mass-slot--free.ch-mass-slot--selected {
+  background: var(--ch-emerald);
+  color: #fff;
+}
+
+.ch-mass-slot--busy {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: #e8e6e0;
+}
+
+/* —— Glowing candle —— */
+.ch-candle-glow {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.85rem 1rem;
+  background: var(--ch-card);
+  border: 1px solid var(--ch-line);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.ch-candle-glow__flame {
+  font-size: 1.5rem;
+  animation: ch-candle-pulse 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
+}
+
+@keyframes ch-candle-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.08);
+  }
+}
+
+/* —— Parish card —— */
+.ch-parish-card {
+  margin: 1.5rem 0;
+  padding: 1.15rem;
+  background: var(--ch-card);
+  border: 1px solid var(--ch-line);
+  border-radius: 8px;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ch-parish-card__row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.ch-parish-card__img {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--ch-gold-soft);
+}
+
+/* —— Parish admin mobile dashboard —— */
+.ch-priest-dash {
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.ch-priest-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.ch-priest-tab {
+  padding: 0.65rem 0.35rem;
+  border: 1px solid var(--ch-line);
+  background: var(--ch-card);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ch-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.ch-priest-tab--on {
+  background: var(--ch-emerald);
+  color: #fff;
+  border-color: var(--ch-emerald);
+}
+
+.ch-priest-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ch-priest-checklist__item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--ch-line);
+  font-size: 0.85rem;
+}
+
+.ch-intentions-feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ch-intentions-feed__item {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--ch-line);
+}
+
+.ch-intentions-feed__badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.2rem 0.45rem;
+  background: rgba(30, 58, 30, 0.1);
+  color: var(--ch-emerald);
+  border-radius: 4px;
+}

@@ -1,5 +1,5 @@
-import "../../vk-memorial.css";
+import "../../chronicle-memorial.css";
 
 export default function MemorialLayout({ children }: { children: React.ReactNode }) {
-  return <div className="vk-memorial-page">{children}</div>;
+  return <div className="chronicle-memorial-page">{children}</div>;
 }

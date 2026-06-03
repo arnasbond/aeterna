@@ -16,12 +16,20 @@ import {
   type PriestDashboard,
 } from "@/lib/api";
 
+type Tab = "masses" | "intentions" | "finance";
+
 function formatDt(dt: string) {
-  return new Date(dt).toLocaleString("lt-LT");
+  return new Date(dt).toLocaleString("lt-LT", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 export default function PriestDashboardPage() {
   const router = useRouter();
+  const [tab, setTab] = useState<Tab>("masses");
   const [dash, setDash] = useState<PriestDashboard | null>(null);
   const [masses, setMasses] = useState<MassSlot[]>([]);
   const [newDt, setNewDt] = useState("");
@@ -65,88 +73,129 @@ export default function PriestDashboardPage() {
 
   if (!dash) return <section className="ae-section">Kraunama…</section>;
 
+  const booked = masses.filter((m) => m.status === "booked" || m.status === "pending");
+  const available = masses.filter((m) => m.status === "available");
+
+  const tabs: { id: Tab; label: string }[] = [
+    { id: "masses", label: "Šv. Mišios" },
+    { id: "intentions", label: "Intencijos" },
+    { id: "finance", label: "Finansai" },
+  ];
+
   return (
-    <section className="ae-section">
+    <section className="ae-section ch-priest-dash">
       <div className="ae-priest-header">
         <div>
-          <h1>Parapijos administratoriaus skydas</h1>
+          <h1 className="chronicle-serif">Parapijos skydas</h1>
           <p className="ae-hint">{dash.parish.title}</p>
         </div>
-        <button type="button" className="ae-btn ae-btn--outline" onClick={logout}>
-          Atsijungti
+        <button type="button" className="ch-btn ch-btn--outline" onClick={logout}>
+          Išeiti
         </button>
       </div>
 
-      <div className="ae-finance-grid">
-        <article className="ae-card">
-          <h3>Žvakutės</h3>
-          <p className="ae-finance-value">{formatEuro(dash.finances.candlesTotalCents)}</p>
-        </article>
-        <article className="ae-card">
-          <h3>Šv. Mišios</h3>
-          <p className="ae-finance-value">{formatEuro(dash.finances.massesTotalCents)}</p>
-        </article>
-        <article className="ae-card">
-          <h3>Memorialai</h3>
-          <p className="ae-finance-value">{formatEuro(dash.finances.memorialsTotalCents)}</p>
-        </article>
-        <article className="ae-card ae-card--accent">
-          <h3>Iš viso parapijai</h3>
-          <p className="ae-finance-value">{formatEuro(dash.finances.totalCents)}</p>
-        </article>
-      </div>
+      <nav className="ch-priest-tabs" aria-label="Skydo skiltys">
+        {tabs.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className={`ch-priest-tab${tab === t.id ? " ch-priest-tab--on" : ""}`}
+            onClick={() => setTab(t.id)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </nav>
 
-      <p className="ae-hint">
-        Laukia patvirtinimo: <strong>{dash.pendingMasses}</strong> · Laisvi laikai:{" "}
-        <strong>{dash.upcomingSlots}</strong>
-      </p>
+      {tab === "masses" && (
+        <div className="ae-card">
+          <h3>Šv. Mišių valdymas</h3>
+          <p className="ae-hint">Pažymėkite laikus kaip laisvus arba užimtus — matomi memorialų kalendoriuje.</p>
+          <form className="ae-priest-add-slot" onSubmit={addSlot} style={{ marginBottom: "1rem" }}>
+            <input type="datetime-local" value={newDt} onChange={(e) => setNewDt(e.target.value)} required />
+            <button type="submit" className="ch-btn ch-btn--primary">
+              + Laisvas laikas
+            </button>
+          </form>
+          {err && <p className="ae-error">{err}</p>}
 
-      <div className="ae-card ae-priest-profile-cta" style={{ marginTop: "1.5rem" }}>
-        <h3>Parapijos profilis</h3>
-        <p className="ae-hint">
-          Užpildykite kontaktus, mišių laikus ir naujienas — matoma viešame parapijos puslapyje. Galite
-          perkelti informaciją iš oficialios svetainės.
-        </p>
-        <Link href="/priest/profile" className="ae-btn ae-btn--gold">
-          Redaguoti parapijos profilį
-        </Link>
-      </div>
+          <ul className="ch-priest-checklist">
+            {masses.map((m) => (
+              <li key={m.id} className={`ch-priest-checklist__item ch-priest-checklist__item--${m.status}`}>
+                <span>{formatDt(m.dateTime)}</span>
+                <span className={`ae-status ae-status--${m.status === "available" ? "confirmed" : "pending"}`}>
+                  {m.status === "available" ? "Laisva" : m.status === "pending" ? "Laukia" : "Užimta"}
+                </span>
+                {m.status === "pending" && (
+                  <button type="button" className="ch-btn ch-btn--outline" style={{ padding: "0.35rem 0.6rem", fontSize: "0.72rem" }} onClick={() => confirm(m.id)}>
+                    Patvirtinti
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+          <p className="ae-hint" style={{ marginTop: "0.75rem" }}>
+            Laisvų: {available.length} · Užsakytų / laukiančių: {booked.length}
+          </p>
+        </div>
+      )}
 
-      <div className="ae-card" style={{ marginTop: "1.5rem" }}>
+      {tab === "intentions" && (
+        <div className="ae-card">
+          <h3>Intencijų sąrašas</h3>
+          <p className="ae-hint">Tiesioginis srautas — velionės vardas, intencija, mokėjimo būsena.</p>
+          {booked.length === 0 ? (
+            <p className="ae-hint">Kol kas nėra užsakytų mišių.</p>
+          ) : (
+            <ul className="ch-intentions-feed">
+              {booked.map((m) => (
+                <li key={m.id} className="ch-intentions-feed__item">
+                  <div className="ch-intentions-feed__badge">✓ Apmokėta</div>
+                  <p style={{ margin: "0.25rem 0", fontWeight: 700 }}>{formatDt(m.dateTime)}</p>
+                  {m.intentions && <p style={{ margin: 0, fontSize: "0.9rem" }}>{m.intentions}</p>}
+                  {m.bookedBy && (
+                    <p className="ae-hint" style={{ margin: "0.25rem 0 0" }}>
+                      Užsakovas: {m.bookedBy}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {tab === "finance" && (
+        <div className="ae-card">
+          <h3>Finansai — skaidrumas</h3>
+          <p className="ae-hint">Visos sumos, gautos tiesiogiai į parapijos banko sąskaitą per AETERNA.</p>
+          <div className="ae-finance-grid">
+            <article className="ae-card">
+              <h4>Žvakutės</h4>
+              <p className="ae-finance-value">{formatEuro(dash.finances.candlesTotalCents)}</p>
+            </article>
+            <article className="ae-card">
+              <h4>Šv. Mišios</h4>
+              <p className="ae-finance-value">{formatEuro(dash.finances.massesTotalCents)}</p>
+            </article>
+            <article className="ae-card ae-card--accent">
+              <h4>Iš viso</h4>
+              <p className="ae-finance-value">{formatEuro(dash.finances.totalCents)}</p>
+            </article>
+          </div>
+        </div>
+      )}
+
+      <div className="ae-card" style={{ marginTop: "1rem" }}>
         <SupportInbox mode="priest" parishId={dash.parish.id} authorName={dash.parish.title} />
       </div>
 
-      <div className="ae-card" style={{ marginTop: "2rem" }}>
-        <h3>Mišių kalendorius</h3>
-        <form className="ae-priest-add-slot" onSubmit={addSlot}>
-          <input type="datetime-local" value={newDt} onChange={(e) => setNewDt(e.target.value)} required />
-          <button type="submit" className="ae-btn ae-btn--primary">
-            Pridėti laiką
-          </button>
-        </form>
-        {err && <p className="ae-error">{err}</p>}
-
-        <ul className="ae-priest-mass-list">
-          {masses.map((m) => (
-            <li key={m.id}>
-              <div>
-                <strong>{formatDt(m.dateTime)}</strong>
-                <span className={`ae-status ae-status--${m.status}`}>{m.status}</span>
-                {m.intentions && <p className="ae-hint">Intencija: {m.intentions}</p>}
-                {m.bookedBy && <p className="ae-hint">Užsakovas: {m.bookedBy}</p>}
-              </div>
-              {m.status === "pending" && (
-                <button type="button" className="ae-btn ae-btn--outline" onClick={() => confirm(m.id)}>
-                  Patvirtinti
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <p style={{ marginTop: "2rem", textAlign: "center" }}>
-        <Link href="/">← Atgal į svetainę</Link>
+      <p style={{ marginTop: "1rem", textAlign: "center" }}>
+        <Link href="/priest/profile" className="ae-hint">
+          Redaguoti parapijos profilį
+        </Link>
+        {" · "}
+        <Link href="/">Pradžia</Link>
       </p>
     </section>
   );
