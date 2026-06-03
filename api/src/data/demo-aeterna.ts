@@ -27,7 +27,7 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
     "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?auto=format&fit=crop&q=80&w=400",
     "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&q=80&w=400",
   ],
-  videoUrl: "https://www.youtube.com/watch?v=2MskS698vS4",
+  videoUrl: "https://assets.mixkit.co/videos/3042/3042-720.mp4",
   geoLocation: { lat: 54.6866, lng: 25.2872 },
   privacyStatus: "public",
   moderationStatus: "approved",
@@ -36,4 +36,4 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
 export const DEMO_MEMORIAL_SLUG = "ona-demo";
 
 /** Padidinkite, kai keičiate demo turinį — priverstinis atnaujinimas serveryje. */
-export const DEMO_MEDIA_VERSION = 7;
+export const DEMO_MEDIA_VERSION = 8;
