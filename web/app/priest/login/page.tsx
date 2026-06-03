@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   fetchParishes,
   getPriestToken,
   priestLogin,
   priestRequestOtp,
   priestVerifyOtp,
+  redirectToPriestDashboard,
   setPriestToken,
   validatePriestSession,
   type Parish,
@@ -16,7 +16,7 @@ import {
 import { requirePasswords } from "@/lib/auth-config";
 
 type Step = "form" | "code";
-type View = "loading" | "ready" | "redirecting";
+type View = "loading" | "ready";
 
 function parishFromLocation(): string | null {
   if (typeof window === "undefined") return null;
@@ -24,8 +24,6 @@ function parishFromLocation(): string | null {
 }
 
 export default function PriestLoginPage() {
-  const router = useRouter();
-  const initStarted = useRef(false);
   const [view, setView] = useState<View>("loading");
   const [parishes, setParishes] = useState<Parish[]>([]);
   const [parishId, setParishId] = useState("");
@@ -39,18 +37,14 @@ export default function PriestLoginPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (initStarted.current) return;
-    initStarted.current = true;
-
     let cancelled = false;
 
     async function init() {
       if (getPriestToken()) {
-        setView("redirecting");
         const ok = await validatePriestSession();
         if (cancelled) return;
         if (ok) {
-          router.replace("/priest/dashboard");
+          redirectToPriestDashboard();
           return;
         }
       }
@@ -75,7 +69,17 @@ export default function PriestLoginPage() {
     return () => {
       cancelled = true;
     };
-  }, [router]);
+  }, []);
+
+  async function afterLogin(token: string) {
+    setPriestToken(token);
+    const ok = await validatePriestSession();
+    if (ok) {
+      redirectToPriestDashboard();
+      return;
+    }
+    throw new Error("Sesija nepatvirtinta — bandykite dar kartą");
+  }
 
   async function submitPassword(e: React.FormEvent) {
     e.preventDefault();
@@ -83,9 +87,7 @@ export default function PriestLoginPage() {
     setBusy(true);
     try {
       const session = await priestLogin(parishId, password);
-      setPriestToken(session.token);
-      setView("redirecting");
-      router.replace("/priest/dashboard");
+      await afterLogin(session.token);
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Prisijungimas nepavyko");
     } finally {
@@ -115,9 +117,7 @@ export default function PriestLoginPage() {
     setBusy(true);
     try {
       const session = await priestVerifyOtp(parishId, email, code);
-      setPriestToken(session.token);
-      setView("redirecting");
-      router.replace("/priest/dashboard");
+      await afterLogin(session.token);
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Neteisingas kodas");
     } finally {
@@ -131,9 +131,7 @@ export default function PriestLoginPage() {
     setBusy(true);
     try {
       const session = await priestLogin(parishId, "");
-      setPriestToken(session.token);
-      setView("redirecting");
-      router.replace("/priest/dashboard");
+      await afterLogin(session.token);
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Prisijungimas nepavyko");
     } finally {
@@ -141,7 +139,7 @@ export default function PriestLoginPage() {
     }
   }
 
-  if (view === "loading" || view === "redirecting") {
+  if (view === "loading") {
     return (
       <section className="ae-section ae-auth-gate">
         <p className="ae-hint" style={{ textAlign: "center" }}>

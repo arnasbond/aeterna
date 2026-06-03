@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { SupportInbox } from "@/components/support/SupportInbox";
 import {
   clearPriestToken,
@@ -11,6 +11,7 @@ import {
   fetchPriestDashboard,
   fetchPriestMasses,
   formatEuro,
+  redirectToPriestLogin,
   type MassSlot,
   type PriestDashboard,
   validatePriestSession,
@@ -29,7 +30,6 @@ function formatDt(dt: string) {
 
 export default function PriestDashboardPage() {
   const router = useRouter();
-  const initStarted = useRef(false);
   const [tab, setTab] = useState<Tab>("masses");
   const [dash, setDash] = useState<PriestDashboard | null>(null);
   const [masses, setMasses] = useState<MassSlot[]>([]);
@@ -44,16 +44,13 @@ export default function PriestDashboardPage() {
   }
 
   useEffect(() => {
-    if (initStarted.current) return;
-    initStarted.current = true;
-
     let cancelled = false;
 
     async function boot() {
       const ok = await validatePriestSession();
       if (cancelled) return;
       if (!ok) {
-        router.replace("/priest/login");
+        redirectToPriestLogin();
         return;
       }
       try {
@@ -62,7 +59,7 @@ export default function PriestDashboardPage() {
       } catch {
         if (!cancelled) {
           clearPriestToken();
-          router.replace("/priest/login");
+          redirectToPriestLogin();
         }
       }
     }
@@ -71,7 +68,7 @@ export default function PriestDashboardPage() {
     return () => {
       cancelled = true;
     };
-  }, [router]);
+  }, []);
 
   async function addSlot(e: React.FormEvent) {
     e.preventDefault();

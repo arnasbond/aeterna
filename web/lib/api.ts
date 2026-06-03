@@ -480,6 +480,14 @@ export function clearPriestToken() {
   localStorage.removeItem(priestTokenKey);
 }
 
+export function redirectToPriestDashboard() {
+  window.location.assign("/priest/dashboard");
+}
+
+export function redirectToPriestLogin() {
+  window.location.assign("/priest/login");
+}
+
 /** Validates priest token against the same endpoints the dashboard uses. */
 export async function validatePriestSession(): Promise<boolean> {
   if (!getPriestToken()) return false;
