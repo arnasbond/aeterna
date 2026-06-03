@@ -1219,7 +1219,7 @@ export const LT_PARISHES: Parish[] = [
     "lng": 25.263223999999997,
     "city": "Vilnius",
     "websiteUrl": "https://www.katedra.lt",
-    "image": "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&q=80",
+    "image": "https://images.unsplash.com/photo-1477617722074-45613a51bf6d?auto=format&fit=crop&q=80&w=800",
     "bankAccount": "LT00 0000 0000 0000 0000",
     "supportGoal": "Parama Vilniaus Šv. Stanislovo ir šv. Vladislovo arkikatedra bazilika veiklai ir socialinei pagalbai",
     "source": "katalikai.lt",

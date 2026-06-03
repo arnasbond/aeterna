@@ -14,20 +14,20 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
   birthDate: "1936-05-12",
   deathDate: "2024-12-24",
   portraitUrl:
-    "https://images.unsplash.com/photo-1758686253896-e6c76b6f7aa1?w=900&q=85",
+    "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600",
   farewellMessage:
     "Mano saldžiausieji vaikai ir anūkai — jei skaitote šiuos žodžius, žinokite: aš vis dar sėdžiu su jumis prie arbatos stalo, tik jau tyliau. Būkite švelnūs vieni kitam, dalinkitės maistu ir juokais — tai mano mėgstamiausios dovanos. Nepamirškite pasakyti „ačiū“ už mažas akimirkas ir apkabinti tada, kai dar galite. Aš jus myliu labiau, nei žodžiai telpa.",
   biography:
     "Stasė — visi ją vadino tiesiog Močiute. Gimė 1936 m. gegužę, užaugino keturis vaikus ir džiaugėsi dvylika anūkų. Jos virtuvėje visada kvepėjo cinamonu — obuolių pyragas buvo šeimos sekmadienio ritualas. Stasė mokėjo išklausyti be skubėjimo, siūti sagą ant megztinio ir paslėpti saldainį kišenėje „tik tam, kas buvo geras“.\n\nJi mėgo sodą, senas dainas ir rankas, kurios niekada nebuvo tuščios — ar apkabinti, ar paduoti arbatinuką. Paskutiniais metais dažnai sakydavo: „Geriausia dovana — laikas kartu ir šiltas žodis.“ Jos šypsena liko namuose, kai ji pati jau išėjo ramiai, Kūčių išvakarėse.",
   mediaGallery: [
-    "https://images.unsplash.com/photo-1758686254563-5c5ab338c8b9?w=900&q=85",
-    "https://images.unsplash.com/photo-1616286608358-0e1b143f7d2f?w=900&q=85",
-    "https://images.unsplash.com/photo-1695556746353-b45f7a329777?w=900&q=85",
-    "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=900&q=85",
-    "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=900&q=85",
-    "https://images.pexels.com/photos/3823497/pexels-photo-3823497.jpeg?auto=compress&cs=tinysrgb&w=900",
+    "https://images.unsplash.com/photo-1517089591107-248f8923a784?auto=format&fit=crop&q=80&w=400",
+    "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?auto=format&fit=crop&q=80&w=400",
+    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=400",
+    "https://images.unsplash.com/photo-1518391846015-55a9cb030ad7?auto=format&fit=crop&q=80&w=400",
+    "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?auto=format&fit=crop&q=80&w=400",
+    "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&q=80&w=400",
   ],
-  videoUrl: "https://assets.mixkit.co/videos/5383/5383-720.mp4",
+  videoUrl: "https://www.youtube.com/watch?v=5tXgA27pB1g",
   geoLocation: { lat: 54.6866, lng: 25.2872 },
   privacyStatus: "public",
   moderationStatus: "approved",
@@ -36,4 +36,4 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
 export const DEMO_MEMORIAL_SLUG = "ona-demo";
 
 /** Padidinkite, kai keičiate demo turinį — priverstinis atnaujinimas serveryje. */
-export const DEMO_MEDIA_VERSION = 5;
+export const DEMO_MEDIA_VERSION = 6;

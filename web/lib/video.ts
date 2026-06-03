@@ -25,5 +25,5 @@ export function youtubeVideoId(url: string): string | null {
 export function youtubeEmbedSrc(url: string): string | null {
   const id = youtubeVideoId(url);
   if (!id) return null;
-  return `https://www.youtube.com/embed/${id}?controls=1&rel=0&modestbranding=1&playsinline=1`;
+  return `https://www.youtube.com/embed/${id}?controls=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
 }

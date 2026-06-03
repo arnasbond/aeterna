@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MemorialCandleSheet } from "@/components/memorial/MemorialCandleSheet";
 import { MemorialMassCalendar } from "@/components/memorial/MemorialMassCalendar";
+import { MemorialVideoPlayer } from "@/components/memorial/MemorialVideoPlayer";
 import { MemorialGuestbook } from "@/components/MemorialGuestbook";
 import { VirtualCandles } from "@/components/VirtualCandles";
 import { parishCardImage } from "@/lib/parish-image";
-import { youtubeEmbedSrc } from "@/lib/video";
 import type { MemorialPublic } from "@/lib/api";
 
 function formatYears(birth: string | null, death: string | null) {
@@ -54,7 +54,6 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
     : [];
   const parishImg = parishCardImage(memorial.parish.image, []);
   const location = geo ?? memorial.geoLocation;
-  const videoEmbed = memorial.videoUrl ? youtubeEmbedSrc(memorial.videoUrl) : null;
 
   useEffect(() => {
     if (!lightbox) return;
@@ -134,22 +133,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
       )}
 
       {memorial.videoUrl && (
-        <section className="ch-memorial-video">
-          <h2 className="chronicle-serif">Vaizdo įrašas</h2>
-          <div className="ch-memorial-video__wrap">
-            {videoEmbed ? (
-              <iframe
-                src={videoEmbed}
-                title={`${memorial.fullName} — vaizdo įrašas`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                allowFullScreen
-                loading="lazy"
-              />
-            ) : (
-              <video src={memorial.videoUrl} controls playsInline preload="metadata" />
-            )}
-          </div>
-        </section>
+        <MemorialVideoPlayer videoUrl={memorial.videoUrl} fullName={memorial.fullName} />
       )}
 
       {gallery.length > 0 && (

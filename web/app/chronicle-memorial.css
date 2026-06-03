@@ -332,30 +332,49 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
 }
 
 .ch-memorial-video {
-  margin: 1.75rem 0;
+  margin: 3rem 0;
 }
 
-.ch-memorial-video h2 {
-  font-size: 1.1rem;
-  margin: 0 0 0.75rem;
+.ch-memorial-video__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0c0a09;
+  margin: 0 0 1rem;
+  text-align: center;
+  letter-spacing: 0.01em;
 }
 
 .ch-memorial-video__wrap {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: 8px;
+  border-radius: 1rem;
   overflow: hidden;
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  background: #000;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: #1c1917;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.08);
 }
 
-.ch-memorial-video__wrap iframe,
-.ch-memorial-video__wrap video {
+.ch-memorial-video__iframe,
+.ch-memorial-video__native {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   border: none;
+}
+
+.ch-memorial-video__native {
   object-fit: contain;
+}
+
+.ch-memorial-video__hint {
+  margin: 0.5rem 0 0;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 300;
+  font-style: italic;
+  color: #a8a29e;
+  line-height: 1.5;
 }
