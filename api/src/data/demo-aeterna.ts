@@ -20,14 +20,14 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
   biography:
     "Stasė — visi ją vadino tiesiog Močiute. Gimė 1936 m. gegužę, užaugino keturis vaikus ir džiaugėsi dvylika anūkų. Jos virtuvėje visada kvepėjo cinamonu — obuolių pyragas buvo šeimos sekmadienio ritualas. Stasė mokėjo išklausyti be skubėjimo, siūti sagą ant megztinio ir paslėpti saldainį kišenėje „tik tam, kas buvo geras“.\n\nJi mėgo sodą, senas dainas ir rankas, kurios niekada nebuvo tuščios — ar apkabinti, ar paduoti arbatinuką. Paskutiniais metais dažnai sakydavo: „Geriausia dovana — laikas kartu ir šiltas žodis.“ Jos šypsena liko namuose, kai ji pati jau išėjo ramiai, Kūčių išvakarėse.",
   mediaGallery: [
-    "https://images.unsplash.com/photo-1517089591107-248f8923a784?auto=format&fit=crop&q=80&w=400",
+    "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&q=80&w=400",
+    "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=400",
+    "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80&w=400",
+    "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&q=80&w=400",
     "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?auto=format&fit=crop&q=80&w=400",
-    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=400",
-    "https://images.unsplash.com/photo-1518391846015-55a9cb030ad7?auto=format&fit=crop&q=80&w=400",
-    "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?auto=format&fit=crop&q=80&w=400",
-    "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&q=80&w=400",
+    "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400",
   ],
-  videoUrl: "https://assets.mixkit.co/videos/3042/3042-720.mp4",
+  videoUrl: "https://www.youtube.com/watch?v=hlWiI4xVXKY",
   geoLocation: { lat: 54.6866, lng: 25.2872 },
   privacyStatus: "public",
   moderationStatus: "approved",
@@ -36,4 +36,4 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
 export const DEMO_MEMORIAL_SLUG = "ona-demo";
 
 /** Padidinkite, kai keičiate demo turinį — priverstinis atnaujinimas serveryje. */
-export const DEMO_MEDIA_VERSION = 8;
+export const DEMO_MEDIA_VERSION = 9;
