@@ -14,7 +14,7 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
   birthDate: "1936-05-12",
   deathDate: "2024-12-24",
   portraitUrl:
-    "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600",
+    "https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?auto=format&fit=crop&q=80&w=600",
   farewellMessage:
     "Mano saldžiausieji vaikai ir anūkai — jei skaitote šiuos žodžius, žinokite: aš vis dar sėdžiu su jumis prie arbatos stalo, tik jau tyliau. Būkite švelnūs vieni kitam, dalinkitės maistu ir juokais — tai mano mėgstamiausios dovanos. Nepamirškite pasakyti „ačiū“ už mažas akimirkas ir apkabinti tada, kai dar galite. Aš jus myliu labiau, nei žodžiai telpa.",
   biography:
@@ -27,7 +27,7 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
     "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?auto=format&fit=crop&q=80&w=400",
     "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&q=80&w=400",
   ],
-  videoUrl: "https://www.youtube.com/watch?v=5tXgA27pB1g",
+  videoUrl: "https://www.youtube.com/watch?v=2MskS698vS4",
   geoLocation: { lat: 54.6866, lng: 25.2872 },
   privacyStatus: "public",
   moderationStatus: "approved",
@@ -36,4 +36,4 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
 export const DEMO_MEMORIAL_SLUG = "ona-demo";
 
 /** Padidinkite, kai keičiate demo turinį — priverstinis atnaujinimas serveryje. */
-export const DEMO_MEDIA_VERSION = 6;
+export const DEMO_MEDIA_VERSION = 7;
