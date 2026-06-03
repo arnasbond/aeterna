@@ -4,16 +4,32 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchParishes, getPriestToken, priestLogin, setPriestToken, type Parish } from "@/lib/api";
+import {
+  fetchParishes,
+  getPriestToken,
+  priestLogin,
+  priestRequestOtp,
+  priestVerifyOtp,
+  setPriestToken,
+  type Parish,
+} from "@/lib/api";
 import { requirePasswords } from "@/lib/auth-config";
+
+type Step = "form" | "code";
 
 function PriestLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [parishes, setParishes] = useState<Parish[]>([]);
   const [parishId, setParishId] = useState("");
+  const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
+  const [step, setStep] = useState<Step>("form");
+  const [usePassword, setUsePassword] = useState(false);
+  const [devHint, setDevHint] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (getPriestToken()) router.replace("/priest/dashboard");
@@ -25,11 +41,57 @@ function PriestLoginForm() {
     });
   }, [router, searchParams]);
 
-  async function submit(e: React.FormEvent) {
+  async function submitPassword(e: React.FormEvent) {
+    e.preventDefault();
+    setErr(null);
+    setBusy(true);
+    try {
+      const session = await priestLogin(parishId, password);
+      setPriestToken(session.token);
+      router.push("/priest/dashboard");
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Prisijungimas nepavyko");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function requestCode(e: React.FormEvent) {
+    e.preventDefault();
+    setErr(null);
+    setDevHint(null);
+    setBusy(true);
+    try {
+      const res = await priestRequestOtp(parishId, email);
+      if (res.devCode) setDevHint(res.devCode);
+      setStep("code");
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Nepavyko išsiųsti kodo");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function verifyCode(e: React.FormEvent) {
+    e.preventDefault();
+    setErr(null);
+    setBusy(true);
+    try {
+      const session = await priestVerifyOtp(parishId, email, code);
+      setPriestToken(session.token);
+      router.push("/priest/dashboard");
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Neteisingas kodas");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function quickLogin(e: React.FormEvent) {
     e.preventDefault();
     setErr(null);
     try {
-      const session = await priestLogin(parishId, password);
+      const session = await priestLogin(parishId, "");
       setPriestToken(session.token);
       router.push("/priest/dashboard");
     } catch (e) {
@@ -37,26 +99,122 @@ function PriestLoginForm() {
     }
   }
 
+  const otpMode = requirePasswords && !usePassword;
+
   return (
     <section className="ae-section ae-wizard">
       <h1 className="ae-section-title">Parapijos administratoriaus prisijungimas</h1>
       <p className="ae-hint" style={{ textAlign: "center", marginBottom: "1.5rem", maxWidth: "30rem", marginInline: "auto" }}>
         {requirePasswords
-          ? "Prisijunkite tik su administratoriaus patvirtintu laikinu slaptažodžiu. Jei jo neturite — pateikite prieigos užklausą."
-          : "Testavimo režimas: pasirinkite parapiją ir spaustite „Prisijungti“ — slaptažodis nereikalingas."}
+          ? otpMode
+            ? "Įveskite patvirtintą el. paštą — gausite vienkartinį prisijungimo kodą (MVP: rodomas testavimo režime)."
+            : "Prisijunkite laikinu slaptažodžiu, kurį gavote iš svetainės administratoriaus."
+          : "Testavimo režimas: pasirinkite parapiją ir prisijunkite be slaptažodžio."}
       </p>
-      <form onSubmit={submit}>
-        <div className="ae-field">
-          <label>Parapija</label>
-          <select value={parishId} onChange={(e) => setParishId(e.target.value)}>
-            {parishes.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.title}
-              </option>
-            ))}
-          </select>
-        </div>
-        {requirePasswords && (
+
+      {!requirePasswords ? (
+        <form onSubmit={quickLogin}>
+          <div className="ae-field">
+            <label>Parapija</label>
+            <select value={parishId} onChange={(e) => setParishId(e.target.value)}>
+              {parishes.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.title}
+                </option>
+              ))}
+            </select>
+          </div>
+          {err && <p className="ae-error">{err}</p>}
+          <button type="submit" className="ae-btn ae-btn--gold ae-btn--wide">
+            Prisijungti
+          </button>
+        </form>
+      ) : otpMode && step === "form" ? (
+        <form onSubmit={requestCode}>
+          <div className="ae-field">
+            <label>Parapija</label>
+            <select value={parishId} onChange={(e) => setParishId(e.target.value)} required>
+              {parishes.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.title}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="ae-field">
+            <label>El. paštas</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="klebonas@parapija.lt"
+              required
+              autoComplete="email"
+            />
+          </div>
+          {err && <p className="ae-error">{err}</p>}
+          <button type="submit" className="ae-btn ae-btn--gold ae-btn--wide" disabled={busy}>
+            {busy ? "Siunčiama…" : "Gauti prisijungimo kodą"}
+          </button>
+          <button
+            type="button"
+            className="ae-btn ae-btn--outline ae-btn--wide"
+            style={{ marginTop: "0.5rem" }}
+            onClick={() => setUsePassword(true)}
+          >
+            Turiu laikiną slaptažodį
+          </button>
+        </form>
+      ) : otpMode && step === "code" ? (
+        <form onSubmit={verifyCode}>
+          {devHint && (
+            <p className="ae-auth-test-banner" role="status">
+              Testavimo kodas: <strong>{devHint}</strong>
+            </p>
+          )}
+          <div className="ae-field">
+            <label>6 skaitmenų kodas</label>
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]{6}"
+              maxLength={6}
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+              placeholder="000000"
+              required
+              autoComplete="one-time-code"
+            />
+          </div>
+          {err && <p className="ae-error">{err}</p>}
+          <button type="submit" className="ae-btn ae-btn--gold ae-btn--wide" disabled={busy || code.length < 6}>
+            {busy ? "Tikrinama…" : "Prisijungti"}
+          </button>
+          <button
+            type="button"
+            className="ae-btn ae-btn--outline ae-btn--wide"
+            style={{ marginTop: "0.5rem" }}
+            onClick={() => {
+              setStep("form");
+              setCode("");
+              setErr(null);
+            }}
+          >
+            ← Kitas el. paštas
+          </button>
+        </form>
+      ) : (
+        <form onSubmit={submitPassword}>
+          <div className="ae-field">
+            <label>Parapija</label>
+            <select value={parishId} onChange={(e) => setParishId(e.target.value)}>
+              {parishes.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.title}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="ae-field">
             <label>Laikinas slaptažodis</label>
             <input
@@ -68,12 +226,25 @@ function PriestLoginForm() {
               autoComplete="one-time-code"
             />
           </div>
-        )}
-        {err && <p className="ae-error">{err}</p>}
-        <button type="submit" className="ae-btn ae-btn--gold ae-btn--wide">
-          Prisijungti
-        </button>
-      </form>
+          {err && <p className="ae-error">{err}</p>}
+          <button type="submit" className="ae-btn ae-btn--gold ae-btn--wide" disabled={busy}>
+            Prisijungti
+          </button>
+          <button
+            type="button"
+            className="ae-btn ae-btn--outline ae-btn--wide"
+            style={{ marginTop: "0.5rem" }}
+            onClick={() => {
+              setUsePassword(false);
+              setStep("form");
+              setErr(null);
+            }}
+          >
+            Prisijungti el. paštu (OTP)
+          </button>
+        </form>
+      )}
+
       <p style={{ textAlign: "center", marginTop: "1.25rem" }}>
         <Link href={`/priest/request${parishId ? `?parish=${encodeURIComponent(parishId)}` : ""}`}>
           Pateikti prieigos užklausą administratoriui

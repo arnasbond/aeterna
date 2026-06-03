@@ -187,7 +187,8 @@ export async function findMemorialByPerson(
 export async function getMemorialPublic(slug: string): Promise<AeternaMemorialPublic | null> {
   const map = await loadMemorials();
   const row = map.get(slug);
-  if (!row || row.privacyStatus !== "public") return null;
+  const mod = row?.moderationStatus ?? "approved";
+  if (!row || row.privacyStatus !== "public" || mod === "pending" || mod === "rejected") return null;
   const parish = getParish(row.parishId);
   if (!parish) return null;
   const { userId: _, ...rest } = row;
@@ -247,6 +248,7 @@ export async function createMemorial(
     videoUrl: input.videoUrl ?? null,
     geoLocation: null,
     privacyStatus: input.privacyStatus ?? "public",
+    moderationStatus: "pending",
     profileUrl: profileUrl(slug),
     qrCodeUrl: qrPlaceholder(slug),
     createdAt: now,
@@ -372,4 +374,42 @@ export async function parishAdminSummary(): Promise<ParishSummary[]> {
     s.parishCommissionCents += o.parishAmountCents ?? (o as { parishCommissionCents?: number }).parishCommissionCents ?? 0;
   }
   return [...byParish.values()];
+}
+
+export type MemorialModerationRow = Pick<
+  AeternaMemorial,
+  "id" | "slug" | "fullName" | "parishId" | "createdAt" | "moderationStatus" | "privacyStatus"
+> & { parishTitle: string };
+
+export async function listPendingMemorials(): Promise<MemorialModerationRow[]> {
+  const map = await loadMemorials();
+  const out: MemorialModerationRow[] = [];
+  for (const row of map.values()) {
+    if ((row.moderationStatus ?? "approved") !== "pending") continue;
+    const parish = getParish(row.parishId);
+    out.push({
+      id: row.id,
+      slug: row.slug,
+      fullName: row.fullName,
+      parishId: row.parishId,
+      parishTitle: parish?.title ?? row.parishId,
+      createdAt: row.createdAt,
+      moderationStatus: row.moderationStatus ?? "pending",
+      privacyStatus: row.privacyStatus,
+    });
+  }
+  return out.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export async function setMemorialModeration(
+  slug: string,
+  status: "approved" | "rejected"
+): Promise<AeternaMemorial | null> {
+  const map = await loadMemorials();
+  const row = map.get(slug);
+  if (!row) return null;
+  row.moderationStatus = status;
+  row.updatedAt = new Date().toISOString();
+  await saveMemorials();
+  return row;
 }

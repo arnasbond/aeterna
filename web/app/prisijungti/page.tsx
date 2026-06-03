@@ -8,6 +8,7 @@ import {
   fetchUserMe,
   getUserToken,
   setUserToken,
+  oauthLogin,
   userLogin,
   userRegister,
 } from "@/lib/api";
@@ -79,13 +80,52 @@ function AuthForm() {
       </p>
 
       <div className="ae-auth__social" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "1rem" }}>
-        <button type="button" className="ch-btn ch-btn--outline ch-btn--block" disabled title="Netrukus">
-          Tęsti su Google (netrukus)
+        <button
+          type="button"
+          className="ch-btn ch-btn--outline ch-btn--block"
+          disabled={busy}
+          onClick={async () => {
+            setErr(null);
+            setBusy(true);
+            try {
+              const { token } = await oauthLogin("google", email || undefined, fullName || undefined);
+              setUserToken(token);
+              router.push(next);
+            } catch (e) {
+              setErr(e instanceof Error ? e.message : "Google prisijungimas nepavyko");
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          Tęsti su Google
         </button>
-        <button type="button" className="ch-btn ch-btn--outline ch-btn--block" disabled title="Netrukus">
-          Tęsti su Facebook (netrukus)
+        <button
+          type="button"
+          className="ch-btn ch-btn--outline ch-btn--block"
+          disabled={busy}
+          onClick={async () => {
+            setErr(null);
+            setBusy(true);
+            try {
+              const { token } = await oauthLogin("facebook", email || undefined, fullName || undefined);
+              setUserToken(token);
+              router.push(next);
+            } catch (e) {
+              setErr(e instanceof Error ? e.message : "Facebook prisijungimas nepavyko");
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          Tęsti su Facebook
         </button>
       </div>
+      {!requirePasswords && (
+        <p className="ae-hint" style={{ fontSize: "0.8rem", marginBottom: "1rem" }}>
+          MVP: socialinis prisijungimas sukuria testinę paskyrą be tikro OAuth.
+        </p>
+      )}
 
       {!requirePasswords && (
         <p className="ae-auth-test-banner" role="status">

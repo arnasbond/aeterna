@@ -59,6 +59,8 @@ export type AeternaMemorial = {
   videoUrl: string | null;
   geoLocation: GeoLocation | null;
   privacyStatus: "public" | "private";
+  /** Super admin patvirtinimas — seni profiliai be lauko laikomi approved */
+  moderationStatus?: "pending" | "approved" | "rejected";
   qrCodeUrl: string | null;
   profileUrl: string;
   createdAt: string;

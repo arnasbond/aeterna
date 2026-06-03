@@ -30,6 +30,7 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
   videoUrl: "https://assets.mixkit.co/videos/5383/5383-720.mp4",
   geoLocation: { lat: 54.6866, lng: 25.2872 },
   privacyStatus: "public",
+  moderationStatus: "approved",
 };
 
 export const DEMO_MEMORIAL_SLUG = "ona-demo";

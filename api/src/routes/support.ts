@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { getPriestParishId } from "../services/mass-candle-store.js";
+import { resolvePriestParishId } from "../services/mass-candle-store.js";
 import { getAdminFromToken } from "../services/priest-access-store.js";
 import {
   createThreadForParish,
@@ -18,11 +18,11 @@ import type {
   UpdateSupportThreadInput,
 } from "../types/support-message.js";
 
-function priestParishId(req: FastifyRequest): string | null {
+async function priestParishId(req: FastifyRequest): Promise<string | null> {
   const auth = req.headers.authorization;
   const token = auth?.startsWith("Bearer ") ? auth.slice(7) : req.headers["x-priest-token"];
   const t = typeof token === "string" ? token : undefined;
-  return getPriestParishId(t);
+  return resolvePriestParishId(t);
 }
 
 function adminToken(req: FastifyRequest): string | undefined {
@@ -32,8 +32,8 @@ function adminToken(req: FastifyRequest): string | undefined {
   return typeof h === "string" ? h : undefined;
 }
 
-function requirePriest(req: FastifyRequest, reply: FastifyReply): string | null {
-  const parishId = priestParishId(req);
+async function requirePriest(req: FastifyRequest, reply: FastifyReply): Promise<string | null> {
+  const parishId = await priestParishId(req);
   if (!parishId) {
     reply.status(401).send({ success: false, error: { message: "Reikalingas prisijungimas" } });
     return null;
@@ -56,13 +56,13 @@ function authorLabelFromBody(req: FastifyRequest): string {
 
 export async function priestSupportRoutes(app: FastifyInstance) {
   app.get("/api/v1/priest/support/unread", async (req, reply) => {
-    const parishId = requirePriest(req, reply);
+    const parishId = await requirePriest(req, reply);
     if (!parishId) return;
     return { success: true, data: { count: await unreadCountForParish(parishId) } };
   });
 
   app.get("/api/v1/priest/support/threads", async (req, reply) => {
-    const parishId = requirePriest(req, reply);
+    const parishId = await requirePriest(req, reply);
     if (!parishId) return;
     return { success: true, data: await listThreadsForParish(parishId) };
   });
@@ -70,7 +70,7 @@ export async function priestSupportRoutes(app: FastifyInstance) {
   app.post<{ Body: CreateSupportThreadInput & { authorName?: string } }>(
     "/api/v1/priest/support/threads",
     async (req, reply) => {
-      const parishId = requirePriest(req, reply);
+      const parishId = await requirePriest(req, reply);
       if (!parishId) return;
       try {
         const label = authorLabelFromBody(req) || "Parapijos administratorius";
@@ -86,7 +86,7 @@ export async function priestSupportRoutes(app: FastifyInstance) {
   );
 
   app.get<{ Params: { id: string } }>("/api/v1/priest/support/threads/:id", async (req, reply) => {
-    const parishId = requirePriest(req, reply);
+    const parishId = await requirePriest(req, reply);
     if (!parishId) return;
     const data = await getThread(req.params.id, parishId);
     if (!data) {
@@ -99,7 +99,7 @@ export async function priestSupportRoutes(app: FastifyInstance) {
   app.post<{ Params: { id: string }; Body: PostSupportMessageInput & { authorName?: string } }>(
     "/api/v1/priest/support/threads/:id/messages",
     async (req, reply) => {
-      const parishId = requirePriest(req, reply);
+      const parishId = await requirePriest(req, reply);
       if (!parishId) return;
       try {
         const label = authorLabelFromBody(req) || "Parapijos administratorius";
@@ -115,7 +115,7 @@ export async function priestSupportRoutes(app: FastifyInstance) {
   );
 
   app.patch<{ Params: { id: string } }>("/api/v1/priest/support/threads/:id/read", async (req, reply) => {
-    const parishId = requirePriest(req, reply);
+    const parishId = await requirePriest(req, reply);
     if (!parishId) return;
     await markThreadRead(req.params.id, "priest", parishId);
     return { success: true, data: { ok: true } };

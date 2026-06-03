@@ -528,6 +528,68 @@ export async function priestLogin(parishId: string, password: string) {
   return parse<{ token: string; parishId: string }>(r);
 }
 
+export async function priestRequestOtp(parishId: string, email: string) {
+  const r = await fetch(`${base()}/api/v1/priest/auth/request-code`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ parishId, email }),
+  });
+  return parse<{ sent: boolean; message: string; devCode?: string }>(r);
+}
+
+export async function priestVerifyOtp(parishId: string, email: string, code: string) {
+  const r = await fetch(`${base()}/api/v1/priest/auth/verify-code`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ parishId, email, code }),
+  });
+  return parse<{ token: string; parishId: string }>(r);
+}
+
+export async function oauthLogin(provider: "google" | "facebook", email?: string, fullName?: string) {
+  const r = await fetch(`${base()}/api/v1/auth/oauth`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ provider, email, fullName }),
+  });
+  return parse<{ user: UserAccount; token: string; provider: string }>(r);
+}
+
+export type PendingMemorial = {
+  id: string;
+  slug: string;
+  fullName: string;
+  parishId: string;
+  parishTitle: string;
+  createdAt: string;
+  moderationStatus: "pending" | "approved" | "rejected";
+  privacyStatus: "public" | "private";
+};
+
+export async function fetchPendingMemorials() {
+  const r = await fetch(`${base()}/api/v1/admin/memorials/pending`, {
+    headers: adminHeaders(),
+    cache: "no-store",
+  });
+  return parse<PendingMemorial[]>(r);
+}
+
+export async function approveMemorial(slug: string) {
+  const r = await fetch(`${base()}/api/v1/admin/memorials/${encodeURIComponent(slug)}/approve`, {
+    method: "POST",
+    headers: adminHeaders(),
+  });
+  return parse<{ slug: string; moderationStatus: string }>(r);
+}
+
+export async function rejectMemorial(slug: string) {
+  const r = await fetch(`${base()}/api/v1/admin/memorials/${encodeURIComponent(slug)}/reject`, {
+    method: "POST",
+    headers: adminHeaders(),
+  });
+  return parse<{ slug: string; moderationStatus: string }>(r);
+}
+
 export function getAdminToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(adminTokenKey);

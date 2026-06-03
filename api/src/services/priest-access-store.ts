@@ -1,17 +1,16 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { config } from "../config.js";
+import type { PriestAccessRequest, PriestAccessRequestInput } from "../types/aeterna.js";
+import { getParish } from "./aeterna-store.js";
+import { loadJsonStore, saveJsonStore } from "./persistent-json-store.js";
 
 /** Laikina — pašalinti prieš production (žr. config.testLoginEnabled) */
 export function isTestLoginPassword(password: string): boolean {
   return config.testLoginEnabled && password.trim() === config.testLoginPassword;
 }
-import type { PriestAccessRequest, PriestAccessRequestInput } from "../types/aeterna.js";
-import { getParish } from "./aeterna-store.js";
 
-const REQUESTS_FILE = join(config.dataDir, "priest-access-requests.json");
-const CREDENTIALS_FILE = join(config.dataDir, "priest-credentials.json");
+const REQUESTS_KEY = "priest-access-requests";
+const CREDENTIALS_KEY = "priest-credentials";
 
 const ADMIN_PASSWORD = process.env.AETERNA_ADMIN_PASSWORD || "admin-aeterna-2026";
 const PASSWORD_SALT = process.env.AETERNA_PASSWORD_SALT || "aeterna-priest-v1";
@@ -43,34 +42,30 @@ function generateTempPassword(): string {
 
 async function loadRequests(): Promise<PriestAccessRequest[]> {
   if (requestsCache) return requestsCache;
-  await mkdir(config.dataDir, { recursive: true });
-  try {
-    requestsCache = JSON.parse(await readFile(REQUESTS_FILE, "utf8")) as PriestAccessRequest[];
-  } catch {
-    requestsCache = [];
-    await saveRequests();
-  }
+  requestsCache = await loadJsonStore<PriestAccessRequest[]>(REQUESTS_KEY, []);
   return requestsCache;
 }
 
 async function saveRequests(): Promise<void> {
-  await writeFile(REQUESTS_FILE, JSON.stringify(requestsCache ?? [], null, 2));
+  await saveJsonStore(REQUESTS_KEY, requestsCache ?? []);
 }
 
 async function loadCredentials(): Promise<PriestCredential[]> {
   if (credentialsCache) return credentialsCache;
-  await mkdir(config.dataDir, { recursive: true });
-  try {
-    credentialsCache = JSON.parse(await readFile(CREDENTIALS_FILE, "utf8")) as PriestCredential[];
-  } catch {
-    credentialsCache = [];
-    await saveCredentials();
-  }
+  credentialsCache = await loadJsonStore<PriestCredential[]>(CREDENTIALS_KEY, []);
   return credentialsCache;
 }
 
 async function saveCredentials(): Promise<void> {
-  await writeFile(CREDENTIALS_FILE, JSON.stringify(credentialsCache ?? [], null, 2));
+  await saveJsonStore(CREDENTIALS_KEY, credentialsCache ?? []);
+}
+
+export async function isApprovedPriestEmail(parishId: string, email: string): Promise<boolean> {
+  const normalized = email.trim().toLowerCase();
+  const requests = await loadRequests();
+  return requests.some(
+    (r) => r.parishId === parishId && r.email === normalized && r.status === "approved"
+  );
 }
 
 export async function submitPriestAccessRequest(

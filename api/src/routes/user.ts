@@ -13,6 +13,7 @@ import {
   getUserById,
   getUserIdFromToken,
   loginUser,
+  oauthLoginUser,
   registerUser,
 } from "../services/user-store.js";
 
@@ -68,6 +69,27 @@ export async function userRoutes(app: FastifyInstance) {
       });
     }
     return { success: true, data: session };
+  });
+
+  app.post<{
+    Body: { provider?: "google" | "facebook"; email?: string; fullName?: string };
+  }>("/api/v1/auth/oauth", async (req, reply) => {
+    const { provider, email, fullName } = req.body ?? {};
+    if (provider !== "google" && provider !== "facebook") {
+      return reply.status(400).send({
+        success: false,
+        error: { message: "provider turi būti google arba facebook" },
+      });
+    }
+    try {
+      const session = await oauthLoginUser({ provider, email, fullName });
+      return { success: true, data: session };
+    } catch (e) {
+      return reply.status(400).send({
+        success: false,
+        error: { message: e instanceof Error ? e.message : "OAuth prisijungimas nepavyko" },
+      });
+    }
   });
 
   app.get("/api/v1/auth/me", async (req, reply) => {

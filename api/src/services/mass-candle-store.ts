@@ -1,6 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
-import { createHash, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { config } from "../config.js";
 import type {
   LightCandleInput,
@@ -16,11 +14,16 @@ import {
   recordDonation,
 } from "./aeterna-store.js";
 import { isTestLoginPassword, verifyPriestTemporaryPassword } from "./priest-access-store.js";
+import { loadJsonStore, saveJsonStore } from "./persistent-json-store.js";
+import {
+  createPriestSession,
+  getPriestParishIdFromSession,
+  getPriestParishIdSync,
+} from "./priest-session-store.js";
+import { CANDLE_SERVICE_FEE_CENTS, processCandlePayment } from "./stripe-connect-mock.js";
 
-const MASSES_FILE = join(config.dataDir, "aeterna-masses.json");
-const CANDLES_FILE = join(config.dataDir, "aeterna-candles.json");
-
-const priestTokens = new Map<string, string>();
+const MASSES_KEY = "aeterna-masses";
+const CANDLES_KEY = "aeterna-candles";
 
 let massesCache: MassSchedule[] | null = null;
 let candlesCache: VirtualCandle[] | null = null;
@@ -70,34 +73,28 @@ function seedMasses(): MassSchedule[] {
 
 async function loadMasses(): Promise<MassSchedule[]> {
   if (massesCache) return massesCache;
-  await mkdir(config.dataDir, { recursive: true });
-  try {
-    massesCache = JSON.parse(await readFile(MASSES_FILE, "utf8")) as MassSchedule[];
-  } catch {
+  const stored = await loadJsonStore<MassSchedule[]>(MASSES_KEY, []);
+  if (stored.length === 0) {
     massesCache = seedMasses();
     await saveMasses();
+  } else {
+    massesCache = stored;
   }
   return massesCache;
 }
 
 async function saveMasses(): Promise<void> {
-  await writeFile(MASSES_FILE, JSON.stringify(massesCache ?? [], null, 2));
+  await saveJsonStore(MASSES_KEY, massesCache ?? []);
 }
 
 async function loadCandles(): Promise<VirtualCandle[]> {
   if (candlesCache) return candlesCache;
-  await mkdir(config.dataDir, { recursive: true });
-  try {
-    candlesCache = JSON.parse(await readFile(CANDLES_FILE, "utf8")) as VirtualCandle[];
-  } catch {
-    candlesCache = [];
-    await saveCandles();
-  }
+  candlesCache = await loadJsonStore<VirtualCandle[]>(CANDLES_KEY, []);
   return candlesCache;
 }
 
 async function saveCandles(): Promise<void> {
-  await writeFile(CANDLES_FILE, JSON.stringify(candlesCache ?? [], null, 2));
+  await saveJsonStore(CANDLES_KEY, candlesCache ?? []);
 }
 
 export async function priestLogin(
@@ -110,14 +107,17 @@ export async function priestLogin(
     isTestLoginPassword(password) ||
     (await verifyPriestTemporaryPassword(parishId, password));
   if (!ok) return null;
-  const token = createHash("sha256").update(`${parishId}:${Date.now()}:${randomUUID()}`).digest("hex");
-  priestTokens.set(token, parishId);
-  return { token, parishId };
+  return createPriestSession(parishId);
 }
 
 export function getPriestParishId(token: string | undefined): string | null {
-  if (!token) return null;
-  return priestTokens.get(token) ?? null;
+  return getPriestParishIdSync(token);
+}
+
+export async function resolvePriestParishId(token: string | undefined): Promise<string | null> {
+  const sync = getPriestParishIdSync(token);
+  if (sync) return sync;
+  return getPriestParishIdFromSession(token);
 }
 
 export async function getAvailableMasses(parishId: string): Promise<MassSchedule[]> {
@@ -182,9 +182,21 @@ export async function confirmMassBooking(massId: string, parishId: string): Prom
   return slot;
 }
 
-export async function lightCandle(input: LightCandleInput): Promise<VirtualCandle> {
+export type LightCandleResult = VirtualCandle & {
+  payment: ReturnType<typeof processCandlePayment>;
+  serviceFeeCents: number;
+  totalChargedCents: number;
+};
+
+export async function lightCandle(input: LightCandleInput): Promise<LightCandleResult> {
   const memorial = await getMemorialBySlug(input.memorialSlug);
   if (!memorial) throw new Error("Profilis nerastas");
+
+  const donationCents = Math.max(100, Math.round(input.amountCents));
+  const payment = processCandlePayment({
+    parishId: memorial.parishId,
+    donationCents,
+  });
 
   const candle: VirtualCandle = {
     id: randomUUID(),
@@ -193,14 +205,26 @@ export async function lightCandle(input: LightCandleInput): Promise<VirtualCandl
     parishId: memorial.parishId,
     donorName: input.donorName.trim() || "Anonimas",
     litAt: new Date().toISOString(),
-    donationAmountCents: input.amountCents,
+    donationAmountCents: donationCents,
   };
   const candles = await loadCandles();
   candles.push(candle);
   candlesCache = candles;
   await saveCandles();
-  await recordDonation(memorial.parishId, input.amountCents, "candle", candle.id, memorial.id);
-  return candle;
+  await recordDonation(memorial.parishId, donationCents, "candle", candle.id, memorial.id);
+  await recordDonation(
+    memorial.parishId,
+    CANDLE_SERVICE_FEE_CENTS,
+    "candle",
+    `${candle.id}-fee`,
+    memorial.id
+  );
+  return {
+    ...candle,
+    payment,
+    serviceFeeCents: payment.serviceFeeCents,
+    totalChargedCents: payment.totalChargedCents,
+  };
 }
 
 export async function listCandlesForMemorial(slug: string): Promise<VirtualCandle[]> {

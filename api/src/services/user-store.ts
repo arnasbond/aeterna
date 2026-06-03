@@ -128,3 +128,41 @@ export async function getUserById(id: string): Promise<UserPublic | null> {
   const user = users.find((u) => u.id === id);
   return user ? toPublic(user) : null;
 }
+
+/** MVP OAuth — sukuria arba prisijungia pagal el. paštą (mock, be tikro provider) */
+export async function oauthLoginUser(input: {
+  provider: "google" | "facebook";
+  email?: string;
+  fullName?: string;
+}): Promise<{ user: UserPublic; token: string; provider: string }> {
+  const provider = input.provider;
+  const email = (
+    input.email?.trim().toLowerCase() ||
+    `${provider}-user@${provider === "google" ? "gmail.com" : "facebook.com"}`
+  ).slice(0, 120);
+  const fullName =
+    input.fullName?.trim() ||
+    (provider === "google" ? "Google naudotojas" : "Facebook naudotojas");
+
+  const users = await loadUsers();
+  let user = users.find((u) => u.email === email);
+  if (!user) {
+    const now = new Date().toISOString();
+    user = {
+      id: randomUUID(),
+      email,
+      fullName,
+      passwordHash: hashPassword(`oauth:${provider}:${randomUUID()}`),
+      createdAt: now,
+      updatedAt: now,
+    };
+    users.push(user);
+    await saveUsers();
+  }
+
+  const token = createHash("sha256")
+    .update(`user-oauth:${user.id}:${provider}:${Date.now()}:${randomUUID()}`)
+    .digest("hex");
+  userTokens.set(token, user.id);
+  return { user: toPublic(user), token, provider };
+}

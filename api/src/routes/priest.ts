@@ -4,10 +4,11 @@ import {
   confirmMassBooking,
   createMassSlot,
   getPriestDashboard,
-  getPriestParishId,
   listMassesForPriest,
   priestLogin,
+  resolvePriestParishId,
 } from "../services/mass-candle-store.js";
+import { requestPriestOtp, verifyPriestOtp } from "../services/priest-otp-store.js";
 import { submitPriestAccessRequest } from "../services/priest-access-store.js";
 import type { ParishProfileInput } from "../types/parish-profile.js";
 import {
@@ -16,11 +17,11 @@ import {
   updateParishProfile,
 } from "../services/parish-profile-store.js";
 
-function parishFromRequest(req: FastifyRequest): string | null {
+async function parishFromRequest(req: FastifyRequest): Promise<string | null> {
   const auth = req.headers.authorization;
   const token = auth?.startsWith("Bearer ") ? auth.slice(7) : req.headers["x-priest-token"];
   const t = typeof token === "string" ? token : undefined;
-  return getPriestParishId(t);
+  return resolvePriestParishId(t);
 }
 
 export async function priestRoutes(app: FastifyInstance) {
@@ -74,8 +75,51 @@ export async function priestRoutes(app: FastifyInstance) {
     return { success: true, data: session };
   });
 
+  app.post<{ Body: { parishId?: string; email?: string } }>(
+    "/api/v1/priest/auth/request-code",
+    async (req, reply) => {
+      const { parishId, email } = req.body ?? {};
+      if (!parishId || !email?.trim()) {
+        return reply.status(400).send({
+          success: false,
+          error: { message: "parishId ir email privalomi" },
+        });
+      }
+      try {
+        const result = await requestPriestOtp(parishId, email);
+        return { success: true, data: result };
+      } catch (e) {
+        return reply.status(400).send({
+          success: false,
+          error: { message: e instanceof Error ? e.message : "Nepavyko išsiųsti kodo" },
+        });
+      }
+    }
+  );
+
+  app.post<{ Body: { parishId?: string; email?: string; code?: string } }>(
+    "/api/v1/priest/auth/verify-code",
+    async (req, reply) => {
+      const { parishId, email, code } = req.body ?? {};
+      if (!parishId || !email?.trim() || !code?.trim()) {
+        return reply.status(400).send({
+          success: false,
+          error: { message: "parishId, email ir code privalomi" },
+        });
+      }
+      const session = await verifyPriestOtp(parishId, email, code);
+      if (!session) {
+        return reply.status(401).send({
+          success: false,
+          error: { message: "Neteisingas arba pasibaigęs kodas" },
+        });
+      }
+      return { success: true, data: session };
+    }
+  );
+
   app.get("/api/v1/priest/dashboard", async (req, reply) => {
-    const parishId = parishFromRequest(req);
+    const parishId = await parishFromRequest(req);
     if (!parishId) {
       return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
     }
@@ -83,7 +127,7 @@ export async function priestRoutes(app: FastifyInstance) {
   });
 
   app.get("/api/v1/priest/masses", async (req, reply) => {
-    const parishId = parishFromRequest(req);
+    const parishId = await parishFromRequest(req);
     if (!parishId) {
       return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
     }
@@ -91,7 +135,7 @@ export async function priestRoutes(app: FastifyInstance) {
   });
 
   app.post<{ Body: { dateTime: string } }>("/api/v1/priest/masses", async (req, reply) => {
-    const parishId = parishFromRequest(req);
+    const parishId = await parishFromRequest(req);
     if (!parishId) {
       return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
     }
@@ -103,7 +147,7 @@ export async function priestRoutes(app: FastifyInstance) {
   });
 
   app.get("/api/v1/priest/parish-profile", async (req, reply) => {
-    const parishId = parishFromRequest(req);
+    const parishId = await parishFromRequest(req);
     if (!parishId) {
       return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
     }
@@ -115,7 +159,7 @@ export async function priestRoutes(app: FastifyInstance) {
   });
 
   app.put<{ Body: ParishProfileInput }>("/api/v1/priest/parish-profile", async (req, reply) => {
-    const parishId = parishFromRequest(req);
+    const parishId = await parishFromRequest(req);
     if (!parishId) {
       return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
     }
@@ -131,7 +175,7 @@ export async function priestRoutes(app: FastifyInstance) {
   });
 
   app.post<{ Body: { url?: string } }>("/api/v1/priest/parish-profile/import-website", async (req, reply) => {
-    const parishId = parishFromRequest(req);
+    const parishId = await parishFromRequest(req);
     if (!parishId) {
       return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
     }
@@ -153,7 +197,7 @@ export async function priestRoutes(app: FastifyInstance) {
   });
 
   app.patch<{ Params: { id: string } }>("/api/v1/priest/masses/:id/confirm", async (req, reply) => {
-    const parishId = parishFromRequest(req);
+    const parishId = await parishFromRequest(req);
     if (!parishId) {
       return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
     }

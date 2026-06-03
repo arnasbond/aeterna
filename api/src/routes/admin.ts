@@ -1,6 +1,10 @@
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import { config } from "../config.js";
 import {
+  listPendingMemorials,
+  setMemorialModeration,
+} from "../services/aeterna-store.js";
+import {
   adminLogin,
   approvePriestAccessRequest,
   getAdminFromToken,
@@ -75,5 +79,28 @@ export async function adminRoutes(app: FastifyInstance) {
         error: { message: e instanceof Error ? e.message : "Nepavyko atmesti" },
       });
     }
+  });
+
+  app.get("/api/v1/admin/memorials/pending", async (req, reply) => {
+    if (!requireAdmin(req, reply)) return;
+    return { success: true, data: await listPendingMemorials() };
+  });
+
+  app.post<{ Params: { slug: string } }>("/api/v1/admin/memorials/:slug/approve", async (req, reply) => {
+    if (!requireAdmin(req, reply)) return;
+    const row = await setMemorialModeration(req.params.slug, "approved");
+    if (!row) {
+      return reply.status(404).send({ success: false, error: { message: "Memorialas nerastas" } });
+    }
+    return { success: true, data: { slug: row.slug, moderationStatus: row.moderationStatus } };
+  });
+
+  app.post<{ Params: { slug: string } }>("/api/v1/admin/memorials/:slug/reject", async (req, reply) => {
+    if (!requireAdmin(req, reply)) return;
+    const row = await setMemorialModeration(req.params.slug, "rejected");
+    if (!row) {
+      return reply.status(404).send({ success: false, error: { message: "Memorialas nerastas" } });
+    }
+    return { success: true, data: { slug: row.slug, moderationStatus: row.moderationStatus } };
   });
 }

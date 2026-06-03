@@ -5,11 +5,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SupportInbox } from "@/components/support/SupportInbox";
 import {
+  approveMemorial,
   approvePriestRequest,
   clearAdminToken,
+  fetchPendingMemorials,
   fetchPriestAccessRequests,
   getAdminToken,
+  rejectMemorial,
   rejectPriestRequest,
+  type PendingMemorial,
   type PriestAccessRequest,
 } from "@/lib/api";
 
@@ -20,6 +24,7 @@ function formatDt(iso: string) {
 export default function AdminDashboardPage() {
   const router = useRouter();
   const [list, setList] = useState<PriestAccessRequest[]>([]);
+  const [pendingMemorials, setPendingMemorials] = useState<PendingMemorial[]>([]);
   const [err, setErr] = useState<string | null>(null);
   const [issued, setIssued] = useState<{
     priestName: string;
@@ -30,8 +35,12 @@ export default function AdminDashboardPage() {
   const [busyId, setBusyId] = useState<string | null>(null);
 
   async function load() {
-    const data = await fetchPriestAccessRequests();
+    const [data, memorials] = await Promise.all([
+      fetchPriestAccessRequests(),
+      fetchPendingMemorials(),
+    ]);
     setList(data);
+    setPendingMemorials(memorials);
   }
 
   useEffect(() => {
@@ -132,6 +141,73 @@ export default function AdminDashboardPage() {
       <div className="ae-card" style={{ marginBottom: "2rem" }}>
         <SupportInbox mode="admin" />
       </div>
+
+      <h2 className="ae-section-title" style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>
+        Memorialų patvirtinimas ({pendingMemorials.length})
+      </h2>
+      {pendingMemorials.length === 0 ? (
+        <p className="ae-hint" style={{ marginBottom: "2rem" }}>
+          Nėra laukiančių memorialų.
+        </p>
+      ) : (
+        <ul style={{ marginBottom: "2rem", padding: 0, listStyle: "none" }}>
+          {pendingMemorials.map((m) => (
+            <li key={m.id} className="ae-card" style={{ padding: "1rem", marginBottom: "0.75rem" }}>
+              <p style={{ margin: "0 0 0.25rem", fontWeight: 700 }}>{m.fullName}</p>
+              <p style={{ margin: "0 0 0.5rem", fontSize: "0.9rem", color: "var(--ae-muted)" }}>
+                {m.parishTitle} · /m/{m.slug}
+              </p>
+              <p style={{ margin: "0 0 0.75rem", fontSize: "0.75rem", color: "var(--ae-muted)" }}>
+                Sukurta {formatDt(m.createdAt)}
+              </p>
+              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                <button
+                  type="button"
+                  className="ae-btn ae-btn--primary"
+                  disabled={busyId === m.slug}
+                  onClick={async () => {
+                    setBusyId(m.slug);
+                    setErr(null);
+                    try {
+                      await approveMemorial(m.slug);
+                      await load();
+                    } catch (e) {
+                      setErr(e instanceof Error ? e.message : "Nepavyko patvirtinti");
+                    } finally {
+                      setBusyId(null);
+                    }
+                  }}
+                >
+                  Patvirtinti ir publikuoti
+                </button>
+                <button
+                  type="button"
+                  className="ae-btn ae-btn--outline"
+                  disabled={busyId === m.slug}
+                  onClick={async () => {
+                    if (!confirm(`Atmesti memorialą „${m.fullName}"?`)) return;
+                    setBusyId(m.slug);
+                    setErr(null);
+                    try {
+                      await rejectMemorial(m.slug);
+                      await load();
+                    } catch (e) {
+                      setErr(e instanceof Error ? e.message : "Nepavyko atmesti");
+                    } finally {
+                      setBusyId(null);
+                    }
+                  }}
+                >
+                  Atmesti
+                </button>
+                <Link href={`/m/${m.slug}`} className="ae-btn ae-btn--outline" target="_blank">
+                  Peržiūrėti
+                </Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <h2 className="ae-section-title" style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>
         Parapijos administratorių užklausos
