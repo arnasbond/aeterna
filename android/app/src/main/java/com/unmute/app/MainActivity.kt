@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private var loadedBaseUrl: String? = null
     private var pageLoaded = false
     private var serverContentVersion: String? = null
+    private var serverCommitHash: String? = null
     private val handler = Handler(Looper.getMainLooper())
     private val loadTimeout = Runnable { if (!pageLoaded) showError(getString(R.string.error_timeout)) }
 
@@ -158,7 +159,9 @@ class MainActivity : AppCompatActivity() {
     private fun updateSubtitle() {
         val v = AppUpdateManager.currentVersionCode(this)
         val cv = serverContentVersion?.let { " · srv:$it" } ?: ""
-        supportActionBar?.subtitle = "${UrlStore.getUrl(this).trimEnd('/')} · apk:$v$cv"
+        val commit = serverCommitHash?.let { " · $it" } ?: ""
+        supportActionBar?.subtitle =
+            "${UrlStore.getUrl(this).trimEnd('/')} · apk:$v$commit$cv"
     }
 
     private fun clearAllWebStorage() {
@@ -225,53 +228,60 @@ class MainActivity : AppCompatActivity() {
         updateSubtitle()
     }
 
-    /** Senas WebView cache rodydavo „vercel“ — perrašome iš /api/build-label. */
+    private fun fetchCommitHash(base: String): String? {
+        try {
+            val hashConn =
+                (URL("$base/commit-hash.txt?t=${System.currentTimeMillis()}").openConnection() as HttpURLConnection).apply {
+                    connectTimeout = 12_000
+                    readTimeout = 12_000
+                    requestMethod = "GET"
+                    setRequestProperty("Cache-Control", "no-cache")
+                }
+            val label =
+                if (hashConn.responseCode in 200..299) {
+                    hashConn.inputStream.bufferedReader().readText().trim().lowercase()
+                } else ""
+            hashConn.disconnect()
+            if (label.matches(Regex("^[0-9a-f]{7}$"))) return label
+        } catch (_: Exception) {
+            /* ignore */
+        }
+        return null
+    }
+
+    private fun applyCommitLabelToWeb(label: String) {
+        val safe = label.replace("\\", "").replace("'", "")
+        val js = """
+            (function(){
+              var id='$safe';
+              var el=document.getElementById('aeterna-build-label');
+              if(el) el.textContent=id;
+              document.querySelectorAll('.ae-deploy-badge strong,#aeterna-build-label').forEach(function(n){
+                if(n) n.textContent=id;
+              });
+            })();
+        """.trimIndent()
+        webView.evaluateJavascript(js, null)
+    }
+
+    /** WebView kartais rodo „…“ — versija iš commit-hash.txt (kaip PC Chrome). */
     private fun syncBuildLabelOnPage() {
         val base = homeUrl().trimEnd('/')
-        Thread {
-            try {
-                var label = ""
-                val hashConn = (URL("$base/commit-hash.txt?t=${System.currentTimeMillis()}").openConnection() as HttpURLConnection).apply {
-                    connectTimeout = 10_000
-                    readTimeout = 10_000
-                    requestMethod = "GET"
-                    setRequestProperty("Cache-Control", "no-cache")
-                }
-                if (hashConn.responseCode in 200..299) {
-                    label = hashConn.inputStream.bufferedReader().readText().trim()
-                }
-                hashConn.disconnect()
-                if (!label.matches(Regex("^[0-9a-fA-F]{7}$"))) {
-                val conn = (URL("$base/api/build-label").openConnection() as HttpURLConnection).apply {
-                    connectTimeout = 10_000
-                    readTimeout = 10_000
-                    requestMethod = "GET"
-                    setRequestProperty("Cache-Control", "no-cache")
-                }
-                if (conn.responseCode in 200..299) {
-                    val body = conn.inputStream.bufferedReader().readText()
-                    label = JSONObject(body).optString("label", "").trim()
-                }
-                conn.disconnect()
-                }
-                if (label.isEmpty() || label == "vercel" || !label.matches(Regex("^[0-9a-fA-F]{7}$"))) return@Thread
-                val safe = label.lowercase().replace("\\", "").replace("'", "")
-                val js = """
-                    (function(){
-                      var id='$safe';
-                      var el=document.getElementById('aeterna-build-label');
-                      if(el) el.textContent=id;
-                      document.querySelectorAll('.ae-deploy-badge strong').forEach(function(n){
-                        if(n&&!/^[0-9a-f]{7}$$/i.test((n.textContent||'').trim()))
-                          n.textContent=id;
-                      });
-                    })();
-                """.trimIndent()
-                runOnUiThread { webView.evaluateJavascript(js, null) }
-            } catch (_: Exception) {
-                /* ignore */
-            }
-        }.start()
+        fun runOnce(delayMs: Long) {
+            handler.postDelayed({
+                Thread {
+                    val label = fetchCommitHash(base) ?: return@Thread
+                    serverCommitHash = label
+                    runOnUiThread {
+                        applyCommitLabelToWeb(label)
+                        updateSubtitle()
+                    }
+                }.start()
+            }, delayMs)
+        }
+        runOnce(0)
+        runOnce(600)
+        runOnce(2000)
     }
 
     private fun showError(detail: String) {
