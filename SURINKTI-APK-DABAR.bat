@@ -6,11 +6,13 @@ git add -A
 git commit -m "fix: native version bar + server fetch commit-hash"
 git push origin main
 echo.
-echo === 2. APK (versija 0.2.4) ===
+echo === 2. APK (versija 0.2.5 build 7) ===
 cd android
-call build-apk.ps1
+powershell -ExecutionPolicy Bypass -File build-apk.ps1 -Notes "0.2.5 versijos juosta telefone"
 echo.
 echo === 3. Telefone ===
-echo Idiekite nauja APK is android\app\build\outputs\apk\release\
-echo Apacioje MATOMA ZALIA JUOSTA su versija (ne WebView)
+copy /Y android\app\build\outputs\apk\release\app-release.apk "%USERPROFILE%\Desktop\AETERNA-0.2.5.apk" 2>nul
+echo.
+echo Desktop: AETERNA-0.2.5.apk
+echo Telefone idiekite — virsuje AETERNA 0.2.5, apacioje geltona juosta
 pause

@@ -40,7 +40,9 @@
     <string name="download_started">Atsisiunčiama… Patikrinkite pranešimus arba Atsisiuntimų aplanką.</string>
     <string name="download_open_browser">Atidaroma naršyklėje…</string>
     <string name="download_notification_desc">AETERNA Android programėlė</string>
-    <string name="version_loading">Svetainės versija: kraunama…</string>
-    <string name="version_line">Svetainės versija: %1$s · %2$s</string>
-    <string name="version_failed">Svetainės versija: nepavyko · %1$s</string>
+    <string name="version_loading">APK %1$s (nr. %2$d) · svetainė kraunama…</string>
+    <string name="version_line">APK %1$s (nr. %2$d) · svetainė %3$s · %4$s</string>
+    <string name="version_failed">APK %1$s (nr. %2$d) · svetainės commit nepavyko · %3$s</string>
+    <string name="apk_version_banner">Įdiegta programėlė: %1$s (build %2$d)</string>
+    <string name="apk_toast">AETERNA APK %1$s (build %2$d)</string>
 </resources>

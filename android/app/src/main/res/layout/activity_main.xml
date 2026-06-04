@@ -29,13 +29,16 @@
             android:id="@+id/native_version_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:background="#1E3A1E"
             android:gravity="center"
-            android:padding="6dp"
-            android:textColor="#E8F0E6"
-            android:textSize="11sp"
+            android:padding="10dp"
+            android:textColor="#F5E6A3"
+            android:textSize="13sp"
+            android:textStyle="bold"
             android:fontFamily="monospace"
-            android:text="Svetainės versija: …" />
+            android:elevation="8dp"
+            android:text="APK versija: …" />
     </LinearLayout>
 
     <LinearLayout

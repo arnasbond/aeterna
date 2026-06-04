@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+        toolbar.title = "AETERNA ${BuildConfig.VERSION_NAME}"
         toolbar.setOnClickListener { refreshFromServer(clearCache = true) }
 
         webView = findViewById(R.id.webview)
@@ -129,6 +130,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         refreshNativeVersionBar()
+        showApkVersionToastOnce()
         RemoteConfig.sync(this, force = true) { _ ->
             fetchServerContentVersion()
             refreshFromServer(clearCache = true)
@@ -139,15 +141,30 @@ class MainActivity : AppCompatActivity() {
     /** Visada matoma — nepriklauso nuo WebView JS (sprendžia „…“ problemą). */
     private fun refreshNativeVersionBar() {
         val base = homeUrl().trimEnd('/')
-        nativeVersionBar.text = getString(R.string.version_loading)
+        val apk = BuildConfig.VERSION_NAME
+        val code = BuildConfig.VERSION_CODE
+        nativeVersionBar.text = getString(R.string.version_loading, apk, code)
+        nativeVersionBar.visibility = View.VISIBLE
         Thread {
             val label = fetchCommitHash(base)
             runOnUiThread {
                 nativeVersionBar.text =
-                    if (label != null) getString(R.string.version_line, label, base)
-                    else getString(R.string.version_failed, base)
+                    if (label != null) getString(R.string.version_line, apk, code, label, base)
+                    else getString(R.string.version_failed, apk, code, base)
             }
         }.start()
+    }
+
+    private fun showApkVersionToastOnce() {
+        val prefs = getSharedPreferences("unmute_prefs", MODE_PRIVATE)
+        val key = "toast_apk_${BuildConfig.VERSION_CODE}"
+        if (prefs.getBoolean(key, false)) return
+        prefs.edit().putBoolean(key, true).apply()
+        Toast.makeText(
+            this,
+            getString(R.string.apk_toast, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun fetchServerContentVersion() {

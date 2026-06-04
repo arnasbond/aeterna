@@ -1,6 +1,6 @@
 {
-    "releaseNotes":  "VK stiliaus demo memorialas, parapijos administratorius, paskyros registracija",
-    "versionCode":  9,
+    "releaseNotes":  "Automated build",
+    "versionCode":  10,
     "versionName":  "0.1.0-dev",
     "required":  false
 }

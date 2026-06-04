@@ -14,6 +14,11 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        title = getString(R.string.settings_title)
+
+        findViewById<TextView>(R.id.apk_version_banner).text =
+            getString(R.string.apk_version_banner, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+
         val input = findViewById<EditText>(R.id.url_input)
         val hint = findViewById<TextView>(R.id.url_hint)
 

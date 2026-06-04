@@ -26,15 +26,21 @@ if (-not $env:ANDROID_HOME) {
 
 New-Item -ItemType Directory -Force -Path $ReleaseDir | Out-Null
 
+$gradleProps = Join-Path $Root "gradle.properties"
 $versionCode = 1
-$versionName = "0.1.0-dev"
-if (Test-Path $VersionFile) {
+$versionName = "0.2.5"
+if (Test-Path $gradleProps) {
+    Get-Content $gradleProps | ForEach-Object {
+        if ($_ -match '^APP_VERSION_CODE=(\d+)') { $versionCode = [int]$Matches[1] }
+        if ($_ -match '^APP_VERSION_NAME=(.+)') { $versionName = $Matches[1].Trim() }
+    }
+} elseif (Test-Path $VersionFile) {
     Get-Content $VersionFile | ForEach-Object {
         if ($_ -match '^versionCode=(\d+)') { $versionCode = [int]$Matches[1] }
         if ($_ -match '^versionName=(.+)$') { $versionName = $Matches[1].Trim() }
     }
+    $versionCode++
 }
-$versionCode++
 
 $notes = $Notes
 if (-not $notes) {
@@ -64,10 +70,15 @@ Write-Host ""
 Write-Host "Renkamas APK v$versionName ($versionCode)..." -ForegroundColor Cyan
 Push-Location $Root
 try {
-    & $gradlew assembleDebug "-PAPP_VERSION_CODE=$versionCode" "-PAPP_VERSION_NAME=$versionName"
+    & $gradlew assembleRelease "-PAPP_VERSION_CODE=$versionCode" "-PAPP_VERSION_NAME=$versionName"
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-    $apk = Get-ChildItem -Path "app\build\outputs\apk\debug" -Filter "*.apk" -Recurse | Select-Object -First 1
+    $apk = Get-ChildItem -Path "app\build\outputs\apk\release" -Filter "*.apk" -Recurse | Select-Object -First 1
+    if (-not $apk) {
+        & $gradlew assembleDebug "-PAPP_VERSION_CODE=$versionCode" "-PAPP_VERSION_NAME=$versionName"
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        $apk = Get-ChildItem -Path "app\build\outputs\apk\debug" -Filter "*.apk" -Recurse | Select-Object -First 1
+    }
     if (-not $apk) {
         Write-Host "APK nerastas po build." -ForegroundColor Red
         exit 1
@@ -98,13 +109,16 @@ try {
     $utf8NoBom = New-Object System.Text.UTF8Encoding $false
     [System.IO.File]::WriteAllText($UpdateJson, $manifest, $utf8NoBom)
 
-    Remove-Item $apk.FullName -Force -ErrorAction SilentlyContinue
+    $desktopApk = Join-Path $env:USERPROFILE "Desktop\AETERNA-$versionName.apk"
+    Copy-Item $apk.FullName $desktopApk -Force
 
     Write-Host ""
     Write-Host "APK paruoštas ir publikuotas OTA atnaujinimams:" -ForegroundColor Green
     Write-Host "  Telefonui: $userApk"
+    Write-Host "  Darbalaukis: $desktopApk"
     Write-Host "  Serveris:  $destApk"
     Write-Host "  Manifest:  $UpdateJson"
+    Write-Host "  Versija:   $versionName (build $versionCode)"
     Write-Host ""
     Write-Host "Telefonai su senesne versija gaus atnaujinimą automatiškai (API turi veikti :4000)." -ForegroundColor Cyan
 } finally {
