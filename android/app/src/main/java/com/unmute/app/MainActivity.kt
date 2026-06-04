@@ -92,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 handler.removeCallbacks(loadTimeout)
                 if (url?.startsWith("file:///android_asset/error") != true) {
                     hideError()
+                    syncBuildLabelOnPage()
                 }
                 updateSubtitle()
             }
@@ -215,8 +216,45 @@ class MainActivity : AppCompatActivity() {
         handler.postDelayed(loadTimeout, 20_000)
         val sep = if (base.contains("?")) "&" else "?"
         val cv = serverContentVersion ?: System.currentTimeMillis().toString()
-        webView.loadUrl("$base${sep}_cv=$cv&_app=${AppUpdateManager.currentVersionCode(this)}")
+        val url = "$base${sep}_cv=$cv&_app=${AppUpdateManager.currentVersionCode(this)}&_t=${System.currentTimeMillis()}"
+        val headers = mapOf(
+            "Cache-Control" to "no-cache, no-store, must-revalidate",
+            "Pragma" to "no-cache"
+        )
+        webView.loadUrl(url, headers)
         updateSubtitle()
+    }
+
+    /** Senas WebView cache rodydavo „vercel“ — perrašome iš /api/build-label. */
+    private fun syncBuildLabelOnPage() {
+        val base = homeUrl().trimEnd('/')
+        Thread {
+            try {
+                val conn = (URL("$base/api/build-label").openConnection() as HttpURLConnection).apply {
+                    connectTimeout = 10_000
+                    readTimeout = 10_000
+                    requestMethod = "GET"
+                    setRequestProperty("Cache-Control", "no-cache")
+                }
+                if (conn.responseCode !in 200..299) return@Thread
+                val body = conn.inputStream.bufferedReader().readText()
+                val label = JSONObject(body).optString("label", "").trim()
+                conn.disconnect()
+                if (label.isEmpty() || label == "vercel") return@Thread
+                val safe = label.replace("\\", "").replace("'", "")
+                val js = """
+                    (function(){
+                      var el = document.getElementById('aeterna-build-label');
+                      if (el) el.textContent = '$safe';
+                      var badge = document.getElementById('aeterna-deploy-badge');
+                      if (badge) badge.setAttribute('data-build', '$safe');
+                    })();
+                """.trimIndent()
+                runOnUiThread { webView.evaluateJavascript(js, null) }
+            } catch (_: Exception) {
+                /* ignore */
+            }
+        }.start()
     }
 
     private fun showError(detail: String) {
