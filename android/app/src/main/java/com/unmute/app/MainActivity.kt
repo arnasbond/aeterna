@@ -230,16 +230,30 @@ class MainActivity : AppCompatActivity() {
         val base = homeUrl().trimEnd('/')
         Thread {
             try {
+                var label = ""
+                val hashConn = (URL("$base/commit-hash.txt?t=${System.currentTimeMillis()}").openConnection() as HttpURLConnection).apply {
+                    connectTimeout = 10_000
+                    readTimeout = 10_000
+                    requestMethod = "GET"
+                    setRequestProperty("Cache-Control", "no-cache")
+                }
+                if (hashConn.responseCode in 200..299) {
+                    label = hashConn.inputStream.bufferedReader().readText().trim()
+                }
+                hashConn.disconnect()
+                if (!label.matches(Regex("^[0-9a-fA-F]{7}$"))) {
                 val conn = (URL("$base/api/build-label").openConnection() as HttpURLConnection).apply {
                     connectTimeout = 10_000
                     readTimeout = 10_000
                     requestMethod = "GET"
                     setRequestProperty("Cache-Control", "no-cache")
                 }
-                if (conn.responseCode !in 200..299) return@Thread
-                val body = conn.inputStream.bufferedReader().readText()
-                val label = JSONObject(body).optString("label", "").trim()
+                if (conn.responseCode in 200..299) {
+                    val body = conn.inputStream.bufferedReader().readText()
+                    label = JSONObject(body).optString("label", "").trim()
+                }
                 conn.disconnect()
+                }
                 if (label.isEmpty() || label == "vercel" || !label.matches(Regex("^[0-9a-fA-F]{7}$"))) return@Thread
                 val safe = label.lowercase().replace("\\", "").replace("'", "")
                 val js = """
