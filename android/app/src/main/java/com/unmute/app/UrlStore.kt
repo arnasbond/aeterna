@@ -31,11 +31,27 @@ object UrlStore {
         return base
     }
 
+    private fun isDevWebUrl(url: String): Boolean {
+        val lower = url.lowercase()
+        return lower.contains("localhost") ||
+            lower.contains("127.0.0.1") ||
+            lower.contains("10.0.2.2") ||
+            lower.contains("192.168.") ||
+            (lower.contains(":3000") && !lower.contains("vercel.app"))
+    }
+
+    /** Jei išsaugotas dev/LAN adresas — grąžiname production iš BuildConfig. */
     fun getUrl(context: Context): String {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val saved = prefs.getString(KEY_URL, null)?.trim().orEmpty()
         val raw = saved.ifEmpty { BuildConfig.WEB_APP_URL }
-        return ensureWebHost(raw)
+        val base = ensureWebHost(raw)
+        if (isDevWebUrl(base)) {
+            val prod = ensureWebHost(BuildConfig.WEB_APP_URL)
+            prefs.edit().putString(KEY_URL, prod).putBoolean(KEY_MANUAL_OVERRIDE, false).apply()
+            return prod
+        }
+        return base
     }
 
     fun isManualOverride(context: Context): Boolean {

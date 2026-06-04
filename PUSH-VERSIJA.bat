@@ -1,7 +1,8 @@
 @echo off
 cd /d H:\dev\aeterna
 git add -A
-git commit -m "fix: Vercel build label on phone (server runtime, not local)"
+git commit -m "fix: phone local version - force Vercel URL, show host in badge"
 git push origin main
-git rev-parse --short HEAD
+echo.
+echo Paleiskite Vercel deploy, tada telefone: Nustatymai - debesis arba naujas APK
 pause

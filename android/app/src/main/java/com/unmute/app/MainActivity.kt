@@ -196,7 +196,17 @@ class MainActivity : AppCompatActivity() {
     private fun homeUrl(): String = UrlStore.getUrl(this)
 
     private fun loadHome(force: Boolean = false) {
-        val base = homeUrl()
+        var base = homeUrl()
+        val lower = base.lowercase()
+        if (lower.contains("localhost") || lower.contains("192.168.") || lower.contains("10.0.2.2") || lower.contains("127.0.0.1")) {
+            UrlStore.resetUrl(this)
+            base = homeUrl()
+            Toast.makeText(
+                this,
+                "Perjungta į $base",
+                Toast.LENGTH_LONG
+            ).show()
+        }
         if (!force && base == loadedBaseUrl && pageLoaded) return
         loadedBaseUrl = base
         pageLoaded = false

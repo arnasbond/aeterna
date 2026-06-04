@@ -5,7 +5,7 @@ plugins {
 
 val webAppUrl: String =
     (project.findProperty("WEB_APP_URL") as String?)
-        ?: "http://10.0.2.2:3000"
+        ?: "https://aeterna-mauve.vercel.app"
 
 val apiBaseUrl: String =
     (project.findProperty("API_BASE_URL") as String?)

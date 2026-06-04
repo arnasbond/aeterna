@@ -2943,6 +2943,12 @@
   color: var(--ae-primary-dark);
 }
 
+.ae-deploy-badge__host {
+  font-family: ui-monospace, monospace;
+  font-size: 0.68rem;
+  opacity: 0.85;
+}
+
 .ae-memorial-search__build {
   font-family: ui-monospace, monospace;
   font-size: 0.72rem;
