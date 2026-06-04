@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         nativeVersionBar = findViewById(R.id.native_version_bar)
 
         findViewById<Button>(R.id.btn_retry).setOnClickListener {
+            UrlStore.forceProductionCloud(this)
             hideError()
             refreshFromServer(clearCache = true)
         }
@@ -129,6 +130,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        UrlStore.forceProductionCloud(this)
         refreshNativeVersionBar()
         showApkVersionToastOnce()
         RemoteConfig.sync(this, force = true) { _ ->
@@ -149,8 +151,8 @@ class MainActivity : AppCompatActivity() {
             val label = fetchCommitHash(base)
             runOnUiThread {
                 nativeVersionBar.text =
-                    if (label != null) getString(R.string.version_line, apk, code, label, base)
-                    else getString(R.string.version_failed, apk, code, base)
+                    if (label != null) getString(R.string.version_line, apk, code, label)
+                    else getString(R.string.version_failed, apk, code)
             }
         }.start()
     }
@@ -251,7 +253,7 @@ class MainActivity : AppCompatActivity() {
         pageLoaded = false
         hideError()
         handler.removeCallbacks(loadTimeout)
-        handler.postDelayed(loadTimeout, 20_000)
+        handler.postDelayed(loadTimeout, 45_000)
         val sep = if (base.contains("?")) "&" else "?"
         val cv = serverContentVersion ?: System.currentTimeMillis().toString()
         val url = "$base${sep}_cv=$cv&_app=${AppUpdateManager.currentVersionCode(this)}&_t=${System.currentTimeMillis()}"

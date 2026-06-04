@@ -32,25 +32,25 @@ class SettingsActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             val safe = UrlStore.ensureWebHost(url)
-            if (safe != UrlStore.normalizeBaseUrl(url)) {
-                Toast.makeText(this, R.string.url_invalid, Toast.LENGTH_LONG).show()
-                input.setText(safe)
-            }
             UrlStore.setUrl(this, safe)
+            input.setText(safe)
+            if (safe != url.trim().trimEnd('/')) {
+                Toast.makeText(this, R.string.url_redirected, Toast.LENGTH_LONG).show()
+            }
             Toast.makeText(this, R.string.url_saved, Toast.LENGTH_SHORT).show()
             setResult(RESULT_OK)
             finish()
         }
 
         findViewById<Button>(R.id.btn_reset).setOnClickListener {
-            UrlStore.resetUrl(this)
-            input.setText(BuildConfig.WEB_APP_URL)
+            UrlStore.forceProductionCloud(this)
+            input.setText(UrlStore.getUrl(this))
             Toast.makeText(this, R.string.url_reset, Toast.LENGTH_SHORT).show()
         }
 
         findViewById<Button>(R.id.btn_cloud_auto).setOnClickListener {
-            UrlStore.resetUrl(this)
-            input.setText(BuildConfig.WEB_APP_URL)
+            UrlStore.forceProductionCloud(this)
+            input.setText(UrlStore.getUrl(this))
             Toast.makeText(this, R.string.cloud_mode_enabled, Toast.LENGTH_LONG).show()
             setResult(RESULT_OK)
             finish()

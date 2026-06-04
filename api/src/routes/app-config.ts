@@ -22,7 +22,10 @@ export async function appConfigRoutes(app: FastifyInstance) {
   app.get("/api/v1/app/config", async (req) => {
     const hostHeader = req.headers.host ?? `localhost:${process.env.PORT || 4000}`;
     const proto = (req.headers["x-forwarded-proto"] as string) ?? req.protocol;
-    const webAppUrl = publicWebUrl();
+    let webAppUrl = publicWebUrl();
+    if (webAppUrl.includes("aeterna-mauve.vercel.app")) {
+      webAppUrl = "https://aeterna-web-six.vercel.app";
+    }
     const apiBaseUrl = publicApiUrl(hostHeader, proto);
 
     let minVersionCode = 1;
@@ -62,7 +65,10 @@ export async function appConfigRoutes(app: FastifyInstance) {
     const hostHeader = req.headers.host ?? `localhost:${process.env.PORT || 4000}`;
     const proto = (req.headers["x-forwarded-proto"] as string) ?? req.protocol;
     const apiHost = publicApiUrl(hostHeader, proto);
-    const webUrl = publicWebUrl();
+    let webUrl = publicWebUrl();
+    if (webUrl.includes("aeterna-mauve.vercel.app")) {
+      webUrl = "https://aeterna-web-six.vercel.app";
+    }
 
     let versionCode = 1;
     let versionName = "0.1.0-dev";

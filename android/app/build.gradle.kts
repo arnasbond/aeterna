@@ -5,7 +5,7 @@ plugins {
 
 val webAppUrl: String =
     (project.findProperty("WEB_APP_URL") as String?)
-        ?: "https://aeterna-mauve.vercel.app"
+        ?: "https://aeterna-web-six.vercel.app"
 
 val apiBaseUrl: String =
     (project.findProperty("API_BASE_URL") as String?)
@@ -19,8 +19,9 @@ android {
         applicationId = "com.unmute.app"
         minSdk = 24
         targetSdk = 35
-        versionCode = (project.findProperty("APP_VERSION_CODE") as String?)?.toIntOrNull() ?: 1
-        versionName = (project.findProperty("APP_VERSION_NAME") as String?) ?: "0.1.0-dev"
+        // Numatyta iš android/gradle.properties — nepriklauso nuo API update.json
+        versionCode = (project.findProperty("APP_VERSION_CODE") as String?)?.toIntOrNull() ?: 11
+        versionName = (project.findProperty("APP_VERSION_NAME") as String?) ?: "0.2.5"
         buildConfigField("String", "WEB_APP_URL", "\"$webAppUrl\"")
         buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
     }

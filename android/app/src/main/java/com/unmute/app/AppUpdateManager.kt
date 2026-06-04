@@ -46,7 +46,7 @@ object AppUpdateManager {
                 val current = currentVersionCode(activity)
                 if (!info.apkAvailable) return@execute
 
-                if (info.versionCode > current) {
+                if (info.versionCode > current && !wouldDowngradeToDev(info, activity)) {
                     activity.runOnUiThread {
                         showUpdateDialog(activity, info, current)
                     }
@@ -58,6 +58,18 @@ object AppUpdateManager {
                     }
                 }
             }
+        }
+    }
+
+    /** Serveris kartą turėjo 0.1.0-dev (build 10) — nebekviesti „atnaujinti“ į dev ant 0.2.5. */
+    private fun wouldDowngradeToDev(info: UpdateInfo, activity: Activity): Boolean {
+        if (!info.versionName.contains("-dev", ignoreCase = true)) return false
+        return try {
+            val pkg = activity.packageManager.getPackageInfo(activity.packageName, 0)
+            val name = pkg.versionName ?: ""
+            !name.contains("-dev", ignoreCase = true)
+        } catch (_: Exception) {
+            false
         }
     }
 

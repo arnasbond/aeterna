@@ -1,4 +1,4 @@
-# AETERNA — debug APK surinkimas + publikavimas OTA atnaujinimams (Windows)
+# AETERNA — APK surinkimas (Windows)
 # Reikia: Android SDK (Android Studio) ir JDK 17+
 
 param(
@@ -12,17 +12,61 @@ $ReleaseDir = Join-Path $RepoRoot "api\releases\android"
 $VersionFile = Join-Path $ReleaseDir "version.properties"
 $UpdateJson = Join-Path $ReleaseDir "update.json"
 
-if (-not $env:ANDROID_HOME -and -not $env:ANDROID_SDK_ROOT) {
-    $defaultSdk = Join-Path $env:LOCALAPPDATA "Android\Sdk"
-    if (Test-Path $defaultSdk) {
-        $env:ANDROID_HOME = $defaultSdk
-    }
+function Resolve-SdkDir([string]$Raw) {
+    if (-not $Raw) { return $null }
+    $p = $Raw.Trim().Replace("/", "\")
+    $p = $p -replace '\\+', '\'
+    if (Test-Path $p) { return (Resolve-Path $p).Path }
+    return $null
 }
 
-if (-not $env:ANDROID_HOME) {
-    Write-Host "ANDROID_HOME nerastas. Įdiekite Android Studio arba nustatykite ANDROID_HOME." -ForegroundColor Red
+function Find-AndroidSdk {
+    if ($env:ANDROID_HOME -and (Test-Path $env:ANDROID_HOME)) {
+        return (Resolve-Path $env:ANDROID_HOME).Path
+    }
+    if ($env:ANDROID_SDK_ROOT -and (Test-Path $env:ANDROID_SDK_ROOT)) {
+        return (Resolve-Path $env:ANDROID_SDK_ROOT).Path
+    }
+
+    $localProps = Join-Path $Root "local.properties"
+    if (Test-Path $localProps) {
+        foreach ($line in Get-Content $localProps) {
+            if ($line -match '^\s*sdk\.dir\s*=\s*(.+)\s*$') {
+                $sdk = Resolve-SdkDir $Matches[1]
+                if ($sdk) { return $sdk }
+            }
+        }
+    }
+
+    $candidates = @(
+        "H:\OneDrive\Desktop\unmute\android-sdk",
+        (Join-Path $env:LOCALAPPDATA "Android\Sdk"),
+        (Join-Path $env:USERPROFILE "AppData\Local\Android\Sdk"),
+        "C:\Android\Sdk"
+    )
+    foreach ($c in $candidates) {
+        if ($c -and (Test-Path $c)) { return (Resolve-Path $c).Path }
+    }
+    return $null
+}
+
+$sdk = Find-AndroidSdk
+if (-not $sdk) {
+    Write-Host ""
+    Write-Host "ANDROID_HOME nerastas." -ForegroundColor Red
+    Write-Host ""
+    Write-Host "1) Įdiekite Android Studio: https://developer.android.com/studio" -ForegroundColor Yellow
+    Write-Host "2) Arba nukopijuokite SDK į:" -ForegroundColor Yellow
+    Write-Host "   H:\OneDrive\Desktop\unmute\android-sdk" -ForegroundColor Yellow
+    Write-Host "3) Arba redaguokite android\local.properties:" -ForegroundColor Yellow
+    Write-Host "   sdk.dir=C\:\\Users\\JUSU\\AppData\\Local\\Android\\Sdk" -ForegroundColor Yellow
+    Write-Host ""
     exit 1
 }
+
+$env:ANDROID_HOME = $sdk
+$env:ANDROID_SDK_ROOT = $sdk
+Write-Host "Android SDK: $sdk" -ForegroundColor DarkGray
 
 New-Item -ItemType Directory -Force -Path $ReleaseDir | Out-Null
 
@@ -44,25 +88,18 @@ if (Test-Path $gradleProps) {
 
 $notes = $Notes
 if (-not $notes) {
-    $notes = Read-Host "Atnaujinimo aprašymas (Enter = numatytasis)"
-}
-if (-not $notes) {
     $notes = "AETERNA Android $versionName (build $versionCode)"
 }
 
 "versionCode=$versionCode`nversionName=$versionName" | Set-Content -Path $VersionFile -Encoding UTF8
 
 $localProps = Join-Path $Root "local.properties"
-if (-not (Test-Path $localProps)) {
-    $sdkDir = $env:ANDROID_HOME -replace '\\', '/'
-    "sdk.dir=$sdkDir" | Set-Content -Path $localProps -Encoding UTF8
-    Write-Host "Sukurtas local.properties → $sdkDir"
-}
+$sdkDirGradle = $sdk -replace '\\', '/'
+"sdk.dir=$sdkDirGradle" | Set-Content -Path $localProps -Encoding ASCII
 
 $gradlew = Join-Path $Root "gradlew.bat"
 if (-not (Test-Path $gradlew)) {
-    Write-Host ""
-    Write-Host "gradlew.bat dar nėra. Android Studio → Open → android/ → Build APK" -ForegroundColor Yellow
+    Write-Host "gradlew.bat nerastas. Atidarykite android/ Android Studio." -ForegroundColor Yellow
     exit 1
 }
 
@@ -88,17 +125,14 @@ try {
     Copy-Item $apk.FullName $userApk -Force
 
     $destApk = Join-Path $ReleaseDir "aeterna.apk"
-    if (Test-Path $destApk) { Remove-Item $destApk -Force }
-    try {
-        New-Item -ItemType HardLink -Path $destApk -Target $userApk | Out-Null
-    } catch {
-        Copy-Item $userApk $destApk -Force
-    }
+    Copy-Item $userApk $destApk -Force
 
     $webReleaseDir = Join-Path $RepoRoot "web\public\releases"
     New-Item -ItemType Directory -Force -Path $webReleaseDir | Out-Null
     Copy-Item $userApk (Join-Path $webReleaseDir "aeterna.apk") -Force
-    Write-Host "  Web statika: $(Join-Path $webReleaseDir 'aeterna.apk')" -ForegroundColor DarkGray
+
+    $desktopApk = Join-Path $env:USERPROFILE "Desktop\AETERNA-$versionName.apk"
+    Copy-Item $apk.FullName $desktopApk -Force
 
     $manifest = @{
         versionCode = $versionCode
@@ -109,18 +143,11 @@ try {
     $utf8NoBom = New-Object System.Text.UTF8Encoding $false
     [System.IO.File]::WriteAllText($UpdateJson, $manifest, $utf8NoBom)
 
-    $desktopApk = Join-Path $env:USERPROFILE "Desktop\AETERNA-$versionName.apk"
-    Copy-Item $apk.FullName $desktopApk -Force
-
     Write-Host ""
-    Write-Host "APK paruoštas ir publikuotas OTA atnaujinimams:" -ForegroundColor Green
-    Write-Host "  Telefonui: $userApk"
+    Write-Host "APK paruoštas:" -ForegroundColor Green
     Write-Host "  Darbalaukis: $desktopApk"
-    Write-Host "  Serveris:  $destApk"
-    Write-Host "  Manifest:  $UpdateJson"
-    Write-Host "  Versija:   $versionName (build $versionCode)"
+    Write-Host "  Versija:     $versionName (build $versionCode)"
     Write-Host ""
-    Write-Host "Telefonai su senesne versija gaus atnaujinimą automatiškai (API turi veikti :4000)." -ForegroundColor Cyan
 } finally {
     Pop-Location
 }

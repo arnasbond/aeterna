@@ -56,7 +56,7 @@ object RemoteConfig {
 
                 if (!UrlStore.isManualOverride(context)) {
                     val remote = UrlStore.ensureWebHost(config.optString("webAppUrl", ""))
-                    if (remote.isNotEmpty() && remote != url) {
+                    if (remote.isNotEmpty() && remote != url && remote.startsWith("https://")) {
                         UrlStore.applyRemoteUrl(context, remote)
                         url = remote
                         urlChanged = true
