@@ -3,10 +3,17 @@ package com.unmute.app
 import java.net.URL
 
 object ApiUrl {
-    /** HTTPS production — tas pats hostas (API per Next rewrite). Dev — :4000 */
+    /**
+     * Vercel: svetainė aeterna-web-six, API api-three-chi-63.
+     * LAN/dev: tas pats PC su portu 4000.
+     */
     fun resolveApiBase(webUrl: String): String {
         val trimmed = webUrl.trim().trimEnd('/')
-        if (trimmed.isEmpty()) return "https://aeterna-web-six.vercel.app"
+        if (trimmed.isEmpty()) return BuildConfig.API_BASE_URL.trimEnd('/')
+
+        if (isVercelProductionWeb(trimmed)) {
+            return BuildConfig.API_BASE_URL.trimEnd('/')
+        }
 
         if (trimmed.startsWith("https://")) {
             return trimmed
@@ -26,5 +33,12 @@ object ApiUrl {
         } catch (_: Exception) {
             trimmed
         }
+    }
+
+    private fun isVercelProductionWeb(url: String): Boolean {
+        if (!url.startsWith("https://")) return false
+        return url.contains("aeterna-web-six") ||
+            url.contains("aeterna-web") ||
+            (url.contains(".vercel.app") && !url.contains("api-"))
     }
 }

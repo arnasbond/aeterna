@@ -56,8 +56,9 @@ cd android
 
 ## Atnaujinimai
 
-- **Svetainė/API:** `git push` → Render automatiškai perbuildina
-- **Android APK:** `build-apk.ps1` → rankinis įdiegimas arba OTA (reikia APK ant serverio)
+- **Svetainė/API:** `git push` → Render automatiškai perbuildina (programėlėje matosi iš karto)
+- **Android APK:** `android\build-apk.ps1` → `git push` (APK + manifest) → telefonai gauna OTA pasiūlymą
+- **Serverio adresas telefone:** automatinis iš `/api/v1/app/config` — IP vesti nereikia
 
 ## Lokaliai vs debesis
 

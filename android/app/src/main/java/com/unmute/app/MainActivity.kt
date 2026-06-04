@@ -11,6 +11,7 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -24,7 +25,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
+import java.net.HttpURLConnection
+import java.net.URL
 import java.net.URLEncoder
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private var backPressToast: Toast? = null
     private var loadedBaseUrl: String? = null
     private var pageLoaded = false
+    private var serverContentVersion: String? = null
     private val handler = Handler(Looper.getMainLooper())
     private val loadTimeout = Runnable { if (!pageLoaded) showError(getString(R.string.error_timeout)) }
 
@@ -45,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        toolbar.setOnClickListener { loadHome(force = true) }
+        toolbar.setOnClickListener { refreshFromServer(clearCache = true) }
 
         webView = findViewById(R.id.webview)
         errorPanel = findViewById(R.id.error_panel)
@@ -54,13 +59,14 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_retry).setOnClickListener {
             hideError()
-            loadHome(force = true)
+            refreshFromServer(clearCache = true)
         }
         findViewById<Button>(R.id.btn_settings).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         webView.setBackgroundColor(Color.parseColor("#fcfbf7"))
+        clearAllWebStorage()
 
         with(webView.settings) {
             javaScriptEnabled = true
@@ -69,6 +75,8 @@ class MainActivity : AppCompatActivity() {
             loadWithOverviewMode = true
             useWideViewPort = true
             mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            @Suppress("DEPRECATION")
+            cacheMode = android.webkit.WebSettings.LOAD_NO_CACHE
         }
 
         if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
@@ -112,29 +120,72 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Visada titulinis — ne atkurti paskutinį demo ar kitą puslapį
-        loadHome(force = true)
+        RemoteConfig.sync(this, force = true) { _ ->
+            fetchServerContentVersion()
+            refreshFromServer(clearCache = true)
+            AppUpdateManager.checkForUpdate(this@MainActivity, onLaunch = true)
+        }
+    }
 
-        AppUpdateManager.checkForUpdate(this)
+    private fun fetchServerContentVersion() {
+        Thread {
+            try {
+                val api = ApiUrl.resolveApiBase(UrlStore.getUrl(this))
+                val conn = (URL("$api/api/v1/app/config").openConnection() as HttpURLConnection).apply {
+                    connectTimeout = 10_000
+                    readTimeout = 10_000
+                    requestMethod = "GET"
+                    setRequestProperty("Cache-Control", "no-cache")
+                }
+                if (conn.responseCode in 200..299) {
+                    val body = conn.inputStream.bufferedReader().readText()
+                    val data = JSONObject(body).optJSONObject("data")
+                    serverContentVersion = data?.optString("contentVersion", "")?.trim()?.ifEmpty { null }
+                }
+                conn.disconnect()
+            } catch (_: Exception) {
+                /* ignore */
+            }
+            runOnUiThread { updateSubtitle() }
+        }.start()
     }
 
     private fun updateSubtitle() {
-        supportActionBar?.subtitle = UrlStore.getUrl(this).trimEnd('/')
+        val v = AppUpdateManager.currentVersionCode(this)
+        val cv = serverContentVersion?.let { " · srv:$it" } ?: ""
+        supportActionBar?.subtitle = "${UrlStore.getUrl(this).trimEnd('/')} · apk:$v$cv"
     }
 
-    private fun homeUrl(): String {
-        return UrlStore.getUrl(this)
+    private fun clearAllWebStorage() {
+        try {
+            webView.clearCache(true)
+            webView.clearHistory()
+            CookieManager.getInstance().removeAllCookies(null)
+            CookieManager.getInstance().flush()
+            RemoteConfig.clearWebCache(this)
+        } catch (_: Exception) {
+            /* ignore */
+        }
     }
+
+    fun refreshFromServer(clearCache: Boolean = false) {
+        if (clearCache) clearAllWebStorage()
+        loadHome(force = true)
+    }
+
+    private fun homeUrl(): String = UrlStore.getUrl(this)
 
     private fun loadHome(force: Boolean = false) {
-        val url = homeUrl()
-        if (!force && url == loadedBaseUrl && pageLoaded) return
-        loadedBaseUrl = url
+        val base = homeUrl()
+        if (!force && base == loadedBaseUrl && pageLoaded) return
+        loadedBaseUrl = base
         pageLoaded = false
         hideError()
         handler.removeCallbacks(loadTimeout)
-        handler.postDelayed(loadTimeout, 15_000)
-        webView.loadUrl(url)
+        handler.postDelayed(loadTimeout, 20_000)
+        val sep = if (base.contains("?")) "&" else "?"
+        val cv = serverContentVersion ?: System.currentTimeMillis().toString()
+        webView.loadUrl("$base${sep}_cv=$cv&_app=${AppUpdateManager.currentVersionCode(this)}")
         updateSubtitle()
     }
 
@@ -160,11 +211,19 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_reload -> {
-                loadHome(force = true)
+                RemoteConfig.sync(this, force = true) {
+                    fetchServerContentVersion()
+                    refreshFromServer(clearCache = true)
+                    Toast.makeText(this, R.string.reload_from_server_done, Toast.LENGTH_LONG).show()
+                }
                 true
             }
             R.id.action_check_update -> {
-                AppUpdateManager.checkForUpdate(this, force = true)
+                RemoteConfig.sync(this, force = true) {
+                    fetchServerContentVersion()
+                    refreshFromServer(clearCache = true)
+                    AppUpdateManager.checkForUpdate(this, force = true)
+                }
                 true
             }
             R.id.action_share -> {
@@ -195,9 +254,15 @@ class MainActivity : AppCompatActivity() {
         webView.onResume()
         val url = homeUrl()
         if (url != loadedBaseUrl) {
-            loadHome(force = true)
+            refreshFromServer(clearCache = true)
         } else {
             updateSubtitle()
+        }
+        RemoteConfig.sync(this, force = true) { result ->
+            if (result.urlChanged || result.contentChanged) {
+                fetchServerContentVersion()
+                refreshFromServer(clearCache = true)
+            }
         }
         AppUpdateManager.checkForUpdate(this)
     }
@@ -231,7 +296,7 @@ class MainActivity : AppCompatActivity() {
 
         @JavascriptInterface
         fun goHome() {
-            runOnUiThread { loadHome(force = true) }
+            runOnUiThread { refreshFromServer(clearCache = true) }
         }
     }
 
@@ -239,7 +304,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (errorPanel.visibility == View.VISIBLE) {
             hideError()
-            loadHome(force = true)
+            refreshFromServer(clearCache = true)
             return
         }
         if (webView.canGoBack()) {

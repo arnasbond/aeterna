@@ -50,6 +50,13 @@
             android:layout_marginTop="8dp"
             android:text="@string/reset_default" />
 
+        <Button
+            android:id="@+id/btn_cloud_auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/use_cloud_auto" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

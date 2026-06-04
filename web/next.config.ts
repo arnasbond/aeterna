@@ -8,6 +8,23 @@ const devOrigins = (process.env.NEXT_DEV_ORIGINS || "192.168.8.244,localhost")
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   allowedDevOrigins: devOrigins,
+  env: {
+    NEXT_PUBLIC_BUILD_LABEL:
+      process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ||
+      process.env.RENDER_GIT_COMMIT?.slice(0, 7) ||
+      "local",
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Cache-Control", value: "no-store, no-cache, must-revalidate" },
+          { key: "Pragma", value: "no-cache" },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     const api = process.env.API_INTERNAL_URL?.replace(/\/$/, "");
     if (!api) return [];

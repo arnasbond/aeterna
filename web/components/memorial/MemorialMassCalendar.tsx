@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  DonationAmountPicker,
+  donationAmountCents,
+  DONATION_MIN_EUR,
+} from "@/components/DonationAmountPicker";
+import { RequestMassSlotsButton } from "@/components/mass/RequestMassSlotsButton";
 import { bookMass, fetchAvailableMasses, type MassSlot } from "@/lib/api";
 
 function formatSlot(dt: string) {
@@ -15,10 +21,11 @@ function formatSlot(dt: string) {
 
 type Props = {
   parishId: string;
+  parishTitle?: string;
   deceasedName: string;
 };
 
-export function MemorialMassCalendar({ parishId, deceasedName }: Props) {
+export function MemorialMassCalendar({ parishId, parishTitle, deceasedName }: Props) {
   const [slots, setSlots] = useState<MassSlot[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [intentions, setIntentions] = useState("");
@@ -27,6 +34,9 @@ export function MemorialMassCalendar({ parishId, deceasedName }: Props) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [amountEur, setAmountEur] = useState(15);
+  const [customMode, setCustomMode] = useState(false);
+  const [customInput, setCustomInput] = useState("");
 
   useEffect(() => {
     if (!parishId) return;
@@ -37,9 +47,20 @@ export function MemorialMassCalendar({ parishId, deceasedName }: Props) {
 
   const selected = slots.find((s) => s.id === selectedId);
 
+  const amountCents = donationAmountCents(amountEur, customMode, customInput);
+  const amountLabel =
+    amountCents != null ? `${(amountCents / 100).toFixed(2).replace(/\.00$/, "")} €` : null;
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!selectedId) return;
+    if (!selectedId) {
+      setErr("Pasirinkite laisvą laiką.");
+      return;
+    }
+    if (amountCents == null) {
+      setErr(`Pasirinkite sumą nuo ${DONATION_MIN_EUR} €.`);
+      return;
+    }
     setBusy(true);
     setErr(null);
     setMsg(null);
@@ -48,7 +69,7 @@ export function MemorialMassCalendar({ parishId, deceasedName }: Props) {
         massId: selectedId,
         intentions: intentions || `Už ${deceasedName}`,
         donorName,
-        amountCents: 1500,
+        amountCents,
       });
       setMsg("Mišios užsakytos. Laikas pažymėtas kaip užimtas — laukiama patvirtinimo.");
       setShowForm(false);
@@ -72,7 +93,12 @@ export function MemorialMassCalendar({ parishId, deceasedName }: Props) {
       </p>
 
       {slots.length === 0 ? (
-        <p className="ae-hint">Šiuo metu nėra laisvų laikų — parapijos administratorius gali atidaryti skydelyje.</p>
+        <div style={{ marginBottom: "1rem" }}>
+          <p className="ae-hint" style={{ marginBottom: "0.75rem" }}>
+            Šiuo metu nėra laisvų laikų. Paspauskite — kunigas gaus pranešimą ir galės pridėti laikus.
+          </p>
+          <RequestMassSlotsButton parishId={parishId} parishTitle={parishTitle} source="memorial" />
+        </div>
       ) : (
         <div className="ch-mass-grid">
           {slots.map((s) => (
@@ -91,16 +117,6 @@ export function MemorialMassCalendar({ parishId, deceasedName }: Props) {
         </div>
       )}
 
-      <div className="ch-mass-grid" style={{ marginTop: "0.5rem", opacity: 0.5 }} aria-hidden>
-        {["09:00", "11:00", "18:00"].map((t) => (
-          <div key={t} className="ch-mass-slot ch-mass-slot--busy">
-            {t}
-            <br />
-            užimta
-          </div>
-        ))}
-      </div>
-
       {showForm && selected && (
         <form onSubmit={submit} className="ch-mass-book-form">
           <p style={{ margin: "0 0 0.75rem", fontWeight: 600 }}>{formatSlot(selected.dateTime)}</p>
@@ -118,11 +134,32 @@ export function MemorialMassCalendar({ parishId, deceasedName }: Props) {
             <label>Jūsų vardas</label>
             <input value={donorName} onChange={(e) => setDonorName(e.target.value)} required />
           </div>
-          <p className="ch-fee-note">Mokėjimas (mock) — 15 € tiesiai parapijos sąskaitai.</p>
+          <DonationAmountPicker
+            presetEur={amountEur}
+            customMode={customMode}
+            customInput={customInput}
+            onPreset={(a) => {
+              setCustomMode(false);
+              setCustomInput("");
+              setAmountEur(a);
+              setErr(null);
+            }}
+            onCustomMode={() => {
+              setCustomMode(true);
+              setErr(null);
+            }}
+            onCustomInput={setCustomInput}
+            label="Auka už Šv. Mišias (€)"
+          />
+          <p className="ch-fee-note">Mokėjimas (mock) — visa suma skiriama parapijos sąskaitai.</p>
           {err && <p className="ae-error">{err}</p>}
           {msg && <p className="ae-hint" style={{ color: "var(--ch-emerald)" }}>{msg}</p>}
           <button type="submit" className="ch-btn ch-btn--primary ch-btn--block" disabled={busy}>
-            {busy ? "Užsakoma…" : "Užsakyti ir apmokėti"}
+            {busy
+              ? "Užsakoma…"
+              : amountLabel
+                ? `Užsakyti ir paaukoti (${amountLabel})`
+                : "Pasirinkite sumą"}
           </button>
         </form>
       )}

@@ -7,6 +7,10 @@ val webAppUrl: String =
     (project.findProperty("WEB_APP_URL") as String?)
         ?: "http://10.0.2.2:3000"
 
+val apiBaseUrl: String =
+    (project.findProperty("API_BASE_URL") as String?)
+        ?: "https://api-three-chi-63.vercel.app"
+
 android {
     namespace = "com.unmute.app"
     compileSdk = 35
@@ -18,6 +22,7 @@ android {
         versionCode = (project.findProperty("APP_VERSION_CODE") as String?)?.toIntOrNull() ?: 1
         versionName = (project.findProperty("APP_VERSION_NAME") as String?) ?: "0.1.0-dev"
         buildConfigField("String", "WEB_APP_URL", "\"$webAppUrl\"")
+        buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
     }
 
     buildTypes {

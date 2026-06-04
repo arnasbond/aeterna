@@ -3,6 +3,7 @@ import { DownloadAppButton } from "@/components/DownloadAppButton";
 import { AboutInitiative } from "@/components/home/AboutInitiative";
 import { HomeExplainerModal } from "@/components/home/HomeExplainerModal";
 import { HomeHeroInteractive } from "@/components/home/HomeHeroInteractive";
+import { MemorialSearchBox } from "@/components/home/MemorialSearchBox";
 import { HomeHowItWorksInteractive } from "@/components/home/HomeHowItWorksInteractive";
 
 const EXAMPLE = "/m/ona-demo";
@@ -39,6 +40,7 @@ export function HomeLanding() {
               Sukurkite vietą, kur artimųjų istorijos, nuotraukos ir prisiminimai lieka pasiekiami visiems
               šeimos nariams. Sujunkite paminklą su skaitmenine erdve — vienu QR nuskaitymu kapinėse.
             </p>
+            <MemorialSearchBox />
             <ul className="vk-hero__list">
               <li>Memorialinis puslapis — nuotraukos, istorijos ir vieta žemėlapyje</li>
               <li>QR plokštelė ant paminklo — paruošta montavimui</li>

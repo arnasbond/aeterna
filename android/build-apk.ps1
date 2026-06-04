@@ -84,6 +84,11 @@ try {
         Copy-Item $userApk $destApk -Force
     }
 
+    $webReleaseDir = Join-Path $RepoRoot "web\public\releases"
+    New-Item -ItemType Directory -Force -Path $webReleaseDir | Out-Null
+    Copy-Item $userApk (Join-Path $webReleaseDir "aeterna.apk") -Force
+    Write-Host "  Web statika: $(Join-Path $webReleaseDir 'aeterna.apk')" -ForegroundColor DarkGray
+
     $manifest = @{
         versionCode = $versionCode
         versionName = $versionName

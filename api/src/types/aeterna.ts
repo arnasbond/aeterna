@@ -69,6 +69,8 @@ export type AeternaMemorial = {
 
 export type AeternaMemorialPublic = Omit<AeternaMemorial, "userId"> & {
   parish: Pick<Parish, "id" | "title" | "diocese" | "supportGoal" | "image">;
+  /** Ar profilis pririštas prie vartotojo paskyros (redaguoti gali tik savininkas) */
+  linkedToAccount: boolean;
 };
 
 export type CreateMemorialInput = {

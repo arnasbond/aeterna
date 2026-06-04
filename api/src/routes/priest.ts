@@ -8,6 +8,11 @@ import {
   priestLogin,
   resolvePriestParishId,
 } from "../services/mass-candle-store.js";
+import {
+  acknowledgeMassSlotRequest,
+  listPendingMassSlotRequests,
+  unreadMassSlotRequestCount,
+} from "../services/mass-slot-request-store.js";
 import { requestPriestOtp, verifyPriestOtp } from "../services/priest-otp-store.js";
 import { submitPriestAccessRequest } from "../services/priest-access-store.js";
 import type { ParishProfileInput } from "../types/parish-profile.js";
@@ -211,4 +216,35 @@ export async function priestRoutes(app: FastifyInstance) {
       });
     }
   });
+
+  app.get("/api/v1/priest/mass-slot-requests/unread", async (req, reply) => {
+    const parishId = await parishFromRequest(req);
+    if (!parishId) {
+      return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
+    }
+    return { success: true, data: { count: await unreadMassSlotRequestCount(parishId) } };
+  });
+
+  app.get("/api/v1/priest/mass-slot-requests", async (req, reply) => {
+    const parishId = await parishFromRequest(req);
+    if (!parishId) {
+      return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
+    }
+    return { success: true, data: await listPendingMassSlotRequests(parishId) };
+  });
+
+  app.patch<{ Params: { id: string } }>(
+    "/api/v1/priest/mass-slot-requests/:id/acknowledge",
+    async (req, reply) => {
+      const parishId = await parishFromRequest(req);
+      if (!parishId) {
+        return reply.status(401).send({ success: false, error: { message: "Reikalingas klebono token" } });
+      }
+      const row = await acknowledgeMassSlotRequest(req.params.id, parishId);
+      if (!row) {
+        return reply.status(404).send({ success: false, error: { message: "Prašymas nerastas" } });
+      }
+      return { success: true, data: row };
+    }
+  );
 }

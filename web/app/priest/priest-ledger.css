@@ -1,0 +1,379 @@
+/* Parapijos klebono skydas — dideli šriftai, lietimas, mobilus */
+.priest-ledger {
+  --pl-text: #1f2933;
+  --pl-muted: #4b5563;
+  --pl-gold: #d4af37;
+  --pl-paper: #fffef8;
+  --pl-green: #166534;
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: 1rem 1rem 6rem;
+  color: var(--pl-text);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+.priest-ledger h1 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin: 0 0 0.35rem;
+  color: var(--pl-text);
+}
+
+.priest-ledger h2 {
+  font-size: 1.35rem;
+  margin: 0 0 0.75rem;
+  color: var(--pl-text);
+}
+
+.priest-ledger h3 {
+  font-size: 1.15rem;
+  margin: 0 0 0.5rem;
+}
+
+.priest-ledger .pl-caption {
+  font-size: 1rem;
+  color: var(--pl-muted);
+}
+
+.priest-ledger .pl-card {
+  background: var(--pl-paper);
+  border: 2px solid #e8e4d8;
+  border-radius: 14px;
+  padding: 1.15rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(31, 41, 51, 0.06);
+}
+
+.priest-ledger .pl-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.priest-ledger .pl-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.priest-ledger .pl-tab {
+  min-height: 3.25rem;
+  padding: 0.85rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: left;
+  border: 2px solid #d1d5db;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--pl-text);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.priest-ledger .pl-tab--on {
+  border-color: var(--pl-gold);
+  background: #fffbeb;
+  box-shadow: inset 0 0 0 1px var(--pl-gold);
+}
+
+.priest-ledger .pl-btn-exit {
+  min-height: 2.75rem;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #9ca3af;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--pl-text);
+}
+
+.priest-ledger .pl-field label {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  color: var(--pl-text);
+}
+
+.priest-ledger .pl-field input,
+.priest-ledger .pl-field textarea {
+  width: 100%;
+  font-size: 1.125rem;
+  padding: 0.85rem 0.9rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  color: var(--pl-text);
+  background: #fff;
+}
+
+.priest-ledger .pl-field textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.priest-ledger .pl-day-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.priest-ledger .pl-day-btn {
+  min-height: 3.25rem;
+  width: 100%;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  background: #fff;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  touch-action: manipulation;
+}
+
+.priest-ledger .pl-day-btn--on {
+  border-color: var(--pl-gold);
+  background: #fffbeb;
+}
+
+.priest-ledger .pl-hour-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.priest-ledger .pl-hour-pill {
+  min-width: 5.5rem;
+  min-height: 3.25rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  background: #fff;
+  touch-action: manipulation;
+}
+
+.priest-ledger .pl-hour-pill--on {
+  border-color: var(--pl-green);
+  background: #ecfdf5;
+  color: var(--pl-green);
+}
+
+.priest-ledger .pl-hour-pill--other {
+  min-width: 8rem;
+  font-size: 1rem;
+}
+
+.priest-ledger .pl-custom-time {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 2px solid var(--pl-gold);
+  border-radius: 14px;
+  background: #fffef5;
+}
+
+.priest-ledger .pl-custom-time__input {
+  width: 100%;
+  min-height: 3.5rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  text-align: center;
+  padding: 0.5rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  color: var(--pl-text);
+}
+
+.priest-ledger .pl-intention-card {
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.priest-ledger .pl-intention-card__time {
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: 800;
+  padding: 0.45rem 0.75rem;
+  border: 3px solid var(--pl-gold);
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+  color: var(--pl-text);
+}
+
+.priest-ledger .pl-intention-card__name {
+  font-size: 1.45rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  line-height: 1.25;
+}
+
+.priest-ledger .pl-intention-card__prayer {
+  font-size: 1.1rem;
+  margin: 0 0 1rem;
+  white-space: pre-wrap;
+  color: var(--pl-text);
+}
+
+.priest-ledger .pl-confirm-mass {
+  width: 100%;
+  min-height: 3.5rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 12px;
+  background: #1e3a1e;
+  color: #fff;
+  touch-action: manipulation;
+}
+
+.priest-ledger .pl-confirm-mass--done {
+  background: var(--pl-green);
+  cursor: default;
+}
+
+.priest-ledger .pl-save-giant {
+  position: sticky;
+  bottom: 0.75rem;
+  z-index: 20;
+  width: 100%;
+  min-height: 3.75rem;
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  border: none;
+  border-radius: 14px;
+  background: var(--pl-green);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(22, 101, 52, 0.35);
+  touch-action: manipulation;
+}
+
+.priest-ledger .pl-photo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 4rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border: 3px dashed var(--pl-gold);
+  border-radius: 14px;
+  background: #fffef5;
+  color: var(--pl-text);
+  cursor: pointer;
+  touch-action: manipulation;
+  text-align: center;
+  padding: 1rem;
+}
+
+.priest-ledger .pl-photo-preview {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  border: 2px solid #e5e7eb;
+}
+
+.priest-ledger .pl-finance-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0.25rem 0 0;
+}
+
+.priest-ledger .pl-link-row {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: 1.05rem;
+}
+
+.priest-ledger .pl-link-row a {
+  color: #1e3a1e;
+  font-weight: 700;
+}
+
+.priest-ledger .pl-success {
+  color: var(--pl-green);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.priest-ledger .pl-error {
+  color: #b91c1c;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.priest-ledger .pl-tab--alert {
+  border-color: #dc2626;
+  background: #fef2f2;
+  animation: pl-tab-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pl-tab-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(220, 38, 38, 0);
+  }
+}
+
+.priest-ledger .pl-mass-request-alert {
+  border: 3px solid #dc2626;
+  background: linear-gradient(135deg, #fff7ed 0%, #fef2f2 100%);
+  cursor: pointer;
+  animation: pl-alert-glow 1.2s ease-in-out infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes pl-alert-glow {
+  0%,
+  100% {
+    border-color: #dc2626;
+  }
+  50% {
+    border-color: var(--pl-gold);
+  }
+}
+
+.priest-ledger .pl-mass-request-list {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px dashed var(--pl-gold);
+}
+
+.priest-ledger .pl-mass-request-card {
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: 12px;
+  border: 2px solid #fbbf24;
+  background: #fffbeb;
+}
+
+.priest-ledger .pl-mass-request-card__who {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.priest-ledger .pl-mass-request-card__msg {
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.priest-ledger .pl-notify-setup {
+  border-color: var(--pl-gold);
+  background: #fffef5;
+}

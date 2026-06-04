@@ -1,5 +1,5 @@
 # AETERNA - paleisti API + Web
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 $nodeDir = "C:\Program Files\nodejs"
 if (Test-Path $nodeDir) { $env:Path = "$nodeDir;$env:Path" }
 
@@ -14,6 +14,11 @@ $ip = (Get-NetIPAddress -AddressFamily IPv4 |
     Select-Object -First 1).IPAddress
 
 $root = $PSScriptRoot
+
+$envLocal = Join-Path $root "web\.env.local"
+@"
+API_INTERNAL_URL=http://127.0.0.1:4000
+"@ | Set-Content -Path $envLocal -Encoding UTF8
 
 foreach ($port in 3000, 4000) {
   Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue |

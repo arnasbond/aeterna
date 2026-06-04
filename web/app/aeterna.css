@@ -1430,6 +1430,18 @@
   background: rgba(74, 103, 65, 0.18);
 }
 
+.ae-mass-request {
+  margin-top: 0.5rem;
+}
+
+.ae-mass-request__panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 2px solid var(--ae-accent);
+  border-radius: 10px;
+  background: #fffef8;
+}
+
 .ae-candles-list {
   max-width: 28rem;
   margin: 0 auto 2rem;
@@ -2773,4 +2785,182 @@
   margin: 0.5rem 0 0;
   font-size: 0.85rem;
   color: #166534;
+}
+
+/* —— Titulinis: atminties paieška —— */
+.ae-memorial-search {
+  position: relative;
+  margin: 1.25rem 0 1.5rem;
+  max-width: 28rem;
+}
+
+.ae-memorial-search__label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ae-muted);
+  margin-bottom: 0.35rem;
+}
+
+.ae-memorial-search__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ae-memorial-search__icon {
+  position: absolute;
+  left: 0.85rem;
+  font-size: 1rem;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.ae-memorial-search__input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+  border: 1px solid #d8e0d4;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #fff;
+  color: var(--ae-text);
+  box-shadow: 0 2px 12px rgba(26, 46, 26, 0.06);
+}
+
+.ae-memorial-search__input:focus {
+  outline: 2px solid var(--ae-primary);
+  outline-offset: 2px;
+  border-color: var(--ae-primary);
+}
+
+.ae-memorial-search__spinner {
+  position: absolute;
+  right: 0.85rem;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #dce6d6;
+  border-top-color: var(--ae-primary);
+  border-radius: 50%;
+  animation: ae-spin 0.7s linear infinite;
+}
+
+.ae-memorial-search__list {
+  position: absolute;
+  z-index: 40;
+  left: 0;
+  right: 0;
+  margin: 0.35rem 0 0;
+  padding: 0.35rem;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #dce6d6;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(26, 46, 26, 0.12);
+  max-height: 16rem;
+  overflow-y: auto;
+}
+
+.ae-memorial-search__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.ae-memorial-search__item:hover,
+.ae-memorial-search__item--active {
+  background: #f4f8f1;
+}
+
+.ae-memorial-search__thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ae-memorial-search__thumb--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef3ea;
+  color: var(--ae-primary);
+  font-size: 1rem;
+}
+
+.ae-memorial-search__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.ae-memorial-search__meta strong {
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.ae-memorial-search__meta small {
+  font-size: 0.78rem;
+  color: var(--ae-muted);
+}
+
+.ae-memorial-search__empty {
+  margin: 0.35rem 0 0;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.85rem;
+  color: var(--ae-muted);
+  background: #fff;
+  border: 1px solid #e8ebe4;
+  border-radius: 10px;
+}
+
+.ae-memorial-search__hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.78rem;
+  color: var(--ae-muted);
+}
+
+.ae-deploy-badge {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--ae-muted);
+  margin: 0;
+  padding: 0.35rem 1rem 0.5rem;
+  font-family: ui-monospace, monospace;
+}
+
+.ae-deploy-badge strong {
+  color: var(--ae-primary-dark);
+}
+
+.ae-memorial-search__build {
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  color: var(--ae-primary-dark);
+}
+
+.ae-memorial-search__example {
+  color: var(--ae-primary-dark);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ae-memorial-search__example:hover {
+  text-decoration: underline;
+}
+
+@keyframes ae-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

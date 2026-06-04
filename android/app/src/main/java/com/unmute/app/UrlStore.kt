@@ -5,6 +5,7 @@ import android.content.Context
 object UrlStore {
     private const val PREFS = "unmute_prefs"
     private const val KEY_URL = "web_app_url"
+    private const val KEY_MANUAL_OVERRIDE = "url_manual_override"
 
     /** Tik svetainės šaknis (be /m/... kelio) — titulinis puslapis visada /. */
     fun normalizeBaseUrl(url: String): String {
@@ -16,18 +17,48 @@ object UrlStore {
         return if (pathStart > 0) trimmed.substring(0, pathStart) else trimmed
     }
 
+    /** API hostas netinka WebView — tik svetainės URL. */
+    fun ensureWebHost(url: String): String {
+        val base = normalizeBaseUrl(url)
+        val lower = base.lowercase()
+        if (lower.contains("api-three") ||
+            (lower.contains("api-") && lower.contains("vercel.app")) ||
+            lower.contains("aeterna-api") ||
+            (lower.contains(":4000") && !lower.contains(":3000"))
+        ) {
+            return BuildConfig.WEB_APP_URL.trimEnd('/')
+        }
+        return base
+    }
+
     fun getUrl(context: Context): String {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val saved = prefs.getString(KEY_URL, null)?.trim().orEmpty()
         val raw = saved.ifEmpty { BuildConfig.WEB_APP_URL }
-        return normalizeBaseUrl(raw)
+        return ensureWebHost(raw)
+    }
+
+    fun isManualOverride(context: Context): Boolean {
+        return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .getBoolean(KEY_MANUAL_OVERRIDE, false)
     }
 
     fun setUrl(context: Context, url: String) {
-        val base = normalizeBaseUrl(url)
+        val base = ensureWebHost(url)
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             .edit()
             .putString(KEY_URL, base)
+            .putBoolean(KEY_MANUAL_OVERRIDE, true)
+            .apply()
+    }
+
+    /** Serverio nurodytas adresas — be rankinio režimo. */
+    fun applyRemoteUrl(context: Context, url: String) {
+        val base = ensureWebHost(url)
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putString(KEY_URL, base)
+            .putBoolean(KEY_MANUAL_OVERRIDE, false)
             .apply()
     }
 
@@ -35,6 +66,14 @@ object UrlStore {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             .edit()
             .remove(KEY_URL)
+            .putBoolean(KEY_MANUAL_OVERRIDE, false)
+            .apply()
+    }
+
+    fun clearManualOverride(context: Context) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(KEY_MANUAL_OVERRIDE, false)
             .apply()
     }
 }

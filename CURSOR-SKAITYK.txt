@@ -1,0 +1,22 @@
+AETERNA — pagrindinis projekto kelias
+=====================================
+
+  H:\dev\aeterna
+
+Kodėl H:, ne C: ir ne OneDrive Desktop?
+  - C: SSD (~128 GB) — mažai laisvos vietos (Windows, Cursor)
+  - H: DUOMENYS — daug vietos (~116 GB laisva)
+  - Ne H:\OneDrive\Desktop — venkite sinchronizacijos lagų
+
+Cursor: File → Open Folder → H:\dev\aeterna
+
+Serveriai (dukart spustelėkite ant darbalaukio):
+  H:\OneDrive\Desktop\PALESTI-SERVERIUS.bat
+  arba H:\OneDrive\Desktop\PALESTI-SERVERIUS.vbs  (jei .bat neatsidaro)
+  arba H:\dev\aeterna\PALESTI-SERVERIUS.bat
+
+npm cache (vartotojo .npmrc):
+  H:\npm-cache
+
+Testas:
+  http://localhost:3000/m/ona-demo

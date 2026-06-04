@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  DonationAmountPicker,
+  donationAmountCents,
+  DONATION_MIN_EUR,
+} from "@/components/DonationAmountPicker";
+import { RequestMassSlotsButton } from "@/components/mass/RequestMassSlotsButton";
 import { bookMass, fetchAvailableMasses, fetchParishes, type MassSlot, type Parish } from "@/lib/api";
 
 function formatSlot(dt: string) {
@@ -28,6 +34,10 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [amountEur, setAmountEur] = useState(15);
+  const [customMode, setCustomMode] = useState(false);
+  const [customInput, setCustomInput] = useState("");
 
   useEffect(() => {
     fetchParishes().then((p) => {
@@ -40,22 +50,41 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
 
   useEffect(() => {
     if (!parishId) return;
+    setSlotsLoading(true);
+    setErr(null);
     fetchAvailableMasses(parishId)
       .then((s) => {
         setSlots(s);
         setSelectedId(s[0]?.id ?? "");
       })
-      .catch(() => setSlots([]));
+      .catch(() => {
+        setSlots([]);
+        setSelectedId("");
+        setErr("Nepavyko įkelti laikų. Patikrinkite, ar veikia serveriai (API).");
+      })
+      .finally(() => setSlotsLoading(false));
   }, [parishId]);
+
+  const parishTitle = parishes.find((p) => p.id === parishId)?.title;
+  const amountCents = donationAmountCents(amountEur, customMode, customInput);
+  const amountLabel =
+    amountCents != null ? `${(amountCents / 100).toFixed(2).replace(/\.00$/, "")} €` : null;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!selectedId) return;
+    if (!selectedId) {
+      setErr("Pasirinkite laisvą laiką iš sąrašo (arba paprašykite kunigo pridėti laikus skydelyje).");
+      return;
+    }
+    if (amountCents == null) {
+      setErr(`Pasirinkite sumą nuo ${DONATION_MIN_EUR} € arba įveskite kitą sumą.`);
+      return;
+    }
     setBusy(true);
     setErr(null);
     setMsg(null);
     try {
-      await bookMass({ massId: selectedId, intentions, donorName, amountCents: 1500 });
+      await bookMass({ massId: selectedId, intentions, donorName, amountCents });
       setMsg("Mišios užsakytos. Parapijos administratorius patvirtins intenciją liturgijoje.");
       setIntentions("");
       const next = await fetchAvailableMasses(parishId);
@@ -94,8 +123,20 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
           </div>
           <div className="ae-field">
             <label>Laisvas laikas</label>
-            {slots.length === 0 ? (
-              <p className="ae-hint">Šiuo metu nėra laisvų laikų — parapijos administratorius gali pridėti skydelyje.</p>
+            {slotsLoading ? (
+              <p className="ae-hint">Kraunami laikai…</p>
+            ) : slots.length === 0 ? (
+              <div className="ae-mass-empty" role="status">
+                <p className="ae-hint" style={{ marginBottom: "0.75rem" }}>
+                  Šiai parapijai dabar nėra laisvų laikų. Galite išsiųsti prašymą kunigui — jis gaus pranešimą
+                  telefone ir skydelyje.
+                </p>
+                <RequestMassSlotsButton
+                  parishId={parishId}
+                  parishTitle={parishTitle}
+                  source={lockParish ? "parish_hub" : "home"}
+                />
+              </div>
             ) : (
               <div className="ae-mass-slots">
                 {slots.map((s) => (
@@ -125,10 +166,38 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
             <label>Jūsų vardas</label>
             <input value={donorName} onChange={(e) => setDonorName(e.target.value)} required />
           </div>
+
+          <DonationAmountPicker
+            presetEur={amountEur}
+            customMode={customMode}
+            customInput={customInput}
+            onPreset={(a) => {
+              setCustomMode(false);
+              setCustomInput("");
+              setAmountEur(a);
+              setErr(null);
+            }}
+            onCustomMode={() => {
+              setCustomMode(true);
+              setErr(null);
+            }}
+            onCustomInput={setCustomInput}
+            label="Auka už Šv. Mišias (€)"
+          />
+          <p className="ch-fee-note">Mokėjimas (mock) — visa suma skiriama parapijos sąskaitai.</p>
+
           {err && <p className="ae-error">{err}</p>}
           {msg && <p className="ae-ok">{msg}</p>}
-          <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide" disabled={busy || !selectedId}>
-            {busy ? "Užsakoma…" : "Užsakyti Mišias ir paaukoti (15 €)"}
+          <button
+            type="submit"
+            className="ae-btn ae-btn--primary ae-btn--wide"
+            disabled={busy || slotsLoading}
+          >
+            {busy
+              ? "Užsakoma…"
+              : amountLabel
+                ? `Užsakyti Mišias ir paaukoti (${amountLabel})`
+                : "Pasirinkite sumą"}
           </button>
         </form>
       </div>

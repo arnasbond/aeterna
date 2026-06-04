@@ -166,7 +166,13 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
         <button type="button" className="ch-btn ch-btn--primary ch-btn--block" onClick={() => setMassOpen((v) => !v)}>
           {massOpen ? "Slėpti kalendorių" : "Užsakyti Šv. Mišias"}
         </button>
-        {massOpen && parishId && <MemorialMassCalendar parishId={parishId} deceasedName={memorial.fullName} />}
+        {massOpen && parishId && (
+          <MemorialMassCalendar
+            parishId={parishId}
+            parishTitle={parishTitle}
+            deceasedName={memorial.fullName}
+          />
+        )}
       </section>
 
       <section className="ch-memorial-board">

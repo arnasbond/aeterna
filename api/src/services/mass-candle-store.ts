@@ -133,6 +133,9 @@ export async function bookMass(input: MassBookingInput): Promise<MassSchedule> {
     throw new Error("Pasirinktas laikas nebeprieinamas");
   }
   const amount = input.amountCents ?? 1500;
+  if (amount < 500) {
+    throw new Error("Minimali auka — 5 €");
+  }
   slot.isAvailable = false;
   slot.status = "pending";
   slot.intentions = input.intentions.trim();

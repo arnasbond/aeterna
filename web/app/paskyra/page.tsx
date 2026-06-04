@@ -64,7 +64,7 @@ export default function PaskyraPage() {
 
       <div className="ae-paskyra-actions">
         <Link
-          href="/wizard"
+          href="/wizard?naujas=1"
           className={`ae-btn ae-btn--primary${memorials.length >= MAX_MEMORIALS ? " ae-btn--disabled" : ""}`}
           aria-disabled={memorials.length >= MAX_MEMORIALS}
           onClick={(e) => {
@@ -93,7 +93,7 @@ export default function PaskyraPage() {
       {memorials.length === 0 ? (
         <p className="ae-hint" style={{ textAlign: "center" }}>
           Dar neturite sukurtų profilių.{" "}
-          <Link href="/wizard">Pradėkite kūrimo vedlys →</Link>
+          <Link href="/wizard?naujas=1">Pradėkite kūrimo vedlys →</Link>
         </p>
       ) : (
         <ul className="ae-paskyra-list">

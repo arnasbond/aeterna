@@ -20,7 +20,7 @@ import kotlin.math.max
 object AppUpdateManager {
     private const val PREFS = "unmute_update_prefs"
     private const val KEY_LAST_CHECK = "last_check_ms"
-    private const val CHECK_INTERVAL_MS = 3 * 60 * 60 * 1000L // 3 val.
+    private const val CHECK_INTERVAL_MS = 60 * 60 * 1000L // 1 val. (foninis)
 
     private val executor = Executors.newSingleThreadExecutor()
 
@@ -33,19 +33,23 @@ object AppUpdateManager {
         val apkAvailable: Boolean
     )
 
-    fun checkForUpdate(activity: Activity, force: Boolean = false) {
+    fun checkForUpdate(activity: Activity, force: Boolean = false, onLaunch: Boolean = false) {
         val prefs = activity.getSharedPreferences(PREFS, Activity.MODE_PRIVATE)
         val now = System.currentTimeMillis()
-        if (!force && now - prefs.getLong(KEY_LAST_CHECK, 0L) < CHECK_INTERVAL_MS) return
+        val throttled = !force && !onLaunch && now - prefs.getLong(KEY_LAST_CHECK, 0L) < CHECK_INTERVAL_MS
+        if (throttled) return
 
         executor.execute {
             try {
                 val info = fetchUpdateInfo(activity) ?: return@execute
                 prefs.edit().putLong(KEY_LAST_CHECK, now).apply()
                 val current = currentVersionCode(activity)
-                if (info.versionCode <= current || !info.apkAvailable) return@execute
-                activity.runOnUiThread {
-                    showUpdateDialog(activity, info, current)
+                if (!info.apkAvailable) return@execute
+
+                if (info.versionCode > current) {
+                    activity.runOnUiThread {
+                        showUpdateDialog(activity, info, current)
+                    }
                 }
             } catch (_: Exception) {
                 if (force) {
@@ -57,7 +61,7 @@ object AppUpdateManager {
         }
     }
 
-    private fun currentVersionCode(activity: Activity): Int {
+    fun currentVersionCode(activity: Activity): Int {
         val pkg = activity.packageManager.getPackageInfo(activity.packageName, 0)
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             pkg.longVersionCode.toInt()
@@ -81,6 +85,10 @@ object AppUpdateManager {
             val root = JSONObject(body)
             if (!root.optBoolean("success", false)) return null
             val data = root.getJSONObject("data")
+            val webFromServer = data.optString("webAppUrl", "").trim()
+            if (webFromServer.isNotEmpty() && !UrlStore.isManualOverride(activity)) {
+                UrlStore.applyRemoteUrl(activity, webFromServer)
+            }
             return UpdateInfo(
                 versionCode = data.getInt("versionCode"),
                 versionName = data.optString("versionName", ""),

@@ -84,26 +84,25 @@ export type MemorialPublic = {
   privacyStatus: string;
   qrCodeUrl: string | null;
   profileUrl: string;
+  linkedToAccount: boolean;
   parish: Pick<Parish, "id" | "title" | "diocese" | "supportGoal" | "image">;
 };
 
 export function resolveApiBase(): string {
-  const env = process.env.NEXT_PUBLIC_API_URL?.trim();
-  if (env) return env.replace(/\/$/, "");
-
   if (typeof window !== "undefined") {
     const { protocol, hostname, origin } = window.location;
     const isLocalHost = hostname === "localhost" || hostname === "127.0.0.1";
     const isLan = /^192\.168\.|^10\.|^172\.(1[6-9]|2\d|3[01])\./.test(hostname);
 
-    if (protocol === "https:" || (!isLocalHost && !isLan)) {
+    // Vienas portas (3000) — Next peradresuoja /api/v1 → API; telefonui nereikia atidaryti :4000
+    if (isLan || isLocalHost || protocol === "https:") {
       return origin.replace(/\/$/, "");
     }
-
-    if (!isLocalHost) {
-      return `${protocol}//${hostname}:4000`;
-    }
   }
+
+  const env = process.env.NEXT_PUBLIC_API_URL?.trim();
+  if (env) return env.replace(/\/$/, "");
+
   return "http://127.0.0.1:4000";
 }
 
@@ -146,6 +145,23 @@ export async function searchParishes(query: string): Promise<Parish[]> {
   const q = encodeURIComponent(query);
   const r = await fetch(`${base()}/api/v1/parishes/search?q=${q}`, { cache: "no-store" });
   return parse<Parish[]>(r);
+}
+
+export type MemorialSearchHit = {
+  slug: string;
+  fullName: string;
+  birthDate: string | null;
+  deathDate: string | null;
+  portraitUrl: string | null;
+};
+
+export async function searchMemorials(query: string, limit = 10): Promise<MemorialSearchHit[]> {
+  const q = encodeURIComponent(query.trim());
+  if (!q) return [];
+  const r = await fetch(`${base()}/api/v1/memorials/search?q=${q}&limit=${limit}`, {
+    cache: "no-store",
+  });
+  return parse<MemorialSearchHit[]>(r);
 }
 
 export async function fetchMemorial(slug: string): Promise<MemorialPublic | null> {
@@ -444,6 +460,15 @@ export async function fetchUserMemorial(slug: string) {
   return parse<OwnedMemorialDetail>(r);
 }
 
+export async function claimUserMemorial(slug: string) {
+  const r = await fetch(`${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}/claim`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...userHeaders() },
+    body: "{}",
+  });
+  return parse<{ slug: string; profileUrl: string; message: string }>(r);
+}
+
 export async function updateUserMemorial(slug: string, payload: UpdateMemorialPayload) {
   const r = await fetch(`${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}`, {
     method: "PATCH",
@@ -528,6 +553,57 @@ export async function bookMass(payload: {
     body: JSON.stringify(payload),
   });
   return parse<MassSlot>(r);
+}
+
+export type MassSlotRequestSource = "home" | "parish_hub" | "memorial";
+
+export type MassSlotRequest = {
+  id: string;
+  parishId: string;
+  requesterName: string;
+  message: string;
+  source: MassSlotRequestSource;
+  status: "pending" | "acknowledged";
+  createdAt: string;
+  acknowledgedAt: string | null;
+};
+
+export async function requestMassSlots(payload: {
+  parishId: string;
+  requesterName?: string;
+  message?: string;
+  source?: MassSlotRequestSource;
+}) {
+  const r = await fetch(`${base()}/api/v1/masses/request-slots`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  return parse<{ id: string; message: string }>(r);
+}
+
+export async function fetchPriestMassSlotRequests() {
+  const r = await fetch(`${base()}/api/v1/priest/mass-slot-requests`, {
+    headers: priestHeaders(),
+    cache: "no-store",
+  });
+  return parse<MassSlotRequest[]>(r);
+}
+
+export async function fetchPriestMassSlotRequestsUnread() {
+  const r = await fetch(`${base()}/api/v1/priest/mass-slot-requests/unread`, {
+    headers: priestHeaders(),
+    cache: "no-store",
+  });
+  return parse<{ count: number }>(r);
+}
+
+export async function acknowledgePriestMassSlotRequest(id: string) {
+  const r = await fetch(`${base()}/api/v1/priest/mass-slot-requests/${encodeURIComponent(id)}/acknowledge`, {
+    method: "PATCH",
+    headers: priestHeaders(),
+  });
+  return parse<MassSlotRequest>(r);
 }
 
 export async function findMemorialForCandle(fullName: string, birthDate: string, deathDate: string) {

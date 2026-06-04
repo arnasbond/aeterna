@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Dancing_Script, Inter, Playfair_Display } from "next/font/google";
 import { Navigation } from "@/components/Navigation";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { DeployBadge } from "@/components/DeployBadge";
 import "./globals.css";
 import "./aeterna.css";
 import "./chronicle.css";
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="aeterna-root">
         <Navigation />
         <main>{children}</main>
+        <DeployBadge />
         <SiteFooter />
       </body>
     </html>

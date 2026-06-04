@@ -114,6 +114,16 @@ async function loadMemorials(): Promise<Map<string, AeternaMemorial>> {
       await saveMemorials();
     }
   }
+  let approvedPending = false;
+  for (const row of memorialsCache.values()) {
+    if (row.moderationStatus === "pending") {
+      row.moderationStatus = "approved";
+      row.updatedAt = new Date().toISOString();
+      approvedPending = true;
+    }
+  }
+  if (approvedPending) await saveMemorials();
+
   return memorialsCache;
 }
 
@@ -175,16 +185,80 @@ export async function findMemorialByPerson(
   return null;
 }
 
+export type MemorialSearchHit = {
+  slug: string;
+  fullName: string;
+  birthDate: string | null;
+  deathDate: string | null;
+  portraitUrl: string | null;
+};
+
+function normalizeSearchText(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+export async function searchMemorialsPublic(
+  query: string,
+  limit = 10
+): Promise<MemorialSearchHit[]> {
+  const q = normalizeSearchText(query);
+  if (!q) return [];
+
+  const map = await loadMemorials();
+  const scored: { score: number; hit: MemorialSearchHit }[] = [];
+
+  for (const row of map.values()) {
+    const mod = row.moderationStatus ?? "approved";
+    if (row.privacyStatus !== "public" || mod === "rejected" || mod === "pending") continue;
+
+    const name = normalizeSearchText(row.fullName);
+    const slug = normalizeSearchText(row.slug);
+    const words = name.split(/\s+/).filter(Boolean);
+
+    let score = 0;
+    if (slug.startsWith(q) || name.startsWith(q)) score = 4;
+    else if (words.some((w) => w.startsWith(q))) score = 3;
+    else if (slug.includes(q) || name.includes(q)) score = 2;
+    else continue;
+
+    scored.push({
+      score,
+      hit: {
+        slug: row.slug,
+        fullName: row.fullName,
+        birthDate: row.birthDate,
+        deathDate: row.deathDate,
+        portraitUrl: row.portraitUrl ?? row.mediaGallery?.[0] ?? null,
+      },
+    });
+  }
+
+  return scored
+    .sort(
+      (a, b) =>
+        b.score - a.score ||
+        a.hit.fullName.localeCompare(b.hit.fullName, "lt")
+    )
+    .slice(0, Math.min(20, Math.max(1, limit)))
+    .map((s) => s.hit);
+}
+
 export async function getMemorialPublic(slug: string): Promise<AeternaMemorialPublic | null> {
   const map = await loadMemorials();
   const row = map.get(slug);
   const mod = row?.moderationStatus ?? "approved";
-  if (!row || row.privacyStatus !== "public" || mod === "pending" || mod === "rejected") return null;
+  if (!row || row.privacyStatus !== "public" || mod === "rejected") return null;
+  if (mod === "pending") return null;
   const parish = getParish(row.parishId);
   if (!parish) return null;
-  const { userId: _, ...rest } = row;
+  const { userId, ...rest } = row;
   return {
     ...rest,
+    linkedToAccount: !!userId,
     parish: {
       id: parish.id,
       title: parish.title,
@@ -193,6 +267,31 @@ export async function getMemorialPublic(slug: string): Promise<AeternaMemorialPu
       image: parish.image,
     },
   };
+}
+
+export async function claimMemorialForUser(
+  slug: string,
+  userId: string
+): Promise<AeternaMemorial | null> {
+  const map = await loadMemorials();
+  const row = map.get(slug);
+  if (!row) return null;
+  if (row.userId && row.userId !== userId) {
+    throw new Error("Šis profilis jau pririštas prie kitos paskyros");
+  }
+  if (row.userId === userId) return row;
+
+  const { MAX_MEMORIALS_PER_USER } = await import("./user-store.js");
+  const owned = await listMemorialsByUserId(userId);
+  if (owned.length >= MAX_MEMORIALS_PER_USER) {
+    throw new Error(`Vienoje paskyroje galima iki ${MAX_MEMORIALS_PER_USER} atminties profilių`);
+  }
+
+  row.userId = userId;
+  row.updatedAt = new Date().toISOString();
+  map.set(slug, row);
+  await saveMemorials();
+  return row;
 }
 
 export async function listMemorialsByUserId(userId: string): Promise<AeternaMemorial[]> {
@@ -240,7 +339,7 @@ export async function createMemorial(
     videoUrl: input.videoUrl ?? null,
     geoLocation: null,
     privacyStatus: input.privacyStatus ?? "public",
-    moderationStatus: "pending",
+    moderationStatus: "approved",
     profileUrl: profileUrl(slug),
     qrCodeUrl: qrPlaceholder(slug),
     createdAt: now,

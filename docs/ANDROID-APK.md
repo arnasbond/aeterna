@@ -81,39 +81,45 @@ gradle wrapper
 
 Programėlė pagal nutylėjimą atidaro **titulinį puslapį** (`/`).
 
-## 6. Automatiniai APK atnaujinimai (OTA)
+## 6. Automatiniai atnaujinimai (OTA + serverio konfigūracija)
 
-Kiekvieną kartą surinkus naują APK, telefonai **automatiškai** (arba per meniu **Tikrinti atnaujinimus**) gali atsisiųsti naują versiją iš jūsų API.
+**Nereikia rankiniu būdu keisti serverio adreso** — programėlė pati ima adresą iš debesies (`/api/v1/app/config`).
 
-1. Paleiskite **API** (`npm run dev` portas **4000**)
-2. Surinkite ir publikuokite APK:
+| Kas atnaujinama | Kaip |
+|-----------------|------|
+| Svetainė, mišios, UI pataisymai | Automatiškai per **WebView** (serveris / Vercel / Render) |
+| Android APK (apvalkalas) | **OTA** — paleidus programėlę arba meniu **Tikrinti atnaujinimus** |
+
+### Naują APK publikuoti (vienas kartas po pataisymų)
 
 ```powershell
 cd android
 .\build-apk.ps1
+git add api/releases/android web/public/releases
+git commit -m "Android OTA build"
+git push
 ```
 
-Skriptas:
-- padidina `versionCode`
-- kopijuoja APK į `api/releases/android/aeterna.apk`
-- atnaujina `api/releases/android/update.json`
+Skriptas padidina `versionCode`, įkelia APK į `api/releases/android/` ir `web/public/releases/`, atnaujina `update.json`.
 
-3. Telefone — programėlė paleidimo metu patikrina ar yra naujesnė versija ir pasiūlo įdiegti.
+**Pirmą kartą** telefone — įdiegti `AETERNA-install.apk`. Vėliau — programėlė pati pasiūlys naują versiją (reikia leisti įdiegti atnaujinimus).
 
-**Pirmą kartą** vis tiek reikia rankiniu būdu įdiegti APK. Vėlesni atnaujinimai — per programėlę (reikės leisti „Įdiegti nežinomų programų“ AETERNA).
+Po kiekvieno APK atnaujinimo telefone **automatiškai** vėl įjungiamas serverio adresas iš debesies (nebereikia vesti IP).
 
-## 5. Pakeisti serverio adresą be naujo build
+## 5. Serverio adresas (tik LAN testavimui)
 
-Programėlėje: meniu **⋮** → **Serverio adresas** → įrašykite pvz. `http://192.168.1.42:3000` → Išsaugoti.
+Meniu **⋮** → **Serverio adresas** — naudokite tik jei testuojate su `npm run dev:lan` namuose. Production — palikite automatinį režimą.
 
 ## Troubleshooting
 
 | Problema | Sprendimas |
 |----------|------------|
+| **PC mato pakeitimus, telefonas ne** | PC = `localhost:3000`. Telefonas = **https://aeterna-web-six.vercel.app**. Reikia `git push` → Vercel deploy, tada **⋮ → Perkrauti iš serverio**. LAN testui: `http://192.168.x.x:3000` nustatymuose. |
 | Balta / klaidos puslapis | Ar `npm run dev:lan` veikia? Naršyklėje telefone atidarykite `http://IP:3000/m/ona-demo` |
 | API neveikia | `NEXT_PUBLIC_API_URL` turi būti PC IP, ne `127.0.0.1` |
 | Windows Firewall | Leiskite Node.js (portai 3000, 4000) privačiame tinkle |
 | Tik HTTP | Dev APK leidžia HTTP; production reikės HTTPS |
+| Senas vaizdas po atnaujinimo | Meniu **Perkrauti iš serverio** (valo talpyklą). Viršuje matote adresą ir `v9` — palyginkite su PC. |
 
 ## Vėliau (production)
 

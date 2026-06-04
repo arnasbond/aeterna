@@ -27,7 +27,7 @@ export function getApkDownloadUrl(): string {
     return `${resolveApiBase()}/api/v1/app/android/download`;
   }
 
-  return "https://api-three-chi-63.vercel.app/api/v1/app/android/download";
+  return `${getSiteOrigin()}/releases/aeterna.apk`;
 }
 
 export function getAppDownloadPageUrl(): string {

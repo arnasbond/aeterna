@@ -1,5 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import {
+  claimMemorialForUser,
   createMemorial,
   getMemorialBySlug,
   listMemorialsByUserId,
@@ -152,6 +153,30 @@ export async function userRoutes(app: FastifyInstance) {
       return { success: true, data: row };
     }
   );
+
+  app.post<{ Params: { slug: string } }>("/api/v1/user/memorials/:slug/claim", async (req, reply) => {
+    const userId = await requireUser(req, reply);
+    if (!userId) return;
+    try {
+      const row = await claimMemorialForUser(req.params.slug, userId);
+      if (!row) {
+        return reply.status(404).send({ success: false, error: { message: "Profilis nerastas" } });
+      }
+      return {
+        success: true,
+        data: {
+          slug: row.slug,
+          profileUrl: row.profileUrl,
+          message: "Profilis pririštas prie jūsų paskyros. Dabar galite redaguoti.",
+        },
+      };
+    } catch (e) {
+      return reply.status(400).send({
+        success: false,
+        error: { message: e instanceof Error ? e.message : "Nepavyko pririšti" },
+      });
+    }
+  });
 
   app.post<{ Body: CreateMemorialInput }>("/api/v1/user/memorials", async (req, reply) => {
     const userId = await requireUser(req, reply);

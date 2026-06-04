@@ -10,6 +10,7 @@ import {
   getUserToken,
   moderateGuestbookEntry,
   updateUserMemorial,
+  uploadMemorialFile,
   type GuestbookEntry,
   type OwnedMemorialDetail,
 } from "@/lib/api";
@@ -27,6 +28,8 @@ export default function EditMemorialPage() {
   const [farewellMessage, setFarewellMessage] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [portraitUrl, setPortraitUrl] = useState("");
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
+  const [mediaBusy, setMediaBusy] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -49,6 +52,7 @@ export default function EditMemorialPage() {
         setFarewellMessage(m.farewellMessage ?? "");
         setVideoUrl(m.videoUrl ?? "");
         setPortraitUrl(m.portraitUrl ?? "");
+        setGalleryUrls(m.mediaGallery ?? []);
         return fetchOwnerGuestbook(slug);
       })
       .then((gb) => setGuestbook(gb))
@@ -60,6 +64,52 @@ export default function EditMemorialPage() {
         }
       });
   }, [slug, router]);
+
+  async function handlePortraitFile(file: File | null) {
+    if (!file) return;
+    setMediaBusy(true);
+    setErr(null);
+    try {
+      setPortraitUrl(await uploadMemorialFile(file));
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Nepavyko įkelti portreto";
+      setErr(msg === "Failed to fetch" ? "Serveris nepasiekiamas — paleiskite PALESTI-SERVERIUS.bat." : msg);
+    } finally {
+      setMediaBusy(false);
+    }
+  }
+
+  async function handleGalleryFiles(files: FileList | null) {
+    if (!files?.length) return;
+    setMediaBusy(true);
+    setErr(null);
+    try {
+      const uploaded: string[] = [];
+      for (const file of Array.from(files)) {
+        uploaded.push(await uploadMemorialFile(file));
+      }
+      setGalleryUrls((prev) => [...prev, ...uploaded]);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Nepavyko įkelti nuotraukų";
+      setErr(msg === "Failed to fetch" ? "Serveris nepasiekiamas — paleiskite PALESTI-SERVERIUS.bat." : msg);
+    } finally {
+      setMediaBusy(false);
+    }
+  }
+
+  async function handleVideoFile(file: File | null) {
+    if (!file) return;
+    setMediaBusy(true);
+    setErr(null);
+    try {
+      setVideoUrl(await uploadMemorialFile(file));
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Nepavyko įkelti vaizdo įrašo";
+      setErr(msg === "Failed to fetch" ? "Serveris nepasiekiamas — paleiskite PALESTI-SERVERIUS.bat." : msg);
+    } finally {
+      setMediaBusy(false);
+    }
+  }
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -75,10 +125,16 @@ export default function EditMemorialPage() {
         farewellMessage: farewellMessage || null,
         videoUrl: videoUrl || null,
         portraitUrl: portraitUrl || null,
+        mediaGallery: galleryUrls,
       });
       setMsg("Pakeitimai išsaugoti.");
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Nepavyko išsaugoti");
+      const msg = e instanceof Error ? e.message : "Nepavyko išsaugoti";
+      setErr(
+        msg === "Failed to fetch"
+          ? "Nepavyko susisiekti su serveriu. Paleiskite PALESTI-SERVERIUS.bat."
+          : msg
+      );
     } finally {
       setBusy(false);
     }
@@ -129,9 +185,42 @@ export default function EditMemorialPage() {
           <label>Mirties data</label>
           <input type="date" value={deathDate} onChange={(e) => setDeathDate(e.target.value)} />
         </div>
-        <div className="ae-field">
-          <label>Portreto nuotraukos nuoroda</label>
-          <input value={portraitUrl} onChange={(e) => setPortraitUrl(e.target.value)} placeholder="https://…" />
+        <div className="ae-field ae-wizard-upload">
+          <label>Portreto nuotrauka</label>
+          <label className="ae-wizard-upload__btn">
+            📁 Įkelti nuotrauką
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/*,.heic,.heif"
+              hidden
+              disabled={mediaBusy}
+              onChange={(e) => {
+                void handlePortraitFile(e.target.files?.[0] ?? null);
+                e.target.value = "";
+              }}
+            />
+          </label>
+          {portraitUrl && <p className="ae-wizard-upload__ok">✓ Portretas įkeltas</p>}
+        </div>
+        <div className="ae-field ae-wizard-upload">
+          <label>Albumo nuotraukos</label>
+          <label className="ae-wizard-upload__btn">
+            📁 Įkelti nuotraukas
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/*,.heic,.heif"
+              multiple
+              hidden
+              disabled={mediaBusy}
+              onChange={(e) => {
+                void handleGalleryFiles(e.target.files);
+                e.target.value = "";
+              }}
+            />
+          </label>
+          {galleryUrls.length > 0 && (
+            <p className="ae-wizard-upload__ok">✓ Įkelta nuotraukų: {galleryUrls.length}</p>
+          )}
         </div>
         <div className="ae-field">
           <label>Palinkėjimas artimiesiems</label>
@@ -141,13 +230,27 @@ export default function EditMemorialPage() {
           <label>Biografija</label>
           <textarea rows={6} value={biography} onChange={(e) => setBiography(e.target.value)} />
         </div>
-        <div className="ae-field">
-          <label>Video nuoroda</label>
-          <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://…" />
+        <div className="ae-field ae-wizard-upload">
+          <label>Vaizdo įrašas</label>
+          <label className="ae-wizard-upload__btn">
+            📁 Įkelti vaizdo įrašą
+            <input
+              type="file"
+              accept="video/mp4,video/webm,video/quicktime,video/*,.mov"
+              hidden
+              disabled={mediaBusy}
+              onChange={(e) => {
+                void handleVideoFile(e.target.files?.[0] ?? null);
+                e.target.value = "";
+              }}
+            />
+          </label>
+          {videoUrl && <p className="ae-wizard-upload__ok">✓ Vaizdo įrašas įkeltas</p>}
         </div>
+        {mediaBusy && <p className="ae-hint">Įkeliama…</p>}
         {err && <p className="ae-error">{err}</p>}
         {msg && <p className="ae-hint" style={{ color: "var(--ae-primary)" }}>{msg}</p>}
-        <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide" disabled={busy}>
+        <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide" disabled={busy || mediaBusy}>
           {busy ? "Saugoma…" : "Išsaugoti pakeitimus"}
         </button>
       </form>

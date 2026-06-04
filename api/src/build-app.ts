@@ -3,8 +3,10 @@ import Fastify, { type FastifyInstance } from "fastify";
 import { config } from "./config.js";
 import { bootstrapDataDir } from "./bootstrap-data.js";
 import { apiRoutes } from "./routes/index.js";
-import { appUpdateRoutes } from "./routes/app-update.js";
+import { appConfigRoutes } from "./routes/app-config.js";
+import { webRedirectRoutes } from "./routes/web-redirects.js";
 import { mediaRoutes } from "./routes/media.js";
+import { publicWebUrl } from "./public-urls.js";
 import { jsonStoreBackend } from "./services/persistent-json-store.js";
 
 export async function buildApp(): Promise<FastifyInstance> {
@@ -41,7 +43,22 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   await apiRoutes(app);
   await mediaRoutes(app);
-  await appUpdateRoutes(app);
+  await appConfigRoutes(app);
+  await webRedirectRoutes(app);
+
+  app.setNotFoundHandler(async (req, reply) => {
+    const path = req.url.split("?")[0] ?? "/";
+    if (path.startsWith("/api") || path === "/health") {
+      return reply.status(404).send({
+        message: `Route ${req.method}:${path} not found`,
+        error: "Not Found",
+        statusCode: 404,
+        hint: "AETERNA API — naudokite /api/v1. Svetainė: " + publicWebUrl(),
+      });
+    }
+    return reply.redirect(302, `${publicWebUrl()}${req.url}`);
+  });
+
   await app.ready();
   return app;
 }

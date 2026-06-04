@@ -11,6 +11,7 @@ import {
   getMemorialPublic,
   getParish,
   listParishes,
+  searchMemorialsPublic,
   parishAdminSummary,
   recordOrder,
   setMemorialLocation,
@@ -23,6 +24,8 @@ import {
   lightCandle,
   listCandlesForMemorial,
 } from "../services/mass-candle-store.js";
+import { createMassSlotRequest } from "../services/mass-slot-request-store.js";
+import type { CreateMassSlotRequestInput } from "../types/mass-slot-request.js";
 import { addGuestbookEntry, listApprovedGuestbook } from "../services/guestbook-store.js";
 import type { CreateGuestbookInput } from "../types/guestbook.js";
 import { priestRoutes } from "./priest.js";
@@ -74,6 +77,15 @@ export async function apiRoutes(app: FastifyInstance) {
     success: true,
     data: searchParishes(req.query.q ?? ""),
   }));
+
+  app.get<{ Querystring: { q?: string; limit?: string } }>(
+    "/api/v1/memorials/search",
+    async (req) => {
+      const q = req.query.q ?? "";
+      const limit = Math.min(20, Math.max(1, Number.parseInt(req.query.limit ?? "10", 10) || 10));
+      return { success: true, data: await searchMemorialsPublic(q, limit) };
+    }
+  );
 
   app.get<{ Params: { slug: string } }>("/api/v1/memorials/:slug/candles", async (req, reply) => {
     const memorial = await getMemorialPublic(req.params.slug);
@@ -194,6 +206,25 @@ export async function apiRoutes(app: FastifyInstance) {
       return reply.status(400).send({
         success: false,
         error: { message: e instanceof Error ? e.message : "Užsakymas nepavyko" },
+      });
+    }
+  });
+
+  app.post<{ Body: CreateMassSlotRequestInput }>("/api/v1/masses/request-slots", async (req, reply) => {
+    try {
+      const row = await createMassSlotRequest(req.body ?? { parishId: "" });
+      return {
+        success: true,
+        data: {
+          id: row.id,
+          message:
+            "Prašymas išsiųstas. Kunigas informuotas — gaus garsinį pranešimą ir žinutę skydelyje.",
+        },
+      };
+    } catch (e) {
+      return reply.status(400).send({
+        success: false,
+        error: { message: e instanceof Error ? e.message : "Nepavyko išsiųsti" },
       });
     }
   });

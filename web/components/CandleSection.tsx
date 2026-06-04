@@ -72,7 +72,7 @@ export function CandleSection() {
           </div>
           {err && <p className="ae-error">{err}</p>}
           <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide" disabled={busy}>
-            {busy ? "Uždegiama…" : "Uždegti žvakutę ir pašventinti"}
+            {busy ? "Uždegiama…" : "Uždegti žvakutę"}
           </button>
           <p className="ae-hint">
             Pavyzdys: <strong>Stasė</strong>, 1936-05-12 — 2024-12-24

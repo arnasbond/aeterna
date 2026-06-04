@@ -1,0 +1,33 @@
+AETERNA — Vercel.com ekranas "Let's build something new"
+========================================================
+
+Pirma: dvigubas paspaudimas VERCEL-IMPORT-DABAR.bat (Git push)
+
+Tada Vercel:
+
+1) Import Git Repository  (NE Create Empty Project!)
+   GitHub -> arnasbond/aeterna
+
+2) BŪTINA: Root Directory = web
+
+3) Environment Variables (Production):
+   API_INTERNAL_URL = https://api-three-chi-63.vercel.app
+   NEXT_PUBLIC_API_URL = https://api-three-chi-63.vercel.app
+   (NEXT_PUBLIC_SITE_URL = įrašysite po deploy — savo .vercel.app URL)
+
+4) Deploy → palaukite Ready
+
+5) Patikra naršyklėje:
+   https://JŪSŲ-URL.vercel.app/paieska
+   (ne 404!)
+
+6) Kompiuteryje į GitHub (jei dar ne):
+   cd H:\dev\aeterna
+   git add -A
+   git commit -m "deploy"
+   git push
+
+7) Telefone: Perkrauti iš serverio
+
+Pilna instrukcija: docs\VERCEL-ZINGSNIAI.md
+Patikra: .\patikrinti-vercel.ps1 (pakeiskite URL skripte jei reikia)

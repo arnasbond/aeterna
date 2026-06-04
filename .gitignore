@@ -1,6 +1,8 @@
 .env
 .env.*
 !.env.example
+!.env.production.example
+!.env.local.example
 .venv/
 __pycache__/
 *.py[cod]
@@ -15,10 +17,7 @@ api/data/aeterna-*.json
 !api/src/data/
 !api/src/data/**
 
-# Android SDK (lokalus build)
 android-sdk/
-
-# Android
 android/.gradle/
 android/build/
 android/app/build/
@@ -27,7 +26,7 @@ android/.idea/
 *.apk
 !AETERNA-install.apk
 !api/releases/android/aeterna.apk
-!android/README.md
+
 .vercel
 node_modules/
 dist/

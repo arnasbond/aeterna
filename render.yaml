@@ -4,7 +4,7 @@ services:
     runtime: node
     rootDir: api
     plan: free
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npm run build && mkdir -p releases/android && (cp -f ../web/public/releases/aeterna.apk releases/android/aeterna.apk 2>/dev/null || true)
     startCommand: npm start
     healthCheckPath: /health
     envVars:
@@ -18,6 +18,11 @@ services:
         fromService:
           type: web
           name: aeterna-web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: PUBLIC_API_URL
+        fromService:
+          type: web
+          name: aeterna-api
           envVarKey: RENDER_EXTERNAL_URL
       - key: CORS_ORIGINS
         fromService:

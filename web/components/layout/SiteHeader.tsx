@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const NAV = [
+  { href: "/paieska", label: "Ieškoti atminties", highlight: true },
   { href: "/#apie", label: "Apie iniciatyvą" },
   { href: "/qr-ploksteles", label: "Atminimo plokštelės", highlight: true },
   { href: "/parishes", label: "Parapijos" },

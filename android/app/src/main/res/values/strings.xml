@@ -2,15 +2,18 @@
 <resources>
     <string name="app_name">AETERNA</string>
     <string name="settings_title">Serverio adresas</string>
-    <string name="settings_intro">Įveskite svetainės adresą (tik šaknis, pvz. https://aeterna-web-six.vercel.app — be /m/demo). Paspaudus AETERNA viršuje — titulinis puslapis.</string>
-    <string name="url_hint">http://192.168.1.42:3000</string>
+    <string name="settings_intro">Adresas paprastai nustatomas automatiškai iš serverio. Čia keiskite tik jei testuojate savo kompiuterį (LAN).</string>
+    <string name="url_hint">https://aeterna-web-six.vercel.app</string>
     <string name="default_url_hint">Numatytasis iš build: %1$s</string>
     <string name="save">Išsaugoti</string>
     <string name="reset_default">Atkurti numatytąjį</string>
-    <string name="url_invalid">Adresas turi prasidėti http:// arba https://</string>
+    <string name="use_cloud_auto">Naudoti debesį (kaip PC production)</string>
+    <string name="cloud_mode_enabled">Debesies režimas įjungtas. Grįžkite ir paspauskite Perkrauti iš serverio.</string>
+    <string name="url_invalid">Įveskite svetainės adresą (aeterna-web-six…), ne API (api-three-chi…)</string>
     <string name="url_saved">Adresas išsaugotas. Grįžkite ir perkraukite.</string>
     <string name="url_reset">Atkurtas numatytasis adresas</string>
-    <string name="reload">Perkrauti</string>
+    <string name="reload">Perkrauti iš serverio</string>
+    <string name="reload_from_server_done">Kraunama naujausia versija iš serverio…</string>
     <string name="press_back_again">Paspauskite atgal dar kartą, kad išeitumėte</string>
     <string name="error_title">Nepavyko atidaryti serverio</string>
     <string name="error_timeout">Serveris neatsako per 15 s. Ar paleistas „npm run dev:lan“?</string>

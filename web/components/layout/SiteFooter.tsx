@@ -24,6 +24,9 @@ export function SiteFooter() {
               <Link href="/">Pagrindinis</Link>
             </li>
             <li>
+              <Link href="/paieska">Ieškoti atminties</Link>
+            </li>
+            <li>
               <Link href="/#kaip-veikia">Kaip veikia</Link>
             </li>
             <li>

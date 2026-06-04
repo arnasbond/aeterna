@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import {
   checkout,
   createMemorial,
+  createUserMemorial,
   fetchParishes,
   fetchUserMe,
   getUserToken,
@@ -25,6 +26,7 @@ function WizardInner() {
   const params = useSearchParams();
   const preParish = params.get("parish") ?? "";
   const prePlate = params.get("plate") as PlateTierId | null;
+  const freshWizard = params.get("naujas") === "1";
   const plateTier = getPlateTier(prePlate);
   const doneOrder = params.get("order");
 
@@ -73,6 +75,23 @@ function WizardInner() {
   }, []);
 
   useEffect(() => {
+    if (!freshWizard) return;
+    setStep(1);
+    setMaxStep(1);
+    setErr(null);
+    setResult(null);
+    setFullName("");
+    setBirthDate("");
+    setDeathDate("");
+    setBiography("");
+    setPortraitUrl("");
+    setGalleryUrls([]);
+    setVideoUrl("");
+    setMediaBusy(false);
+    setBusy(false);
+  }, [freshWizard]);
+
+  useEffect(() => {
     if (preParish) setParishId(preParish);
   }, [preParish]);
 
@@ -96,10 +115,17 @@ function WizardInner() {
       const url = await uploadMemorialFile(file);
       setPortraitUrl(url);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Nepavyko įkelti portreto");
+      setErr(uploadErrorMessage(e, "Nepavyko įkelti portreto"));
     } finally {
       setMediaBusy(false);
     }
+  }
+
+  function uploadErrorMessage(e: unknown, fallback: string): string {
+    const msg = e instanceof Error ? e.message : fallback;
+    return msg === "Failed to fetch"
+      ? "Nepavyko susisiekti su serveriu. Paleiskite PALESTI-SERVERIUS.bat ir naudokite :3000 (ne :4000)."
+      : msg;
   }
 
   async function handleGalleryFiles(files: FileList | null) {
@@ -113,7 +139,7 @@ function WizardInner() {
       }
       setGalleryUrls((prev) => [...prev, ...uploaded]);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Nepavyko įkelti nuotraukų");
+      setErr(uploadErrorMessage(e, "Nepavyko įkelti nuotraukų"));
     } finally {
       setMediaBusy(false);
     }
@@ -127,36 +153,47 @@ function WizardInner() {
       const url = await uploadMemorialFile(file);
       setVideoUrl(url);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Nepavyko įkelti vaizdo įrašo");
+      setErr(uploadErrorMessage(e, "Nepavyko įkelti vaizdo įrašo"));
     } finally {
       setMediaBusy(false);
     }
   }
 
-  async function finish() {
+  const memorialPayload = () => ({
+    parishId,
+    fullName,
+    birthDate: birthDate || undefined,
+    deathDate: deathDate || undefined,
+    biography,
+    portraitUrl: portraitUrl || undefined,
+    mediaGallery: galleryUrls.length ? galleryUrls : undefined,
+    videoUrl: videoUrl || undefined,
+  });
+
+  async function finish(skipCheckout = false) {
     setBusy(true);
     setErr(null);
     try {
-      const memorial = await createMemorial({
-        parishId,
-        fullName,
-        birthDate: birthDate || undefined,
-        deathDate: deathDate || undefined,
-        biography,
-        portraitUrl: portraitUrl || undefined,
-        mediaGallery: galleryUrls.length ? galleryUrls : undefined,
-        videoUrl: videoUrl || undefined,
-      });
-      const pay = await checkout(parishId, packageTotalCents(plateTier?.id ?? null));
+      const memorial = loggedIn
+        ? await createUserMemorial(memorialPayload())
+        : await createMemorial(memorialPayload());
+      const checkoutMsg = skipCheckout
+        ? "Profilis išsaugotas (be apmokėjimo simuliacijos)."
+        : (await checkout(parishId, packageTotalCents(plateTier?.id ?? null))).message;
       setResult({
         slug: memorial.slug,
         profileUrl: memorial.profileUrl,
         qrCodeUrl: memorial.qrCodeUrl,
-        checkout: { message: pay.message },
+        checkout: { message: checkoutMsg },
       });
       setStep(5);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Klaida");
+      const msg = e instanceof Error ? e.message : "Klaida";
+      setErr(
+        msg === "Failed to fetch"
+          ? "Nepavyko susisiekti su serveriu. Paleiskite PALESTI-SERVERIUS.bat ir atidarykite svetainę per http://…:3000 (ne :4000)."
+          : msg
+      );
     } finally {
       setBusy(false);
     }
@@ -380,12 +417,23 @@ function WizardInner() {
             <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(3)}>
               Atgal
             </button>
+            {loggedIn && (
+              <button
+                type="button"
+                className="ae-btn ae-btn--primary"
+                style={{ width: "100%", marginTop: "0.5rem" }}
+                disabled={busy}
+                onClick={() => finish(true)}
+              >
+                {busy ? "Saugoma…" : "Išsaugoti profilį (be apmokėjimo)"}
+              </button>
+            )}
             <button
               type="button"
               className="ae-btn ae-btn--gold"
               style={{ width: "100%", marginTop: "0.5rem" }}
               disabled={busy}
-              onClick={finish}
+              onClick={() => finish(false)}
             >
               {busy ? "Kuriama…" : "Apmokėti ir sukurti (MVP)"}
             </button>
