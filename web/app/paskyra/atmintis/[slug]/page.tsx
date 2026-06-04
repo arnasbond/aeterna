@@ -73,7 +73,7 @@ export default function EditMemorialPage() {
       setPortraitUrl(await uploadMemorialFile(file));
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Nepavyko įkelti portreto";
-      setErr(msg === "Failed to fetch" ? "Serveris nepasiekiamas — paleiskite PALESTI-SERVERIUS.bat." : msg);
+      setErr(msg === "Failed to fetch" ? "Nepavyko įkelti failo — patikrinkite internetą ir bandykite dar kartą." : msg);
     } finally {
       setMediaBusy(false);
     }
@@ -91,7 +91,7 @@ export default function EditMemorialPage() {
       setGalleryUrls((prev) => [...prev, ...uploaded]);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Nepavyko įkelti nuotraukų";
-      setErr(msg === "Failed to fetch" ? "Serveris nepasiekiamas — paleiskite PALESTI-SERVERIUS.bat." : msg);
+      setErr(msg === "Failed to fetch" ? "Nepavyko įkelti failo — patikrinkite internetą ir bandykite dar kartą." : msg);
     } finally {
       setMediaBusy(false);
     }
@@ -105,7 +105,7 @@ export default function EditMemorialPage() {
       setVideoUrl(await uploadMemorialFile(file));
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Nepavyko įkelti vaizdo įrašo";
-      setErr(msg === "Failed to fetch" ? "Serveris nepasiekiamas — paleiskite PALESTI-SERVERIUS.bat." : msg);
+      setErr(msg === "Failed to fetch" ? "Nepavyko įkelti failo — patikrinkite internetą ir bandykite dar kartą." : msg);
     } finally {
       setMediaBusy(false);
     }
@@ -132,7 +132,7 @@ export default function EditMemorialPage() {
       const msg = e instanceof Error ? e.message : "Nepavyko išsaugoti";
       setErr(
         msg === "Failed to fetch"
-          ? "Nepavyko susisiekti su serveriu. Paleiskite PALESTI-SERVERIUS.bat."
+          ? "Nepavyko išsaugoti — patikrinkite internetą. Jei klaida kartojasi, API gali neturėti KV/Blob saugyklos."
           : msg
       );
     } finally {

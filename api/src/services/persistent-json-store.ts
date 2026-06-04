@@ -148,7 +148,18 @@ export async function loadJsonStore<T>(key: string, fallback: T): Promise<T> {
 
 export async function saveJsonStore<T>(key: string, value: T): Promise<void> {
   memory.set(key, value);
-  await saveRaw(key, value);
+  const backend = jsonStoreBackend();
+  if (process.env.VERCEL === "1" && backend === "filesystem") {
+    throw new Error(
+      "Atmintys neišsaugomos: Vercel reikia KV_REST_API_URL arba BLOB_READ_WRITE_TOKEN (JSON saugykla)."
+    );
+  }
+  try {
+    await saveRaw(key, value);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    throw new Error(`Nepavyko išsaugoti duomenų: ${msg}`);
+  }
 }
 
 export function clearJsonStoreCache(key?: string) {

@@ -51,6 +51,11 @@ export async function uploadMemorialMedia(
   }
 
   if (!config.blobReadWriteToken) {
+    if (process.env.VERCEL === "1" || process.env.NODE_ENV === "production") {
+      throw new Error(
+        "Failų saugykla nesukonfigūruota (BLOB_READ_WRITE_TOKEN). Susisiekite su administratoriumi."
+      );
+    }
     return `data:${type};base64,${base64}`;
   }
 

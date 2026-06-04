@@ -14,6 +14,7 @@ import {
   type Parish,
 } from "@/lib/api";
 import { formatPrice, getPlateTier, MEMORIAL_PACKAGE_CENTS, packageTotalCents, type PlateTierId } from "@/lib/qr-plates";
+import { clearWizardDraft, loadWizardDraft, saveWizardDraft } from "@/lib/wizard-draft";
 
 const WIZARD_STEPS = [
   { n: 1, label: "Duomenys" },
@@ -75,7 +76,23 @@ function WizardInner() {
   }, []);
 
   useEffect(() => {
-    if (!freshWizard) return;
+    if (!freshWizard) {
+      const draft = loadWizardDraft();
+      if (draft) {
+        setFullName(draft.fullName);
+        setBirthDate(draft.birthDate);
+        setDeathDate(draft.deathDate);
+        setBiography(draft.biography);
+        setPortraitUrl(draft.portraitUrl);
+        setGalleryUrls(draft.galleryUrls);
+        setVideoUrl(draft.videoUrl);
+        if (draft.parishId) setParishId(draft.parishId);
+        setStep(draft.step);
+        setMaxStep(draft.maxStep);
+      }
+      return;
+    }
+    clearWizardDraft();
     setStep(1);
     setMaxStep(1);
     setErr(null);
@@ -90,6 +107,22 @@ function WizardInner() {
     setMediaBusy(false);
     setBusy(false);
   }, [freshWizard]);
+
+  useEffect(() => {
+    if (result || step === 5) return;
+    saveWizardDraft({
+      fullName,
+      birthDate,
+      deathDate,
+      biography,
+      portraitUrl,
+      galleryUrls,
+      videoUrl,
+      parishId,
+      step,
+      maxStep,
+    });
+  }, [fullName, birthDate, deathDate, biography, portraitUrl, galleryUrls, videoUrl, parishId, step, maxStep, result]);
 
   useEffect(() => {
     if (preParish) setParishId(preParish);
@@ -123,9 +156,10 @@ function WizardInner() {
 
   function uploadErrorMessage(e: unknown, fallback: string): string {
     const msg = e instanceof Error ? e.message : fallback;
-    return msg === "Failed to fetch"
-      ? "Nepavyko susisiekti su serveriu. Paleiskite PALESTI-SERVERIUS.bat ir naudokite :3000 (ne :4000)."
-      : msg;
+    if (msg === "Failed to fetch") {
+      return "Nepavyko įkelti failo (tinklas arba serveris). Bandykite dar kartą arba mažesnę JPG nuotrauką.";
+    }
+    return msg;
   }
 
   async function handleGalleryFiles(files: FileList | null) {
@@ -180,6 +214,7 @@ function WizardInner() {
       const checkoutMsg = skipCheckout
         ? "Profilis išsaugotas (be apmokėjimo simuliacijos)."
         : (await checkout(parishId, packageTotalCents(plateTier?.id ?? null))).message;
+      clearWizardDraft();
       setResult({
         slug: memorial.slug,
         profileUrl: memorial.profileUrl,

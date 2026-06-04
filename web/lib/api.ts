@@ -101,13 +101,13 @@ export function resolveApiBase(): string {
       return origin.replace(/\/$/, "");
     }
 
-    // Production: API atskiras Vercel projektas — tiesioginis kvietimas (CORS įjungtas API)
+    // Production: Vercel svetainė — per Next /api/v1 proxy (mažesnė CORS rizika)
+    if (protocol === "https:" && hostname.endsWith(".vercel.app")) {
+      return origin.replace(/\/$/, "");
+    }
     if (protocol === "https:") {
       const env = process.env.NEXT_PUBLIC_API_URL?.trim();
       if (env?.startsWith("https://")) return env.replace(/\/$/, "");
-      if (hostname.includes("aeterna-mauve.vercel.app") || hostname.endsWith(".vercel.app")) {
-        return DEFAULT_API;
-      }
       return origin.replace(/\/$/, "");
     }
   }
@@ -121,6 +121,19 @@ export function resolveApiBase(): string {
 function base(): string {
   if (typeof window === "undefined") {
     return getApiProxyTarget();
+  }
+  return resolveApiBase();
+}
+
+/** Dideli failai — tiesiai į API (Vercel proxy limitas ~4.5 MB). */
+function uploadBase(): string {
+  if (typeof window === "undefined") {
+    return getApiProxyTarget();
+  }
+  const { protocol, hostname } = window.location;
+  const env = process.env.NEXT_PUBLIC_API_URL?.trim();
+  if (protocol === "https:" && hostname.endsWith(".vercel.app") && env?.startsWith("https://")) {
+    return env.replace(/\/$/, "");
   }
   return resolveApiBase();
 }
@@ -225,6 +238,10 @@ export type CreateMemorialPayload = {
   privacyStatus?: "public" | "private";
 };
 
+function isDataUrl(url: string): boolean {
+  return url.trim().toLowerCase().startsWith("data:");
+}
+
 export async function uploadMemorialFile(file: File): Promise<string> {
   const { prepareUploadFile, guessFileMime } = await import("./compress-upload");
   const prepared = await prepareUploadFile(file);
@@ -245,7 +262,7 @@ export async function uploadMemorialFile(file: File): Promise<string> {
     reader.readAsDataURL(prepared);
   });
 
-  const r = await fetch(`${base()}/api/v1/media/upload`, {
+  const r = await fetch(`${uploadBase()}/api/v1/media/upload`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -255,6 +272,11 @@ export async function uploadMemorialFile(file: File): Promise<string> {
     }),
   });
   const data = await parse<{ url: string }>(r);
+  if (isDataUrl(data.url)) {
+    throw new Error(
+      "Serveris neįrašė nuotraukos į saugyklą. Administratorius turi įjungti Vercel Blob (BLOB_READ_WRITE_TOKEN)."
+    );
+  }
   return data.url;
 }
 

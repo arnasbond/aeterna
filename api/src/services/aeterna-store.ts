@@ -14,6 +14,7 @@ import type {
   Parish,
   ParishSummary,
 } from "../types/aeterna.js";
+import { sanitizeMediaGallery, sanitizeMediaUrl } from "../media-url-sanitize.js";
 import { loadJsonStore, saveJsonStore } from "./persistent-json-store.js";
 
 const MEMORIALS_KEY = "aeterna-memorials";
@@ -351,6 +352,15 @@ export async function createMemorial(
     slug = `${base}-${n++}`;
   }
 
+  const gallery = sanitizeMediaGallery(input.mediaGallery);
+  const portrait = input.portraitUrl
+    ? sanitizeMediaUrl(input.portraitUrl)
+    : (gallery[0] ?? null);
+  const video =
+    input.videoUrl && !input.videoUrl.trim().startsWith("data:")
+      ? sanitizeMediaUrl(input.videoUrl) ?? input.videoUrl.trim()
+      : null;
+
   const now = new Date().toISOString();
   const row: AeternaMemorial = {
     id: randomUUID(),
@@ -361,9 +371,9 @@ export async function createMemorial(
     birthDate: input.birthDate ?? null,
     deathDate: input.deathDate ?? null,
     biography: input.biography ?? "",
-    portraitUrl: input.portraitUrl ?? input.mediaGallery?.[0] ?? null,
-    mediaGallery: input.mediaGallery ?? [],
-    videoUrl: input.videoUrl ?? null,
+    portraitUrl: portrait,
+    mediaGallery: gallery,
+    videoUrl: video,
     geoLocation: null,
     privacyStatus: input.privacyStatus ?? "public",
     moderationStatus: "approved",
@@ -401,9 +411,16 @@ export async function updateMemorialByOwner(
   if (patch.deathDate !== undefined) row.deathDate = patch.deathDate;
   if (patch.biography !== undefined) row.biography = patch.biography;
   if (patch.farewellMessage !== undefined) row.farewellMessage = patch.farewellMessage;
-  if (patch.videoUrl !== undefined) row.videoUrl = patch.videoUrl;
-  if (patch.portraitUrl !== undefined) row.portraitUrl = patch.portraitUrl;
-  if (patch.mediaGallery !== undefined) row.mediaGallery = patch.mediaGallery;
+  if (patch.videoUrl !== undefined) {
+    row.videoUrl =
+      patch.videoUrl && patch.videoUrl.trim()
+        ? sanitizeMediaUrl(patch.videoUrl) ?? patch.videoUrl.trim()
+        : null;
+  }
+  if (patch.portraitUrl !== undefined) {
+    row.portraitUrl = patch.portraitUrl ? sanitizeMediaUrl(patch.portraitUrl) : null;
+  }
+  if (patch.mediaGallery !== undefined) row.mediaGallery = sanitizeMediaGallery(patch.mediaGallery);
   if (patch.privacyStatus !== undefined) row.privacyStatus = patch.privacyStatus;
   row.updatedAt = new Date().toISOString();
   map.set(slug, row);
