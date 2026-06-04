@@ -8,7 +8,7 @@ const devOrigins = (process.env.NEXT_DEV_ORIGINS || "192.168.8.244,localhost")
 const buildLabel =
   process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ||
   process.env.RENDER_GIT_COMMIT?.slice(0, 7) ||
-  (process.env.VERCEL === "1" ? "vercel" : "local");
+  "";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,

@@ -14,9 +14,15 @@ function isDevHost(host: string): boolean {
   );
 }
 
-/** Versija + iš kur kraunama (telefonas dažnai rodo local = ne Vercel URL). */
-export function DeployBadge() {
-  const [label, setLabel] = useState<string>("…");
+type Props = { initialLabel?: string };
+
+/** Versija + host (local = dev PC, raidės/skaičiai = Vercel commit). */
+export function DeployBadge({ initialLabel }: Props) {
+  const safeInitial =
+    initialLabel && initialLabel !== "vercel" && initialLabel !== "local"
+      ? initialLabel
+      : "…";
+  const [label, setLabel] = useState<string>(safeInitial);
   const [host, setHost] = useState("");
 
   useEffect(() => {
@@ -25,23 +31,25 @@ export function DeployBadge() {
     fetch("/api/build-label", { cache: "no-store" })
       .then((r) => r.json())
       .then((j: { label?: string }) => {
-        setLabel(j.label?.trim() || "?");
+        const next = j.label?.trim() || "";
+        if (next && next !== "vercel") setLabel(next);
       })
-      .catch(() => setLabel("?"));
+      .catch(() => {});
   }, []);
 
   const dev = host && isDevHost(host);
+  const display = dev ? "local" : label === "vercel" ? "…" : label;
 
   return (
     <p
       className="ae-deploy-badge"
       title={
         dev
-          ? "Programėlė ar nustatymai krauna dev serverį — nustatykite https://aeterna-mauve.vercel.app"
-          : "Production Vercel deploy versija"
+          ? "Programėlė krauna PC dev serverį (npm run dev)"
+          : "Vercel production — commit hash"
       }
     >
-      Svetainės versija: <strong>{dev ? "local" : label}</strong>
+      Svetainės versija: <strong>{display}</strong>
       {host ? (
         <>
           {" "}

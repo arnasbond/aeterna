@@ -183,7 +183,7 @@ export function MemorialSearchBox() {
       )}
 
       <p className="ae-memorial-search__hint">
-        {buildLabel && buildLabel !== "local" && (
+        {buildLabel && buildLabel !== "local" && buildLabel !== "vercel" && buildLabel !== "…" && (
           <>
             <span className="ae-memorial-search__build">v.{buildLabel}</span>
             {" · "}

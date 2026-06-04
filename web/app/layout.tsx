@@ -3,6 +3,7 @@ import { Dancing_Script, Inter, Playfair_Display } from "next/font/google";
 import { Navigation } from "@/components/Navigation";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { DeployBadge } from "@/components/DeployBadge";
+import { getBuildLabel } from "@/lib/build-label";
 import "./globals.css";
 import "./aeterna.css";
 import "./chronicle.css";
@@ -28,12 +29,13 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const buildLabel = getBuildLabel();
   return (
     <html lang="lt" className={`${inter.variable} ${playfair.variable} ${dancing.variable}`}>
       <body className="aeterna-root">
         <Navigation />
         <main>{children}</main>
-        <DeployBadge />
+        <DeployBadge initialLabel={buildLabel} />
         <SiteFooter />
       </body>
     </html>

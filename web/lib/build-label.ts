@@ -7,12 +7,11 @@ export function getBuildLabel(): string {
   if (ref && ref !== "main") return ref.slice(0, 12);
 
   const pub = process.env.NEXT_PUBLIC_BUILD_LABEL?.trim();
-  if (pub && pub !== "local") return pub;
+  if (pub && pub !== "local" && pub !== "vercel" && pub.length >= 4) return pub;
 
   if (process.env.VERCEL === "1") {
     const dep = process.env.VERCEL_DEPLOYMENT_ID?.trim();
     if (dep && dep.length >= 7) return dep.slice(-7);
-    return "vercel";
   }
 
   return process.env.NODE_ENV === "production" ? "prod" : "local";
