@@ -17,6 +17,8 @@ object UrlStore {
         return if (pathStart > 0) trimmed.substring(0, pathStart) else trimmed
     }
 
+    private fun productionWebUrl(): String = BuildConfig.WEB_APP_URL.trimEnd('/')
+
     /** API hostas netinka WebView — tik svetainės URL. */
     fun ensureWebHost(url: String): String {
         val base = normalizeBaseUrl(url)
@@ -26,7 +28,14 @@ object UrlStore {
             lower.contains("aeterna-api") ||
             (lower.contains(":4000") && !lower.contains(":3000"))
         ) {
-            return BuildConfig.WEB_APP_URL.trimEnd('/')
+            return productionWebUrl()
+        }
+        // Vercel preview — leidžiami tik žinomi production hostai
+        val allowedProduction =
+            lower.contains("aeterna-mauve.vercel.app") ||
+                lower.contains("aeterna-web-six.vercel.app")
+        if (lower.contains("vercel.app") && !allowedProduction) {
+            return productionWebUrl()
         }
         return base
     }

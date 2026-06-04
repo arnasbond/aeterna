@@ -1,4 +1,4 @@
-export const DEFAULT_WEB = "https://aeterna-mauve.vercel.app";
+export const DEFAULT_WEB = "https://aeterna-web-six.vercel.app";
 export const DEFAULT_API = "https://api-three-chi-63.vercel.app";
 
 function looksLikeApiHost(url: string): boolean {

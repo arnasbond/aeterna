@@ -29,6 +29,10 @@ android/.idea/
 
 .vercel
 node_modules/
+node_modules.__deploy_skip__/
+web/node_modules.__deploy_skip__/
+web/node_modules/
+web/.next/
 dist/
 build/
 .DS_Store
