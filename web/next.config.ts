@@ -28,7 +28,10 @@ const nextConfig: NextConfig = {
     ];
   },
   async rewrites() {
-    const api = process.env.API_INTERNAL_URL?.replace(/\/$/, "");
+    const api =
+      process.env.API_INTERNAL_URL?.replace(/\/$/, "") ||
+      process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
+      (process.env.VERCEL === "1" ? "https://api-three-chi-63.vercel.app" : "");
     if (!api) return [];
     return [
       { source: "/api/v1/:path*", destination: `${api}/api/v1/:path*` },

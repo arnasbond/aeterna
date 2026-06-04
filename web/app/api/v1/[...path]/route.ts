@@ -1,46 +1,55 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getApiProxyTarget } from "@/lib/api-proxy-target";
 
-const API = (process.env.API_INTERNAL_URL || "http://127.0.0.1:4000").replace(/\/$/, "");
+export const dynamic = "force-dynamic";
 
 async function proxy(req: NextRequest, pathSegments: string[]) {
+  const base = getApiProxyTarget();
   const path = pathSegments.join("/");
-  const target = `${API}/api/v1/${path}${req.nextUrl.search}`;
+  const url = new URL(req.url);
+  const target = `${base}/api/v1/${path}${url.search}`;
 
   const headers = new Headers();
-  const contentType = req.headers.get("content-type");
-  if (contentType) headers.set("content-type", contentType);
-  const auth = req.headers.get("authorization");
-  if (auth) headers.set("authorization", auth);
-
-  const hasBody = req.method !== "GET" && req.method !== "HEAD";
-  const res = await fetch(target, {
-    method: req.method,
-    headers,
-    body: hasBody ? await req.arrayBuffer() : undefined,
-    cache: "no-store",
+  req.headers.forEach((value, key) => {
+    const k = key.toLowerCase();
+    if (k === "host" || k === "connection" || k === "content-length") return;
+    headers.set(key, value);
   });
 
-  const outHeaders = new Headers();
-  const resType = res.headers.get("content-type");
-  if (resType) outHeaders.set("content-type", resType);
+  const init: RequestInit = {
+    method: req.method,
+    headers,
+    cache: "no-store",
+  };
 
-  return new NextResponse(await res.arrayBuffer(), { status: res.status, headers: outHeaders });
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    init.body = await req.arrayBuffer();
+  }
+
+  const upstream = await fetch(target, init);
+  const outHeaders = new Headers();
+  upstream.headers.forEach((value, key) => {
+    if (key.toLowerCase() === "transfer-encoding") return;
+    outHeaders.set(key, value);
+  });
+  outHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate");
+
+  return new NextResponse(upstream.body, {
+    status: upstream.status,
+    statusText: upstream.statusText,
+    headers: outHeaders,
+  });
 }
 
 type Ctx = { params: Promise<{ path: string[] }> };
 
-export async function GET(req: NextRequest, ctx: Ctx) {
-  return proxy(req, (await ctx.params).path);
+async function handle(req: NextRequest, ctx: Ctx) {
+  const { path } = await ctx.params;
+  return proxy(req, path);
 }
-export async function POST(req: NextRequest, ctx: Ctx) {
-  return proxy(req, (await ctx.params).path);
-}
-export async function PATCH(req: NextRequest, ctx: Ctx) {
-  return proxy(req, (await ctx.params).path);
-}
-export async function PUT(req: NextRequest, ctx: Ctx) {
-  return proxy(req, (await ctx.params).path);
-}
-export async function DELETE(req: NextRequest, ctx: Ctx) {
-  return proxy(req, (await ctx.params).path);
-}
+
+export const GET = handle;
+export const POST = handle;
+export const PATCH = handle;
+export const PUT = handle;
+export const DELETE = handle;

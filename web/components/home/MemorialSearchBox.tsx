@@ -35,8 +35,11 @@ export function MemorialSearchBox() {
   useEffect(() => {
     let cancelled = false;
     fetch("/api/build-label", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((j: { label?: string }) => {
+      .then(async (r) => {
+        if (!r.ok) return;
+        const text = await r.text();
+        if (!text.trim()) return;
+        const j = JSON.parse(text) as { label?: string };
         if (!cancelled && j.label) setBuildLabel(j.label);
       })
       .catch(() => {});

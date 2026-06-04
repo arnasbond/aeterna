@@ -1,3 +1,6 @@
+import { getApiProxyTarget } from "./api-proxy-target";
+import { DEFAULT_API } from "./production-api-default";
+
 export type Parish = {
   id: string;
   title: string;
@@ -94,29 +97,49 @@ export function resolveApiBase(): string {
     const isLocalHost = hostname === "localhost" || hostname === "127.0.0.1";
     const isLan = /^192\.168\.|^10\.|^172\.(1[6-9]|2\d|3[01])\./.test(hostname);
 
-    // Vienas portas (3000) — Next peradresuoja /api/v1 → API; telefonui nereikia atidaryti :4000
-    if (isLan || isLocalHost || protocol === "https:") {
+    if (isLan || isLocalHost) {
+      return origin.replace(/\/$/, "");
+    }
+
+    // Production: API atskiras Vercel projektas — tiesioginis kvietimas (CORS įjungtas API)
+    if (protocol === "https:") {
+      const env = process.env.NEXT_PUBLIC_API_URL?.trim();
+      if (env?.startsWith("https://")) return env.replace(/\/$/, "");
+      if (hostname.includes("aeterna-mauve.vercel.app") || hostname.endsWith(".vercel.app")) {
+        return DEFAULT_API;
+      }
       return origin.replace(/\/$/, "");
     }
   }
 
   const env = process.env.NEXT_PUBLIC_API_URL?.trim();
-  if (env) return env.replace(/\/$/, "");
+  if (env?.startsWith("http")) return env.replace(/\/$/, "");
 
   return "http://127.0.0.1:4000";
 }
 
 function base(): string {
   if (typeof window === "undefined") {
-    const internal = process.env.API_INTERNAL_URL?.trim();
-    if (internal) return internal.replace(/\/$/, "");
-    return process.env.NEXT_PUBLIC_API_URL?.trim() || "http://127.0.0.1:4000";
+    return getApiProxyTarget();
   }
   return resolveApiBase();
 }
 
 async function parse<T>(r: Response): Promise<T> {
-  const j = await r.json();
+  const text = await r.text();
+  if (!text.trim()) {
+    throw new Error(
+      r.ok
+        ? "Serveris grąžino tuščią atsakymą (API proxy neveikia — patikrinkite Vercel env)"
+        : `HTTP ${r.status} — tuščias atsakymas`
+    );
+  }
+  let j: { success?: boolean; data?: T; error?: { message?: string } };
+  try {
+    j = JSON.parse(text) as typeof j;
+  } catch {
+    throw new Error(`Netinkamas serverio atsakymas (HTTP ${r.status})`);
+  }
   if (!r.ok || j.success === false) {
     throw new Error(j.error?.message || `HTTP ${r.status}`);
   }
@@ -178,11 +201,16 @@ export async function searchMemorials(query: string, limit = 10): Promise<Memori
 }
 
 export async function fetchMemorial(slug: string): Promise<MemorialPublic | null> {
-  const r = await fetch(`${base()}/api/v1/memorials/${encodeURIComponent(slug)}`, {
-    cache: "no-store",
-  });
-  if (r.status === 404) return null;
-  return parse<MemorialPublic>(r);
+  const { getDemoMemorialPublic } = await import("./memorial-demo-public");
+  try {
+    const r = await fetch(`${base()}/api/v1/memorials/${encodeURIComponent(slug)}`, {
+      cache: "no-store",
+    });
+    if (r.status === 404) return getDemoMemorialPublic(slug);
+    return parse<MemorialPublic>(r);
+  } catch {
+    return getDemoMemorialPublic(slug);
+  }
 }
 
 export type CreateMemorialPayload = {
