@@ -22,7 +22,6 @@ async function fetchCommitFromSite(): Promise<string | null> {
 export async function DeployBadge() {
   const host =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/^https?:\/\//, "").replace(/\/$/, "") ||
-    process.env.VERCEL_URL?.replace(/\/$/, "") ||
     "aeterna-mauve.vercel.app";
 
   const commit = (await fetchCommitFromSite()) ?? "…";

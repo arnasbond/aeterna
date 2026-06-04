@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { searchMemorials, type MemorialSearchHit } from "@/lib/api";
 
@@ -18,7 +17,6 @@ function formatYears(birth: string | null, death: string | null) {
 }
 
 export function MemorialSearchBox() {
-  const router = useRouter();
   const listId = useId();
   const wrapRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
@@ -95,7 +93,8 @@ export function MemorialSearchBox() {
   function goTo(hit: MemorialSearchHit) {
     setOpen(false);
     setQuery(hit.fullName);
-    router.push(`/m/${hit.slug}`);
+    // Pilnas perkrovimas — išvengia Next kliento navigacijos JSON klaidos
+    window.location.assign(`/m/${hit.slug}`);
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {

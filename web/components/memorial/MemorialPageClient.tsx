@@ -12,6 +12,7 @@ import {
   type MemorialPublic,
   type OwnedMemorialDetail,
 } from "@/lib/api";
+import { getDemoMemorialPublic } from "@/lib/memorial-demo-public";
 
 function toPublicMemorial(
   owned: OwnedMemorialDetail,
@@ -71,6 +72,14 @@ export function MemorialPageClient({ slug }: Props) {
       setOwnerOnly(false);
       setCanClaim(false);
       setCanEdit(false);
+
+      const demo = getDemoMemorialPublic(slug);
+      if (demo) {
+        setMemorial(demo);
+        if (demo.geoLocation) setGeo(demo.geoLocation);
+        setLoading(false);
+        return;
+      }
 
       try {
         const pub = await fetchMemorial(slug);

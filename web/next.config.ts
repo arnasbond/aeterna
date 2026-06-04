@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: devOrigins,
   env: {
     NEXT_PUBLIC_BUILD_LABEL: buildLabel,
+    NEXT_PUBLIC_API_URL:
+      process.env.NEXT_PUBLIC_API_URL?.trim() || "https://api-three-chi-63.vercel.app",
   },
   async headers() {
     return [
