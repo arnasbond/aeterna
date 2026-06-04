@@ -25,6 +25,8 @@ export const config = {
     process.env.BLOB_READ_WRITE_TOKEN?.trim() ||
     process.env.VERCEL_BLOB_READ_WRITE_TOKEN?.trim() ||
     "",
+  /** Kai Blob store prijungtas prie projekto (Storage → Connect). */
+  blobStoreId: process.env.BLOB_STORE_ID?.trim() || "",
   /** Laikinas testinis prisijungimas — išjungti: AETERNA_DISABLE_TEST_LOGIN=1 */
   testLoginEnabled:
     process.env.AETERNA_DISABLE_TEST_LOGIN !== "1" && process.env.NODE_ENV !== "production",

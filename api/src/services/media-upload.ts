@@ -55,17 +55,35 @@ export async function uploadMemorialMedia(
     throw new Error("Failas per didelis (maks. 12 MB). Bandykite mažesnę nuotrauką.");
   }
 
-  if (config.blobReadWriteToken) {
+  const canUseBlob =
+    config.blobReadWriteToken ||
+    config.blobStoreId ||
+    (process.env.VERCEL === "1" && process.env.NODE_ENV === "production");
+
+  if (canUseBlob) {
     const { put } = await import("@vercel/blob");
     const ext = filename.includes(".") ? filename.split(".").pop()!.toLowerCase() : "bin";
     const pathname = `memorial-media/${randomUUID()}.${ext}`;
-    const blob = await put(pathname, buffer, {
+    const putOpts: {
+      access: "public";
+      contentType: string;
+      addRandomSuffix: boolean;
+      token?: string;
+    } = {
       access: "public",
-      token: config.blobReadWriteToken,
       contentType: type,
       addRandomSuffix: false,
-    });
-    return blob.url;
+    };
+    if (config.blobReadWriteToken) {
+      putOpts.token = config.blobReadWriteToken;
+    }
+    try {
+      const blob = await put(pathname, buffer, putOpts);
+      return blob.url;
+    } catch (blobErr) {
+      if (!kvMediaEnabled() || !publicApiBase) throw blobErr;
+      /* fallback KV */
+    }
   }
 
   if (kvMediaEnabled() && publicApiBase) {

@@ -30,7 +30,7 @@ export async function buildApp(): Promise<FastifyInstance> {
     app: "AETERNA API",
     env: process.env.NODE_ENV || "development",
     jsonStore: jsonStoreBackend(),
-    blobStorage: !!config.blobReadWriteToken,
+    blobStorage: !!(config.blobReadWriteToken || config.blobStoreId),
     kvMediaFallback: !!(config.kvRestUrl && config.kvRestToken),
   }));
 
