@@ -1,7 +1,7 @@
 @echo off
 cd /d H:\dev\aeterna
 git add -A
-git commit -m "fix: phone shows commit hash not vercel (server badge, WebView cache)"
+git commit -m "fix: build label git commit only (not deployment id hYyLiUy)"
 git push origin main
 echo.
 echo 1) Palaukite Vercel Ready

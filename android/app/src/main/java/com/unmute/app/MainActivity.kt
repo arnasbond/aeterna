@@ -240,14 +240,17 @@ class MainActivity : AppCompatActivity() {
                 val body = conn.inputStream.bufferedReader().readText()
                 val label = JSONObject(body).optString("label", "").trim()
                 conn.disconnect()
-                if (label.isEmpty() || label == "vercel") return@Thread
-                val safe = label.replace("\\", "").replace("'", "")
+                if (label.isEmpty() || label == "vercel" || !label.matches(Regex("^[0-9a-fA-F]{7}$"))) return@Thread
+                val safe = label.lowercase().replace("\\", "").replace("'", "")
                 val js = """
                     (function(){
-                      var el = document.getElementById('aeterna-build-label');
-                      if (el) el.textContent = '$safe';
-                      var badge = document.getElementById('aeterna-deploy-badge');
-                      if (badge) badge.setAttribute('data-build', '$safe');
+                      var id='$safe';
+                      var el=document.getElementById('aeterna-build-label');
+                      if(el) el.textContent=id;
+                      document.querySelectorAll('.ae-deploy-badge strong').forEach(function(n){
+                        if(n&&!/^[0-9a-f]{7}$$/i.test((n.textContent||'').trim()))
+                          n.textContent=id;
+                      });
                     })();
                 """.trimIndent()
                 runOnUiThread { webView.evaluateJavascript(js, null) }
