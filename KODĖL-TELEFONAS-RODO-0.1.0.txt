@@ -1,0 +1,30 @@
+KODĖL PO ĮDIEGIMO VIS DAR 0.1.0?
+================================
+
+1) Programėlė atsidarius siūlė „Atnaujinimas“ → 0.1.0-dev (build 10).
+   Tai PERRAŠĖ jūsų rankiniu būdu įdiegtą 0.2.5.
+   Dabar update.json pataisytas į 0.2.5 (build 11).
+   Jei telefone buvo build 10 — įdiegti build 7 NEGALIMA (Android atmeta).
+   Reikia naujo APK su build 11.
+
+2) Gal įdiegėte ne tą failą:
+   - Teisingas: AETERNA-0.2.5.apk (po PATIKRA-IR-SURINKTI.bat)
+   - Senas: AETERNA-install.apk, aeterna.apk iš atsisiuntimų
+
+3) Du darbalaukiai Windows:
+   - C:\Users\...\Desktop\AETERNA-0.2.5.apk
+   - H:\OneDrive\Desktop\AETERNA-0.2.5.apk
+   Naudokite naujausią (žiūrėkite datą).
+
+ŽINGSNIAI
+---------
+A) H:\dev\aeterna\PATIKRA-IR-SURINKTI.bat — laukite „versionName='0.2.5'“
+
+B) Geriausia: Ištrinti AETERNA → įdiegti naują AETERNA-0.2.5.apk
+   (build 11 viduje). Nustatymai → versija 0.2.5
+   Arba tiesiog įdiegti naują APK ant senos (11 > 10).
+
+C) Atidarius programėlę — jei klausia atnaujinimo, pasirinkite VĖLIAU
+   (kol neįkėlėte API į Vercel su nauju update.json)
+
+D) Meniu: Naudoti debesį + Perkrauti iš serverio

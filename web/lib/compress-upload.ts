@@ -18,6 +18,11 @@ const EXT_MIME: Record<string, string> = {
   mov: "video/quicktime",
 };
 
+function isMobileDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return /Android|iPhone|iPad|Mobile|AeternaApp/i.test(navigator.userAgent);
+}
+
 export function guessFileMime(file: File): string {
   const type = file.type?.split(";")[0]?.trim().toLowerCase();
   if (type && type !== "application/octet-stream") return type;
@@ -107,7 +112,21 @@ export async function prepareUploadFile(file: File): Promise<File> {
 
   let prepared = file;
   if (isHeic(prepared)) {
-    prepared = await heicToJpeg(prepared);
+    try {
+      prepared = await heicToJpeg(prepared);
+    } catch (e) {
+      if (isMobileDevice() && prepared.size <= MAX_IMAGE_BYTES) {
+        return prepared;
+      }
+      throw e;
+    }
   }
-  return compressImage(prepared);
+  try {
+    return await compressImage(prepared);
+  } catch (e) {
+    if (isMobileDevice() && prepared.size <= MAX_IMAGE_BYTES) {
+      return prepared;
+    }
+    throw e;
+  }
 }

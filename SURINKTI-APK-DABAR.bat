@@ -1,18 +1,20 @@
 @echo off
 chcp 65001 >nul
-cd /d H:\dev\aeterna
-echo === 1. Push web i GitHub ===
-git add -A
-git commit -m "fix: native version bar + server fetch commit-hash"
-git push origin main
+cd /d H:\dev\aeterna\android
+
 echo.
-echo === 2. APK (versija 0.2.5 build 7) ===
-cd android
-powershell -ExecutionPolicy Bypass -File build-apk.ps1 -Notes "0.2.5 versijos juosta telefone"
+echo === AETERNA APK 0.2.5 ===
 echo.
-echo === 3. Telefone ===
-copy /Y android\app\build\outputs\apk\release\app-release.apk "%USERPROFILE%\Desktop\AETERNA-0.2.5.apk" 2>nul
+
+powershell -ExecutionPolicy Bypass -File "build-apk.ps1" -Notes "0.2.5 telefonui"
+if errorlevel 1 (
+  echo.
+  echo Jei ANDROID_HOME nerastas - paleiskite:
+  echo   H:\dev\aeterna\RASTI-ANDROID-SDK.bat
+  pause
+  exit /b 1
+)
+
 echo.
-echo Desktop: AETERNA-0.2.5.apk
-echo Telefone idiekite — virsuje AETERNA 0.2.5, apacioje geltona juosta
+echo Telefone idiekite Desktop\AETERNA-0.2.5.apk ^(versija 0.2.5, ne 0.1.0^)
 pause
