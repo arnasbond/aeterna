@@ -7,7 +7,7 @@ import { MemorialSearchBox } from "@/components/home/MemorialSearchBox";
 import { HomeHowItWorksInteractive } from "@/components/home/HomeHowItWorksInteractive";
 
 const EXAMPLE = "/m/ona-demo";
-const siteBase = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://aeterna-web-six.vercel.app";
+const siteBase = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://aeterna-mauve.vercel.app";
 const exampleQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&color=4a2f7a&bgcolor=ffffff&data=${encodeURIComponent(`${siteBase}${EXAMPLE}`)}`;
 
 const BENEFITS = [

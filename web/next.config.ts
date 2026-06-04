@@ -5,14 +5,16 @@ const devOrigins = (process.env.NEXT_DEV_ORIGINS || "192.168.8.244,localhost")
   .map((s) => s.trim())
   .filter(Boolean);
 
+const buildLabel =
+  process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ||
+  process.env.RENDER_GIT_COMMIT?.slice(0, 7) ||
+  (process.env.VERCEL === "1" ? "vercel" : "local");
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   allowedDevOrigins: devOrigins,
   env: {
-    NEXT_PUBLIC_BUILD_LABEL:
-      process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ||
-      process.env.RENDER_GIT_COMMIT?.slice(0, 7) ||
-      "local",
+    NEXT_PUBLIC_BUILD_LABEL: buildLabel,
   },
   async headers() {
     return [
@@ -33,9 +35,15 @@ const nextConfig: NextConfig = {
       { source: "/health", destination: `${api}/health` },
     ];
   },
-  webpack: (config, { dev }) => {
+  webpack: (config, { dev, webpack }) => {
     if (dev) {
       config.cache = { type: "memory" };
+    } else {
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          "process.env.NEXT_PUBLIC_BUILD_LABEL": JSON.stringify(buildLabel),
+        })
+      );
     }
     return config;
   },

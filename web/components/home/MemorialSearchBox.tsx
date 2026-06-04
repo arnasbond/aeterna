@@ -28,6 +28,22 @@ export function MemorialSearchBox() {
   const [active, setActive] = useState(-1);
   const [searched, setSearched] = useState(false);
   const [apiError, setApiError] = useState(false);
+  const [buildLabel, setBuildLabel] = useState(
+    () => process.env.NEXT_PUBLIC_BUILD_LABEL || ""
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/build-label", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((j: { label?: string }) => {
+        if (!cancelled && j.label) setBuildLabel(j.label);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const runSearch = useCallback(async (value: string) => {
     const q = value.trim();
@@ -167,9 +183,9 @@ export function MemorialSearchBox() {
       )}
 
       <p className="ae-memorial-search__hint">
-        {process.env.NEXT_PUBLIC_BUILD_LABEL && (
+        {buildLabel && buildLabel !== "local" && (
           <>
-            <span className="ae-memorial-search__build">v.{process.env.NEXT_PUBLIC_BUILD_LABEL}</span>
+            <span className="ae-memorial-search__build">v.{buildLabel}</span>
             {" · "}
           </>
         )}
