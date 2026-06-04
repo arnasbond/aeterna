@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var errorPanel: LinearLayout
     private lateinit var errorMessage: TextView
     private lateinit var errorUrl: TextView
+    private lateinit var nativeVersionBar: TextView
     private var backPressToast: Toast? = null
     private var loadedBaseUrl: String? = null
     private var pageLoaded = false
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         errorPanel = findViewById(R.id.error_panel)
         errorMessage = findViewById(R.id.error_message)
         errorUrl = findViewById(R.id.error_url)
+        nativeVersionBar = findViewById(R.id.native_version_bar)
 
         findViewById<Button>(R.id.btn_retry).setOnClickListener {
             hideError()
@@ -126,11 +128,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        refreshNativeVersionBar()
         RemoteConfig.sync(this, force = true) { _ ->
             fetchServerContentVersion()
             refreshFromServer(clearCache = true)
             AppUpdateManager.checkForUpdate(this@MainActivity, onLaunch = true)
         }
+    }
+
+    /** Visada matoma — nepriklauso nuo WebView JS (sprendžia „…“ problemą). */
+    private fun refreshNativeVersionBar() {
+        val base = homeUrl().trimEnd('/')
+        nativeVersionBar.text = getString(R.string.version_loading)
+        Thread {
+            val label = fetchCommitHash(base)
+            runOnUiThread {
+                nativeVersionBar.text =
+                    if (label != null) getString(R.string.version_line, label, base)
+                    else getString(R.string.version_failed, base)
+            }
+        }.start()
     }
 
     private fun fetchServerContentVersion() {
@@ -178,6 +195,7 @@ class MainActivity : AppCompatActivity() {
 
     fun refreshFromServer(clearCache: Boolean = false) {
         if (clearCache) clearAllWebStorage()
+        refreshNativeVersionBar()
         loadHome(force = true)
     }
 

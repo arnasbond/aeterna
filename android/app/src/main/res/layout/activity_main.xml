@@ -24,6 +24,18 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/native_version_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#1E3A1E"
+            android:gravity="center"
+            android:padding="6dp"
+            android:textColor="#E8F0E6"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:text="Svetainės versija: …" />
     </LinearLayout>
 
     <LinearLayout

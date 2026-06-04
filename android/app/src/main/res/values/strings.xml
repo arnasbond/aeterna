@@ -3,13 +3,13 @@
     <string name="app_name">AETERNA</string>
     <string name="settings_title">Serverio adresas</string>
     <string name="settings_intro">Adresas paprastai nustatomas automatiškai iš serverio. Čia keiskite tik jei testuojate savo kompiuterį (LAN).</string>
-    <string name="url_hint">https://aeterna-web-six.vercel.app</string>
+    <string name="url_hint">https://aeterna-mauve.vercel.app</string>
     <string name="default_url_hint">Numatytasis iš build: %1$s</string>
     <string name="save">Išsaugoti</string>
     <string name="reset_default">Atkurti numatytąjį</string>
     <string name="use_cloud_auto">Naudoti debesį (kaip PC production)</string>
     <string name="cloud_mode_enabled">Debesies režimas įjungtas. Grįžkite ir paspauskite Perkrauti iš serverio.</string>
-    <string name="url_invalid">Įveskite svetainės adresą (aeterna-web-six…), ne API (api-three-chi…)</string>
+    <string name="url_invalid">Įveskite svetainės adresą (aeterna-mauve…), ne API (api-three-chi…)</string>
     <string name="url_saved">Adresas išsaugotas. Grįžkite ir perkraukite.</string>
     <string name="url_reset">Atkurtas numatytasis adresas</string>
     <string name="reload">Perkrauti iš serverio</string>
@@ -40,4 +40,7 @@
     <string name="download_started">Atsisiunčiama… Patikrinkite pranešimus arba Atsisiuntimų aplanką.</string>
     <string name="download_open_browser">Atidaroma naršyklėje…</string>
     <string name="download_notification_desc">AETERNA Android programėlė</string>
+    <string name="version_loading">Svetainės versija: kraunama…</string>
+    <string name="version_line">Svetainės versija: %1$s · %2$s</string>
+    <string name="version_failed">Svetainės versija: nepavyko · %1$s</string>
 </resources>
