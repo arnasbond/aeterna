@@ -17,20 +17,20 @@ export async function webRedirectRoutes(app: FastifyInstance) {
   const web = () => publicWebUrl();
 
   app.get("/", async (_req, reply) => {
-    return reply.redirect(302, `${web()}/`);
+    return reply.redirect(`${web()}/`, 302);
   });
 
   for (const path of WEB_PATHS) {
     app.get(path, async (_req, reply) => {
-      return reply.redirect(302, `${web()}${path}`);
+      return reply.redirect(`${web()}${path}`, 302);
     });
   }
 
   app.get<{ Params: { slug: string } }>("/m/:slug", async (req, reply) => {
-    return reply.redirect(302, `${web()}/m/${encodeURIComponent(req.params.slug)}`);
+    return reply.redirect(`${web()}/m/${encodeURIComponent(req.params.slug)}`, 302);
   });
 
   app.get<{ Params: { id: string } }>("/parishes/:id", async (req, reply) => {
-    return reply.redirect(302, `${web()}/parishes/${encodeURIComponent(req.params.id)}`);
+    return reply.redirect(`${web()}/parishes/${encodeURIComponent(req.params.id)}`, 302);
   });
 }

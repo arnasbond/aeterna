@@ -56,7 +56,7 @@ export async function buildApp(): Promise<FastifyInstance> {
         hint: "AETERNA API — naudokite /api/v1. Svetainė: " + publicWebUrl(),
       });
     }
-    return reply.redirect(302, `${publicWebUrl()}${req.url}`);
+    return reply.redirect(`${publicWebUrl()}${req.url}`, 302);
   });
 
   await app.ready();
