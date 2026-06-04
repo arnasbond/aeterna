@@ -56,7 +56,8 @@ object RemoteConfig {
 
                 if (!UrlStore.isManualOverride(context)) {
                     val remote = UrlStore.ensureWebHost(config.optString("webAppUrl", ""))
-                    if (remote.isNotEmpty() && remote != url && remote.startsWith("https://")) {
+                    val okRemote = remote.contains("aeterna-web-six.vercel.app")
+                    if (okRemote && remote != url) {
                         UrlStore.applyRemoteUrl(context, remote)
                         url = remote
                         urlChanged = true

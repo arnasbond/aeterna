@@ -17,14 +17,18 @@
     <string name="reload_from_server_done">Kraunama naujausia versija iš serverio…</string>
     <string name="press_back_again">Paspauskite atgal dar kartą, kad išeitumėte</string>
     <string name="error_title">Nepavyko atidaryti serverio</string>
-    <string name="error_timeout">Serveris neatsako per 15 s. Ar paleistas „npm run dev:lan“?</string>
+    <string name="error_timeout">Serveris neatsako per 45 s. Patikrinkite internetą arba bandykite dar kartą.</string>
     <string name="error_unknown">Tinklo klaida</string>
     <string name="retry">Bandyti dar kartą</string>
     <string name="settings_help">1. Kompiuteryje: api ir web (npm run dev).\n2. Raskite PC IP: ipconfig → IPv4.\n3. web/.env.local: NEXT_PUBLIC_API_URL=http://JŪSŲ_IP:4000\n4. Paleiskite web su: npx next dev -H 0.0.0.0\n5. Čia įrašykite: http://JŪSŲ_IP:3000\n\nEmuliatoriuje: http://10.0.2.2:3000</string>
-    <string name="update_available_title">Galimas programėlės atnaujinimas</string>
-    <string name="update_available_body">Nauja versija %1$s (dabar: %2$d). Atsisiųsti ir įdiegti?</string>
+    <string name="update_available_title">Yra naujesnė programėlės versija</string>
+    <string name="update_available_body">Nauja versija %1$s (nr. %2$d). Jūsų versija: nr. %3$d.\n\nPaspauskite „Atnaujinti dabar“ — atsisiunčiama ir įdiegiama automatiškai.</string>
     <string name="update_download">Atsisiųsti</string>
+    <string name="update_download_now">Atnaujinti dabar</string>
     <string name="update_later">Vėliau</string>
+    <string name="update_already_latest">Jau naujausia versija (nr. %1$d).</string>
+    <string name="update_confirm_install">Patvirtinkite diegimą Android lange („Diegti“).</string>
+    <string name="update_permission_return">Įjunkite leidimą, grįžkite ir paspauskite „Atnaujinti dar kartą“ meniu.</string>
     <string name="update_downloading">Atsisiunčiama…</string>
     <string name="update_please_wait">Palaukite, kol bus paruošta nauja APK.</string>
     <string name="update_download_failed">Nepavyko atsisiųsti: %1$s</string>
@@ -42,8 +46,11 @@
     <string name="download_open_browser">Atidaroma naršyklėje…</string>
     <string name="download_notification_desc">AETERNA Android programėlė</string>
     <string name="version_loading">Programėlė %1$s (nr.%2$d) · svetainė kraunama…</string>
-    <string name="version_line">Programėlė %1$s (nr.%2$d) · svetainė %3$s · mauve</string>
-    <string name="version_failed">Programėlė %1$s (nr.%2$d) · svetainė nepasiekta</string>
+    <string name="version_line">Programėlė %1$s (nr.%2$d) · svetainė veikia · %3$s</string>
+    <string name="version_host_only">Programėlė %1$s (nr.%2$d) · %3$s</string>
+    <string name="version_failed">Programėlė %1$s (nr.%2$d) · svetainė nepasiekiama — bandykite „Bandyti dar kartą“</string>
     <string name="apk_version_banner">Įdiegta programėlė: %1$s (build %2$d)</string>
     <string name="apk_toast">AETERNA APK %1$s (build %2$d)</string>
+    <string name="file_chooser_title">Pasirinkite nuotrauką arba vaizdo įrašą</string>
+    <string name="file_chooser_unavailable">Failų pasirinkimas nepasiekiamas šiame įrenginyje</string>
 </resources>

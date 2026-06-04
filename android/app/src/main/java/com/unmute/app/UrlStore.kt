@@ -67,8 +67,12 @@ object UrlStore {
             (lower.contains(":3000") && !lower.contains("vercel.app"))
     }
 
-    /** Jei išsaugotas dev/LAN adresas — grąžiname production iš BuildConfig. */
+    /** Production: visada web-six (vengiama mauve / API / senų nustatymų). */
     fun getUrl(context: Context): String {
+        if (!isManualOverride(context)) {
+            forceProductionCloud(context)
+            return WORKING_WEB
+        }
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val saved = prefs.getString(KEY_URL, null)?.trim().orEmpty()
         val raw = saved.ifEmpty { BuildConfig.WEB_APP_URL }
@@ -79,9 +83,6 @@ object UrlStore {
         val fixed = migrateMauveToWorking(base)
         if (!fixed.startsWith("https://")) {
             return WORKING_WEB.also { forceProductionCloud(context) }
-        }
-        if (fixed != saved) {
-            prefs.edit().putString(KEY_URL, fixed).putBoolean(KEY_MANUAL_OVERRIDE, false).apply()
         }
         return fixed
     }

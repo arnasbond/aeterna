@@ -2,8 +2,10 @@ package com.unmute.app
 
 import android.annotation.SuppressLint
 import android.webkit.JavascriptInterface
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +14,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.CookieManager
+import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -21,6 +24,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.webkit.WebSettingsCompat
@@ -44,6 +48,19 @@ class MainActivity : AppCompatActivity() {
     private var serverCommitHash: String? = null
     private val handler = Handler(Looper.getMainLooper())
     private val loadTimeout = Runnable { if (!pageLoaded) showError(getString(R.string.error_timeout)) }
+
+    /** Be šio — WebView neleidžia &lt;input type="file"&gt; (PC naršyklė veikia, programėlė ne). */
+    private var filePathCallback: ValueCallback<Array<Uri>>? = null
+
+    private val fileChooserLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val callback = filePathCallback
+            filePathCallback = null
+            if (callback == null) return@registerForActivityResult
+            val uris =
+                WebChromeClient.FileChooserParams.parseResult(result.resultCode, result.data)
+            callback.onReceiveValue(uris)
+        }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,8 +97,11 @@ class MainActivity : AppCompatActivity() {
             loadWithOverviewMode = true
             useWideViewPort = true
             mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            allowFileAccess = true
+            allowContentAccess = true
             @Suppress("DEPRECATION")
             cacheMode = android.webkit.WebSettings.LOAD_NO_CACHE
+            userAgentString = "${userAgentString} AeternaApp/${BuildConfig.VERSION_NAME}"
         }
 
         if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
@@ -90,7 +110,37 @@ class MainActivity : AppCompatActivity() {
 
         webView.addJavascriptInterface(WebAppBridge(), "AeternaApp")
 
-        webView.webChromeClient = WebChromeClient()
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onShowFileChooser(
+                webView: WebView?,
+                callback: ValueCallback<Array<Uri>>?,
+                params: FileChooserParams?
+            ): Boolean {
+                filePathCallback?.onReceiveValue(null)
+                filePathCallback = callback ?: return false
+                val intent =
+                    params?.createIntent()
+                        ?: Intent(Intent.ACTION_GET_CONTENT).apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type = "*/*"
+                        }
+                if (params?.mode == FileChooserParams.MODE_OPEN_MULTIPLE) {
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                }
+                return try {
+                    fileChooserLauncher.launch(
+                        Intent.createChooser(intent, getString(R.string.file_chooser_title))
+                    )
+                    true
+                } catch (_: ActivityNotFoundException) {
+                    filePathCallback?.onReceiveValue(null)
+                    filePathCallback = null
+                    Toast.makeText(this@MainActivity, R.string.file_chooser_unavailable, Toast.LENGTH_LONG)
+                        .show()
+                    false
+                }
+            }
+        }
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 pageLoaded = true
@@ -133,26 +183,38 @@ class MainActivity : AppCompatActivity() {
         UrlStore.forceProductionCloud(this)
         refreshNativeVersionBar()
         showApkVersionToastOnce()
+        loadHome(force = true)
         RemoteConfig.sync(this, force = true) { _ ->
             fetchServerContentVersion()
-            refreshFromServer(clearCache = true)
+            loadHome(force = true)
             AppUpdateManager.checkForUpdate(this@MainActivity, onLaunch = true)
         }
     }
 
-    /** Visada matoma — nepriklauso nuo WebView JS (sprendžia „…“ problemą). */
+    private fun checkAppUpdateOnResume() {
+        AppUpdateManager.checkForUpdate(this, onLaunch = false)
+    }
+
+    /** Versijos juosta — commit-hash „unknown“ ≠ svetainė neveikia. */
     private fun refreshNativeVersionBar() {
         val base = homeUrl().trimEnd('/')
         val apk = BuildConfig.VERSION_NAME
         val code = BuildConfig.VERSION_CODE
+        val host = base.removePrefix("https://").removePrefix("http://")
         nativeVersionBar.text = getString(R.string.version_loading, apk, code)
         nativeVersionBar.visibility = View.VISIBLE
         Thread {
-            val label = fetchCommitHash(base)
+            val reachable = pingWebRoot(base)
+            val label = fetchSiteLabel(base)
             runOnUiThread {
-                nativeVersionBar.text =
-                    if (label != null) getString(R.string.version_line, apk, code, label)
-                    else getString(R.string.version_failed, apk, code)
+                nativeVersionBar.text = when {
+                    reachable && label != null ->
+                        getString(R.string.version_line, apk, code, label)
+                    reachable ->
+                        getString(R.string.version_host_only, apk, code, host)
+                    else ->
+                        getString(R.string.version_failed, apk, code)
+                }
             }
         }.start()
     }
@@ -265,7 +327,28 @@ class MainActivity : AppCompatActivity() {
         updateSubtitle()
     }
 
-    private fun fetchCommitHash(base: String): String? {
+    private fun pingWebRoot(base: String): Boolean {
+        return try {
+            val conn =
+                (URL("$base/?_ping=${System.currentTimeMillis()}").openConnection() as HttpURLConnection).apply {
+                    connectTimeout = 15_000
+                    readTimeout = 15_000
+                    requestMethod = "GET"
+                    instanceFollowRedirects = true
+                    setRequestProperty("Cache-Control", "no-cache")
+                }
+            val ok = conn.responseCode in 200..399
+            if (ok) {
+                conn.inputStream.use { it.read(ByteArray(256)) }
+            }
+            conn.disconnect()
+            ok
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    private fun fetchSiteLabel(base: String): String? {
         try {
             val hashConn =
                 (URL("$base/commit-hash.txt?t=${System.currentTimeMillis()}").openConnection() as HttpURLConnection).apply {
@@ -280,11 +363,14 @@ class MainActivity : AppCompatActivity() {
                 } else ""
             hashConn.disconnect()
             if (label.matches(Regex("^[0-9a-f]{7}$"))) return label
+            if (label == "unknown" || label == "dev") return "web-six"
         } catch (_: Exception) {
             /* ignore */
         }
         return null
     }
+
+    private fun fetchCommitHash(base: String): String? = fetchSiteLabel(base)
 
     private fun applyCommitLabelToWeb(label: String) {
         val safe = label.replace("\\", "").replace("'", "")
@@ -396,7 +482,7 @@ class MainActivity : AppCompatActivity() {
                 refreshFromServer(clearCache = true)
             }
         }
-        AppUpdateManager.checkForUpdate(this)
+        checkAppUpdateOnResume()
     }
 
     override fun onPause() {
