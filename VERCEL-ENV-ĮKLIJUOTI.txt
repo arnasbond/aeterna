@@ -1,3 +1,3 @@
 API_INTERNAL_URL=https://api-three-chi-63.vercel.app
 NEXT_PUBLIC_API_URL=https://api-three-chi-63.vercel.app
-NEXT_PUBLIC_SITE_URL=https://aeterna-arnasbond-gmailcoms-projects.vercel.app
+NEXT_PUBLIC_SITE_URL=https://aeterna-mauve.vercel.app

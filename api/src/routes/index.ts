@@ -78,13 +78,19 @@ export async function apiRoutes(app: FastifyInstance) {
     data: searchParishes(req.query.q ?? ""),
   }));
 
+  const memorialSearchHandler = async (req: { query: { q?: string; limit?: string } }) => {
+    const q = req.query.q ?? "";
+    const limit = Math.min(20, Math.max(1, Number.parseInt(req.query.limit ?? "10", 10) || 10));
+    return { success: true, data: await searchMemorialsPublic(q, limit) };
+  };
+
   app.get<{ Querystring: { q?: string; limit?: string } }>(
     "/api/v1/memorials/search",
-    async (req) => {
-      const q = req.query.q ?? "";
-      const limit = Math.min(20, Math.max(1, Number.parseInt(req.query.limit ?? "10", 10) || 10));
-      return { success: true, data: await searchMemorialsPublic(q, limit) };
-    }
+    memorialSearchHandler
+  );
+  app.get<{ Querystring: { q?: string; limit?: string } }>(
+    "/api/v1/memorial-search",
+    memorialSearchHandler
   );
 
   app.get<{ Params: { slug: string } }>("/api/v1/memorials/:slug/candles", async (req, reply) => {
@@ -96,6 +102,14 @@ export async function apiRoutes(app: FastifyInstance) {
   });
 
   app.get<{ Params: { slug: string } }>("/api/v1/memorials/:slug", async (req, reply) => {
+    if (req.params.slug === "search") {
+      return memorialSearchHandler({
+        query: {
+          q: (req.query as { q?: string }).q ?? "",
+          limit: (req.query as { limit?: string }).limit,
+        },
+      });
+    }
     const row = await getMemorialPublic(req.params.slug);
     if (!row) {
       return reply.status(404).send({ success: false, error: { message: "Profilis nerastas" } });

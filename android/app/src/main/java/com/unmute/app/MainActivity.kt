@@ -116,6 +116,10 @@ class MainActivity : AppCompatActivity() {
                     AppDownloadHelper.openApkDownload(this@MainActivity)
                     return true
                 }
+                if (isExternalMapsUrl(url)) {
+                    openExternalUrl(url)
+                    return true
+                }
                 return false
             }
         }
@@ -171,6 +175,22 @@ class MainActivity : AppCompatActivity() {
     fun refreshFromServer(clearCache: Boolean = false) {
         if (clearCache) clearAllWebStorage()
         loadHome(force = true)
+    }
+
+    private fun isExternalMapsUrl(url: String): Boolean {
+        val u = url.lowercase()
+        return u.contains("google.com/maps") ||
+            u.contains("maps.google.com") ||
+            u.startsWith("geo:") ||
+            u.startsWith("https://maps.app.goo.gl")
+    }
+
+    private fun openExternalUrl(url: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)))
+        } catch (_: Exception) {
+            Toast.makeText(this, R.string.error_unknown, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun homeUrl(): String = UrlStore.getUrl(this)
@@ -297,6 +317,13 @@ class MainActivity : AppCompatActivity() {
         @JavascriptInterface
         fun goHome() {
             runOnUiThread { refreshFromServer(clearCache = true) }
+        }
+
+        @JavascriptInterface
+        fun openMaps(url: String) {
+            runOnUiThread {
+                if (url.isNotBlank()) openExternalUrl(url)
+            }
         }
     }
 

@@ -26,23 +26,33 @@ export function MemorialSearchBox() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useState(-1);
+  const [searched, setSearched] = useState(false);
+  const [apiError, setApiError] = useState(false);
 
   const runSearch = useCallback(async (value: string) => {
     const q = value.trim();
     if (q.length < 1) {
       setHits([]);
       setOpen(false);
+      setSearched(false);
+      setApiError(false);
       return;
     }
     setLoading(true);
+    setSearched(false);
+    setApiError(false);
     try {
       const data = await searchMemorials(q, 8);
       setHits(data);
-      setOpen(data.length > 0);
+      setOpen(true);
+      setSearched(true);
       setActive(data.length > 0 ? 0 : -1);
     } catch {
       setHits([]);
-      setOpen(false);
+      setOpen(true);
+      setSearched(true);
+      setApiError(true);
+      setActive(-1);
     } finally {
       setLoading(false);
     }
@@ -119,6 +129,12 @@ export function MemorialSearchBox() {
         {loading && <span className="ae-memorial-search__spinner" aria-hidden />}
       </div>
 
+      {apiError && searched && (
+        <p className="ae-memorial-search__empty" role="alert">
+          Paieškos serveris laikinai nepasiekiamas. Bandykite pavyzdžius žemiau.
+        </p>
+      )}
+
       {open && hits.length > 0 && (
         <ul id={`${listId}-list`} className="ae-memorial-search__list" role="listbox">
           {hits.map((hit, i) => (
@@ -146,7 +162,7 @@ export function MemorialSearchBox() {
         </ul>
       )}
 
-      {open && !loading && query.trim().length >= 1 && hits.length === 0 && (
+      {open && !loading && searched && query.trim().length >= 1 && hits.length === 0 && !apiError && (
         <p className="ae-memorial-search__empty">Nerasta. Bandykite kitą raides arba vardą.</p>
       )}
 

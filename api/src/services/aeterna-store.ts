@@ -3,6 +3,8 @@ import {
   DEMO_AETERNA_MEMORIAL,
   DEMO_MEDIA_VERSION,
   DEMO_MEMORIAL_SLUG,
+  DEMO_VARDENIS_MEMORIAL,
+  DEMO_VARDENIS_SLUG,
 } from "../data/demo-aeterna.js";
 import { LT_PARISHES } from "../data/lt-parishes.js";
 import type {
@@ -61,18 +63,22 @@ function qrPlaceholder(slug: string): string {
 
 function seedMemorials(): Map<string, AeternaMemorial> {
   const m = new Map<string, AeternaMemorial>();
-  const slug = DEMO_MEMORIAL_SLUG;
   const now = new Date().toISOString();
-  m.set(slug, {
-    id: randomUUID(),
-    slug,
-    profileUrl: profileUrl(slug),
-    qrCodeUrl: qrPlaceholder(slug),
-    createdAt: now,
-    updatedAt: now,
-    ...DEMO_AETERNA_MEMORIAL,
-    demoMediaVersion: DEMO_MEDIA_VERSION,
-  } as AeternaMemorial);
+  for (const [slug, demo] of [
+    [DEMO_MEMORIAL_SLUG, DEMO_AETERNA_MEMORIAL],
+    [DEMO_VARDENIS_SLUG, DEMO_VARDENIS_MEMORIAL],
+  ] as const) {
+    m.set(slug, {
+      id: randomUUID(),
+      slug,
+      profileUrl: profileUrl(slug),
+      qrCodeUrl: qrPlaceholder(slug),
+      createdAt: now,
+      updatedAt: now,
+      ...demo,
+      demoMediaVersion: DEMO_MEDIA_VERSION,
+    } as AeternaMemorial);
+  }
   return m;
 }
 
@@ -85,11 +91,14 @@ async function loadMemorials(): Promise<Map<string, AeternaMemorial>> {
   } else {
     memorialsCache = new Map(arr.map((r) => [r.slug, r]));
   }
-  if (!memorialsCache.has(DEMO_MEMORIAL_SLUG)) {
-    const seeded = seedMemorials().get(DEMO_MEMORIAL_SLUG)!;
-    memorialsCache.set(DEMO_MEMORIAL_SLUG, seeded);
-    await saveMemorials();
-  } else {
+  for (const slug of [DEMO_MEMORIAL_SLUG, DEMO_VARDENIS_SLUG] as const) {
+    if (!memorialsCache.has(slug)) {
+      const seeded = seedMemorials().get(slug)!;
+      memorialsCache.set(slug, seeded);
+      await saveMemorials();
+    }
+  }
+  if (memorialsCache.has(DEMO_MEMORIAL_SLUG)) {
     const existing = memorialsCache.get(DEMO_MEMORIAL_SLUG)!;
     const demoVersion = (existing as AeternaMemorial & { demoMediaVersion?: number }).demoMediaVersion ?? 0;
     const needsDemoRefresh =
@@ -108,6 +117,24 @@ async function loadMemorials(): Promise<Map<string, AeternaMemorial>> {
         createdAt: existing.createdAt,
         profileUrl: profileUrl(DEMO_MEMORIAL_SLUG),
         qrCodeUrl: qrPlaceholder(DEMO_MEMORIAL_SLUG),
+        updatedAt: new Date().toISOString(),
+        demoMediaVersion: DEMO_MEDIA_VERSION,
+      } as AeternaMemorial);
+      await saveMemorials();
+    }
+  }
+  if (!memorialsCache.has(DEMO_VARDENIS_SLUG)) {
+    const seeded = seedMemorials().get(DEMO_VARDENIS_SLUG)!;
+    memorialsCache.set(DEMO_VARDENIS_SLUG, seeded);
+    await saveMemorials();
+  } else {
+    const v = memorialsCache.get(DEMO_VARDENIS_SLUG)!;
+    if (!v.geoLocation) {
+      memorialsCache.set(DEMO_VARDENIS_SLUG, {
+        ...v,
+        ...DEMO_VARDENIS_MEMORIAL,
+        id: v.id,
+        slug: DEMO_VARDENIS_SLUG,
         updatedAt: new Date().toISOString(),
         demoMediaVersion: DEMO_MEDIA_VERSION,
       } as AeternaMemorial);

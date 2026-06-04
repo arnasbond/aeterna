@@ -1,7 +1,7 @@
 # Patikrina ar Vercel jau turi naujausia svetaine
 $ErrorActionPreference = "Continue"
 # Pakeiskite į savo Vercel URL po deploy (Settings → Domains)
-$base = if ($env:AETERNA_WEB_URL) { $env:AETERNA_WEB_URL.TrimEnd('/') } else { "https://aeterna-arnasbond-gmailcoms-projects.vercel.app" }
+$base = if ($env:AETERNA_WEB_URL) { $env:AETERNA_WEB_URL.TrimEnd('/') } else { "https://aeterna-mauve.vercel.app" }
 
 Write-Host ""
 Write-Host "Tikrinama: $base" -ForegroundColor Cyan

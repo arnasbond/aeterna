@@ -1,0 +1,182 @@
+═══════════════════════════════════════════════════════════════
+AETERNA — PROJEKTO KODAS GEMINI (nukopijuokite visą tekstą)
+Skirta nuodugniai patikrai telefone per Gemini
+Atnaujinta: 2026-06-04 | GitHub main: 99c8f02
+═══════════════════════════════════════════════════════════════
+
+【INSTRUKCIJA GEMINI】
+Tu esi QA/testavimo asistentas AETERNA projektui (Lietuva).
+Vartotojas testuoja TELEFONE (Android WebView APK arba Chrome).
+Padėk: žingsnis po žingsnio patikrinti kiekvieną funkciją, užfiksuoti PASS/FAIL,
+paaiškinti 404/401/sena versija, pasiūlyti ką tikrinti toliau.
+Kalba: lietuviškai. Trumpai, aiškiai, su konkrečiais URL.
+
+───────────────────────────────────────────────────────────────
+1. KAS YRA AETERNA
+───────────────────────────────────────────────────────────────
+Skaitmeninė memorialinė platforma + parapijų parama:
+- Memorialiniai puslapiai su QR ant kapo
+- Virtuali žvakutė, Šv. Mišios, aukos parapijai
+- Parapijų žemėlapis, kunigo skydelis (grafikas, intencijos)
+- Android programėlė = WebView → ta pati web svetainė debesyje
+
+Monorepo kelias (PC): H:\dev\aeterna
+GitHub: https://github.com/arnasbond/aeterna (šaka main)
+
+───────────────────────────────────────────────────────────────
+2. PRODUCTION URL (NAUDOTI TESTAMS)
+───────────────────────────────────────────────────────────────
+WEB (production):     https://aeterna-mauve.vercel.app
+API:                  https://api-three-chi-63.vercel.app
+Health:               https://api-three-chi-63.vercel.app/health
+
+Vercel projektas: aeterna | Root Directory: web | Next.js 15
+Paskutinis deploy commit: 99c8f02
+Build žymė puslapyje: "Svetainės versija: 99c8f02" (ne "local")
+
+Android gradle (turi sutapti):
+  WEB_APP_URL=https://aeterna-mauve.vercel.app
+  API_BASE_URL=https://api-three-chi-63.vercel.app
+
+Vercel env (web projektas):
+  NEXT_PUBLIC_SITE_URL=https://aeterna-mauve.vercel.app
+  NEXT_PUBLIC_API_URL=https://api-three-chi-63.vercel.app
+  API_INTERNAL_URL=https://api-three-chi-63.vercel.app
+
+NE naudoti: aeterna.vercel.app (kita svetainė)
+NE naudoti: aeterna-web-six.vercel.app (senas deploy)
+
+───────────────────────────────────────────────────────────────
+3. ARCHITEKTŪRA
+───────────────────────────────────────────────────────────────
+web/     Next.js 15 App Router, React 19, TypeScript
+api/     Fastify 5, JSON failų saugykla, Vercel atskiras projektas
+android/ Kotlin WebView APK (com.unmute.app)
+
+Srautas telefone:
+  APK → WebView krauna WEB_APP_URL → Next.js → /api/v1 per rewrite į API
+
+Svarbūs web failai:
+  web/app/paieska/page.tsx          — paieškos puslapis
+  web/components/home/MemorialSearchBox.tsx
+  web/components/DeployBadge.tsx    — versijos žymė
+  web/components/priest/PriestLedgerDashboard.tsx
+  web/middleware.ts                 — no-cache ant /, /paieska
+  web/next.config.ts                — rewrites į API_INTERNAL_URL
+  android/.../MainActivity.kt       — LOAD_NO_CACHE, ?_cv= cache bust
+
+───────────────────────────────────────────────────────────────
+4. PAGRINDINIAI MARŠRUTAI (WEB)
+───────────────────────────────────────────────────────────────
+/                    Titulinis, hero, paieška, mišios, žvakutė
+/paieska             Atskiras paieškos puslapis
+/m/ona-demo          Demo memorialas (Stasė)
+/m/[slug]            Viešas memorialas
+/wizard              Memorialo kūrimas
+/parishes            Parapijų sąrašas
+/map                 Žemėlapis
+/qr-ploksteles       QR plokštelės
+/prisijungti         Prisijungimas
+/paskyra             Paskyra
+/priest              Kunigo skydelis
+/admin/priest        Admin → kunigas
+/atsisiusti          APK atsisiuntimas
+
+───────────────────────────────────────────────────────────────
+5. API MODULIAI (santrauka)
+───────────────────────────────────────────────────────────────
+GET  /health
+GET  /api/v1
+POST /api/v1/auth/register, login
+GET  /api/v1/memorials/search?q=...     — memorialų paieška
+GET  /api/v1/memorials/:slug
+POST /api/v1/masses/request-slots       — prašymas pridėti laikus
+GET  /api/v1/priest/...                 — kunigo skydelis
+GET  /api/v1/app-config                 — Android remote config
+
+───────────────────────────────────────────────────────────────
+6. NUODUGNI PATIKROS PLANAS (TELEFONAS)
+───────────────────────────────────────────────────────────────
+Prieš pradedant: WiFi arba mobilus internetas. Jei APK — meniu ⋮ →
+"Perkrauti iš serverio" (valo cache).
+
+━━━ A. DEPLOY IR VERSIJA ━━━
+A1. Atidaryti https://aeterna-mauve.vercel.app/
+    PASS: lietuviškas titulas "Virtuali atmintis ir QR kodas ant kapo"
+    FAIL: ispaniška svetainė / klaida / tuščia
+
+A2. Slinkti į apačią — rasti "Svetainės versija: 99c8f02"
+    PASS: raidės/skaičiai 99c8f02
+    FAIL: "local" arba senas hash → sena talpykla arba ne production
+
+A3. Atidaryti /paieska
+    PASS: antraštė "Ieškoti atminties", paieškos laukas
+    FAIL: 404 → GitHub/Vercel deploy problema
+
+━━━ B. PAIEŠKA ━━━
+B1. Tituliniame — laukas "Ieškoti atminties" (hero zonoje)
+B2. /paieska — įvesti "Stas" arba "V"
+    PASS: pasiūlymai (demo Stasė), paspaudus → /m/...
+    FAIL: nieko nerodo — API nepasiekiamas (tikrinti /health)
+
+━━━ C. MEMORIALAS ━━━
+C1. https://aeterna-mauve.vercel.app/m/ona-demo
+    PASS: profilis, nuotraukos, žvakutė, be crash
+    FAIL: balta ekranas / klaida
+
+━━━ D. PARAPIJOS IR ŽEMĖLAPIS ━━━
+D1. /parishes — sąrašas kraunasi
+D2. /map — žemėlapis (Leaflet) rodomas
+
+━━━ E. MIŠIOS IR ŽVAKUTĖ (titulinis) ━━━
+E1. Slinkti iki "Šv. Mišių užsakymas" — sumos 10/15/20/25/Kita
+E2. "Užsakyti Mišias" — mygtukas aktyvus kai yra laisvas laikas
+E3. Žvakutės forma — laukai, sumos 5/10/20 €
+
+━━━ F. KUNIGO SKYDELIS (jei turite prisijungimą) ━━━
+F1. /priest arba /admin/priest — grafikas, intencijos
+F2. "Kitas laikas" custom slot
+F3. Prašymai dėl laikų — pranešimas / garsas (jei įjungta)
+
+━━━ G. ANDROID APK ━━━
+G1. Programėlė atsidaro be klaidos panelės
+G2. Toolbar / meniu — "Perkrauti iš serverio"
+G3. Po perkrovimo — tas pats kaip Chrome: versija 99c8f02, /paieska veikia
+G4. Jei senas UI — WEB_APP_URL gradle.properties ≠ aeterna-mauve → perbuild APK
+
+━━━ H. API TIESIOGIAI (naršyklėje adresų juosta) ━━━
+H1. https://api-three-chi-63.vercel.app/health → status ok
+H2. https://api-three-chi-63.vercel.app/api/v1/memorials/search?q=stas
+    PASS: JSON su rezultatais
+
+───────────────────────────────────────────────────────────────
+7. DAŽNOS PROBLEMOS IR SPRENDIMAI
+───────────────────────────────────────────────────────────────
+404 /paieska          → GitHub neturėjo failo; reikia push + Vercel Ready
+401 Vercel            → Deployment Protection; Production viešinimas
+Telefonas senas, PC naujas → localhost ≠ debesis; APK URL arba Perkrauti
+Versija "local"       → ne Vercel, o npm run dev
+API nepasiekiamas     → NEXT_PUBLIC_API_URL / API_INTERNAL_URL Vercel
+
+───────────────────────────────────────────────────────────────
+8. LOKALUS DEV (PC, ne telefonas)
+───────────────────────────────────────────────────────────────
+cd H:\dev\aeterna\api && npm run dev    → :4000
+cd H:\dev\aeterna\web && npm run dev    → :3000
+Arba: H:\dev\aeterna\PALESTI-SERVERIUS.bat
+
+───────────────────────────────────────────────────────────────
+9. KĄ ATASKAITAI RAŠYTI GEMINI (šablonas)
+───────────────────────────────────────────────────────────────
+Įrenginys: [APK / Chrome]
+URL: aeterna-mauve.vercel.app
+Versija puslapyje: [99c8f02 / kita]
+A1-A3: PASS/FAIL + pastaba
+B1-B2: PASS/FAIL
+C1: PASS/FAIL
+... (likę punktai)
+Blokeriai: [jei yra]
+
+═══════════════════════════════════════════════════════════════
+PABAIGA — nukopijuokite viską nuo 【INSTRUKCIJA GEMINI】 iki čia
+═══════════════════════════════════════════════════════════════

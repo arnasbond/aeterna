@@ -5,7 +5,8 @@ export { LT_PARISHES as DEMO_PARISHES } from "./lt-parishes.js";
 
 /** Viešas web CDN demo nuotraukoms (statiniai failai web/public/demo/stase). */
 export const DEMO_STASE_MEDIA_BASE =
-  "https://aeterna-web-six.vercel.app/demo/stase";
+  (process.env.PUBLIC_WEB_URL || "https://aeterna-mauve.vercel.app").replace(/\/$/, "") +
+  "/demo/stase";
 
 /** Demo profilio turinys — /m/ona-demo (šilta močiutė) */
 export const DEMO_AETERNA_MEMORIAL: Omit<
@@ -37,6 +38,28 @@ export const DEMO_AETERNA_MEMORIAL: Omit<
 };
 
 export const DEMO_MEMORIAL_SLUG = "ona-demo";
+export const DEMO_VARDENIS_SLUG = "vardenis-pavardenis";
+
+/** Antras demo profilis paieškai (raidė V). */
+export const DEMO_VARDENIS_MEMORIAL: Omit<
+  AeternaMemorial,
+  "id" | "slug" | "profileUrl" | "qrCodeUrl" | "createdAt" | "updatedAt"
+> = {
+  userId: null,
+  parishId: DEMO_PARISH_ID,
+  fullName: "Vardenis Pavardenis",
+  birthDate: "1940-01-15",
+  deathDate: "2020-06-01",
+  portraitUrl: null,
+  farewellMessage: "Amžinąją šviesą tegu mato artimieji.",
+  biography:
+    "Vardenis Pavardenis — ramus žmogus, mylėjęs šeimą ir parapijos bendruomenę. Demo profilis paieškai ir navigacijai iki kapo.",
+  mediaGallery: [],
+  videoUrl: null,
+  geoLocation: { lat: 54.6912, lng: 25.2848 },
+  privacyStatus: "public",
+  moderationStatus: "approved",
+};
 
 /** Padidinkite, kai keičiate demo turinį — priverstinis atnaujinimas serveryje. */
-export const DEMO_MEDIA_VERSION = 10;
+export const DEMO_MEDIA_VERSION = 11;

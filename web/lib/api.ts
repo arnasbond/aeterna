@@ -156,12 +156,25 @@ export type MemorialSearchHit = {
 };
 
 export async function searchMemorials(query: string, limit = 10): Promise<MemorialSearchHit[]> {
-  const q = encodeURIComponent(query.trim());
-  if (!q) return [];
-  const r = await fetch(`${base()}/api/v1/memorials/search?q=${q}&limit=${limit}`, {
-    cache: "no-store",
-  });
-  return parse<MemorialSearchHit[]>(r);
+  const trimmed = query.trim();
+  if (!trimmed) return [];
+
+  const { filterMemorialSearchDemos } = await import("./memorial-search-fallback");
+
+  try {
+    const q = encodeURIComponent(trimmed);
+    const r = await fetch(`${base()}/api/v1/memorials/search?q=${q}&limit=${limit}`, {
+      cache: "no-store",
+    });
+    if (!r.ok) {
+      return filterMemorialSearchDemos(trimmed, limit);
+    }
+    const data = await parse<MemorialSearchHit[]>(r);
+    if (data.length > 0) return data;
+    return filterMemorialSearchDemos(trimmed, limit);
+  } catch {
+    return filterMemorialSearchDemos(trimmed, limit);
+  }
 }
 
 export async function fetchMemorial(slug: string): Promise<MemorialPublic | null> {

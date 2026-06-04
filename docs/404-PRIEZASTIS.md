@@ -14,6 +14,6 @@ Po push Vercel automatiškai paleidžia naują deploy (jei projektas susietas su
 ## Patikra
 
 1. https://github.com/arnasbond/aeterna/tree/main/web/app/paieska — turi egzistuoti
-2. https://aeterna-arnasbond-gmailcoms-projects.vercel.app/paieska — po **Ready** deploy
+2. https://aeterna-mauve.vercel.app/paieska — po **Ready** deploy
 
 Jei vis dar 404 po 10 min: Vercel → Deployments → **Redeploy** (paskutinis commit `3e1ba4e`).

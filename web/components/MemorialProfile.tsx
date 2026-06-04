@@ -75,7 +75,13 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
   function openGps() {
     if (!location) return;
     const url = `https://www.google.com/maps/dir/?api=1&destination=${location.lat},${location.lng}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    const bridge = (window as Window & { AeternaApp?: { openMaps?: (u: string) => void } }).AeternaApp;
+    if (bridge?.openMaps) {
+      bridge.openMaps(url);
+      return;
+    }
+    // WebView dažnai blokuoja window.open — tas pats skirtukas veikia patikimiau
+    window.location.assign(url);
   }
 
   return (
@@ -102,15 +108,28 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
         <button type="button" className="ch-btn ch-btn--primary" onClick={() => setCandleOpen(true)}>
           🕯️ Uždegti žvakutę
         </button>
-        <button
-          type="button"
-          className="ch-btn ch-btn--outline"
-          onClick={openGps}
-          disabled={!location}
-          title={location ? "Atidaryti GPS maršrutą" : "Kapo vieta dar nepažymėta"}
-        >
-          📍 Rasti kapavietę
-        </button>
+        {location ? (
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&destination=${location.lat},${location.lng}`}
+            className="ch-btn ch-btn--outline"
+            onClick={(e) => {
+              e.preventDefault();
+              openGps();
+            }}
+            title="Atidaryti GPS maršrutą"
+          >
+            📍 Rasti kapavietę
+          </a>
+        ) : (
+          <button
+            type="button"
+            className="ch-btn ch-btn--outline"
+            disabled
+            title="Kapo vieta dar nepažymėta"
+          >
+            📍 Rasti kapavietę
+          </button>
+        )}
       </div>
 
       {canEdit && (
