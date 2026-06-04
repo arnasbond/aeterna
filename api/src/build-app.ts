@@ -12,7 +12,7 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   const app = Fastify({
     logger: process.env.NODE_ENV !== "production",
-    bodyLimit: 10 * 1024 * 1024,
+    bodyLimit: 15 * 1024 * 1024,
   });
 
   await app.register(cors, {

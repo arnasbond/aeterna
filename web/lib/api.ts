@@ -169,6 +169,10 @@ export type CreateMemorialPayload = {
 };
 
 export async function uploadMemorialFile(file: File): Promise<string> {
+  const { prepareUploadFile, guessFileMime } = await import("./compress-upload");
+  const prepared = await prepareUploadFile(file);
+  const contentType = guessFileMime(prepared);
+
   const base64 = await new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -181,15 +185,15 @@ export async function uploadMemorialFile(file: File): Promise<string> {
       resolve(data);
     };
     reader.onerror = () => reject(new Error("Nepavyko nuskaityti failo"));
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(prepared);
   });
 
   const r = await fetch(`${base()}/api/v1/media/upload`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      filename: file.name,
-      contentType: file.type || "application/octet-stream",
+      filename: prepared.name || file.name,
+      contentType,
       data: base64,
     }),
   });

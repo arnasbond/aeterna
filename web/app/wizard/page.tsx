@@ -252,7 +252,8 @@ function WizardInner() {
                 📁 Įkelti nuotrauką iš telefono galerijos
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/*,.heic,.heif"
+                  capture={undefined}
                   hidden
                   disabled={mediaBusy}
                   onChange={(e) => {
@@ -272,7 +273,8 @@ function WizardInner() {
                 📁 Įkelti nuotrauką iš telefono galerijos
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/*,.heic,.heif"
+                  capture={undefined}
                   multiple
                   hidden
                   disabled={mediaBusy}
@@ -293,7 +295,7 @@ function WizardInner() {
                 📁 Įkelti vaizdo įrašą iš telefono galerijos
                 <input
                   type="file"
-                  accept="video/*"
+                  accept="video/mp4,video/webm,video/quicktime,video/*,.mov"
                   hidden
                   disabled={mediaBusy}
                   onChange={(e) => {

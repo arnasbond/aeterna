@@ -21,7 +21,7 @@ export function MemorialVideoPlayer({ videoUrl, fullName }: Props) {
             className="ch-memorial-video__iframe"
             src={embedSrc}
             title={`Atminimo filmas — Šviesios Atminties ${fullName}`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             loading="lazy"
           />

@@ -1,41 +1,76 @@
 "use client";
 
-import { Suspense, use, useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { MemorialProfile } from "@/components/MemorialProfile";
 import { fetchMemorial, fetchUserMemorial, getUserToken, type MemorialPublic } from "@/lib/api";
 
-function MemorialInner({ slug }: { slug: string }) {
+export default function MemorialPage() {
+  const params = useParams();
+  const slug = typeof params.slug === "string" ? params.slug : "";
+
   const [memorial, setMemorial] = useState<MemorialPublic | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [geo, setGeo] = useState<{ lat: number; lng: number } | null>(null);
   const [canEdit, setCanEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!slug) {
+      setError("Neteisingas adresas");
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
     fetchMemorial(slug)
       .then((m) => {
+        if (cancelled) return;
+        if (!m) {
+          setError("Atminimo puslapis nerastas");
+          setMemorial(null);
+          return;
+        }
         setMemorial(m);
-        if (m?.geoLocation) setGeo(m.geoLocation);
+        if (m.geoLocation) setGeo(m.geoLocation);
       })
-      .catch((e) => setError(e.message));
+      .catch((e) => {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Nepavyko įkelti");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
     if (getUserToken()) {
       fetchUserMemorial(slug)
-        .then((m) => setCanEdit(!!m))
-        .catch(() => setCanEdit(false));
+        .then((m) => {
+          if (!cancelled) setCanEdit(!!m);
+        })
+        .catch(() => {
+          if (!cancelled) setCanEdit(false);
+        });
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
-  if (error) {
+  if (loading) {
     return (
       <section className="ae-section" style={{ textAlign: "center" }}>
-        <p style={{ color: "#b91c1c" }}>{error}</p>
+        Kraunama…
       </section>
     );
   }
 
-  if (!memorial) {
+  if (error || !memorial) {
     return (
       <section className="ae-section" style={{ textAlign: "center" }}>
-        Kraunama…
+        <p style={{ color: "#b91c1c" }}>{error ?? "Atminimo puslapis nerastas"}</p>
       </section>
     );
   }
@@ -47,14 +82,5 @@ function MemorialInner({ slug }: { slug: string }) {
       geo={geo ?? memorial.geoLocation}
       canEdit={canEdit}
     />
-  );
-}
-
-export default function MemorialPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params);
-  return (
-    <Suspense fallback={<section className="ae-section">Kraunama…</section>}>
-      <MemorialInner slug={slug} />
-    </Suspense>
   );
 }

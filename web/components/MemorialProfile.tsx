@@ -45,15 +45,19 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
   const [massOpen, setMassOpen] = useState(false);
 
   const portrait =
-    memorial.portraitUrl ?? memorial.mediaGallery[0] ?? memorial.parish.image;
-  const gallery = memorial.mediaGallery;
+    memorial.portraitUrl ??
+    memorial.mediaGallery?.[0] ??
+    parishCardImage(memorial.parish?.image ?? "", memorial.mediaGallery ?? []);
+  const gallery = memorial.mediaGallery ?? [];
   const firstName = memorial.fullName.split(" ")[0];
   const epitaph = epitaphFromBio(memorial.biography ?? "");
   const bioParagraphs = memorial.biography
     ? memorial.biography.split("\n\n").map((p) => p.trim()).filter(Boolean)
     : [];
-  const parishImg = parishCardImage(memorial.parish.image, []);
+  const parishImg = parishCardImage(memorial.parish?.image ?? "", []);
   const location = geo ?? memorial.geoLocation;
+  const parishTitle = memorial.parish?.title ?? "parapija";
+  const parishId = memorial.parish?.id ?? "";
 
   useEffect(() => {
     if (!lightbox) return;
@@ -64,7 +68,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
 
   useEffect(() => {
     if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("candle") === "1") {
-      setCandleOpen(false);
+      setCandleOpen(true);
     }
   }, []);
 
@@ -80,8 +84,8 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
         <Link href="/" className="ch-logo chronicle-serif">
           <strong>AETERNA</strong>
         </Link>
-        <Link href={`/parishes/${memorial.parish.id}`} className="ch-memorial-top__parish">
-          ← {memorial.parish.title}
+        <Link href={`/parishes/${parishId}`} className="ch-memorial-top__parish">
+          ← {parishTitle}
         </Link>
       </header>
 
@@ -154,7 +158,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
           <img src={parishImg} alt="" className="ch-parish-card__img" referrerPolicy="no-referrer" />
           <div>
             <p style={{ margin: 0, lineHeight: 1.55 }}>
-              <strong>{firstName}</strong> priklausė <strong>{memorial.parish.title}</strong> parapijai. Šv. Mišias už
+              <strong>{firstName}</strong> priklausė <strong>{parishTitle}</strong> parapijai. Šv. Mišias už
               velionę galite užsakyti čia.
             </p>
           </div>
@@ -162,12 +166,12 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
         <button type="button" className="ch-btn ch-btn--primary ch-btn--block" onClick={() => setMassOpen((v) => !v)}>
           {massOpen ? "Slėpti kalendorių" : "Užsakyti Šv. Mišias"}
         </button>
-        {massOpen && <MemorialMassCalendar parishId={memorial.parish.id} deceasedName={memorial.fullName} />}
+        {massOpen && parishId && <MemorialMassCalendar parishId={parishId} deceasedName={memorial.fullName} />}
       </section>
 
       <section className="ch-memorial-board">
         <h2 className="chronicle-serif">Uždegtos žvakutės</h2>
-        <VirtualCandles slug={slug} parishTitle={memorial.parish.title} />
+        <VirtualCandles slug={slug} parishTitle={parishTitle} />
 
         <h2 className="chronicle-serif" style={{ marginTop: "1.5rem" }}>
           Užuojautos ir sveikinimai
@@ -186,7 +190,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit }: Props) {
 
       <MemorialCandleSheet
         slug={slug}
-        parishTitle={memorial.parish.title}
+        parishTitle={parishTitle}
         open={candleOpen}
         onClose={() => setCandleOpen(false)}
         onSuccess={() => {}}

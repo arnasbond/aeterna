@@ -31,7 +31,7 @@ export function VirtualCandles({ slug, parishTitle }: Props) {
             🕯️
           </span>
           <div>
-            <strong>{c.donorName}</strong> uždegė žvakutę ({formatEuro(c.donationAmountCents)} auka {parishTitle}{" "}
+            <strong>{c.donorName}</strong> uždegė žvakutę ({formatEuro(c.donationAmountCents ?? 0)} auka {parishTitle}{" "}
             bažnyčiai)
             <br />
             <span style={{ fontSize: "0.78rem", color: "var(--ch-muted)" }}>
