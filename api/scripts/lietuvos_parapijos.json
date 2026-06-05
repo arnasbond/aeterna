@@ -1,0 +1,3427 @@
+[
+  {
+    "kodas": "191283559",
+    "pavadinimas": "Adakavo Šv. Jono Krikštytojo parapija",
+    "adresas": "Tauragės r. sav., Skaudvilės sen., Adakavo I k."
+  },
+  {
+    "kodas": "191258919",
+    "pavadinimas": "Adomynės Švč. M. Marijos Vardo parapija",
+    "adresas": "Kupiškio r. sav., Šimonių sen., Adomynės k."
+  },
+  {
+    "kodas": "191304042",
+    "pavadinimas": "Adutiškio Švč. M. Marijos Škaplierinės parapija",
+    "adresas": "Švenčionių r. sav., Adutiškis, Postavų g. 5, LT-18290"
+  },
+  {
+    "kodas": "191246945",
+    "pavadinimas": "Akmens Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Varėnos r. sav., Jakėnų sen., Akmenio k."
+  },
+  {
+    "kodas": "191292412",
+    "pavadinimas": "Akmenynų Šv. Roko parapija",
+    "adresas": "Kalvarijos sav., Akmenynų sen., Akmenynų k."
+  },
+  {
+    "kodas": "190768812",
+    "pavadinimas": "Akmenės šv. Onos parapija",
+    "adresas": "Akmenės r. sav., Akmenė, K. Kasakausko g. 5, LT-85367"
+  },
+  {
+    "kodas": "192084738",
+    "pavadinimas": "Alantos Šv. apašt. Jokūbo parapija",
+    "adresas": "Molėtų r. sav., Alanta, Palaukės g. 1A, LT-33312"
+  },
+  {
+    "kodas": "191269552",
+    "pavadinimas": "Aleksandravėlės Šv. Pranciškaus Serafiškojo parapija",
+    "adresas": "Rokiškio r. sav., Obelių sen., Aleksandravėlės k."
+  },
+  {
+    "kodas": "191278416",
+    "pavadinimas": "Aleksandrijos Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Skuodo r. sav., Aleksandrijos sen., Aleksandrijos k."
+  },
+  {
+    "kodas": "191287956",
+    "pavadinimas": "Aleksoto Šv. Kazimiero parapija",
+    "adresas": "Kaunas, Vidukalnio g. 4, LT-46275"
+  },
+  {
+    "kodas": "191300930",
+    "pavadinimas": "Alionių Švč. Marijos Nekaltojo Prasidėjimo parapija",
+    "adresas": "Širvintų r. sav., Alionių sen., Alionių I k."
+  },
+  {
+    "kodas": "191259063",
+    "pavadinimas": "Alizavos Šv. Jono Krikštytojo parapija",
+    "adresas": "Kupiškio r. sav., Alizava, Kalno g. 15, LT-40445"
+  },
+  {
+    "kodas": "191313244",
+    "pavadinimas": "Alksninės Kristaus Atsimainymo parapija",
+    "adresas": "Vilkaviškio r. sav., Bartninkų sen., Margų k. 6, LT-70333"
+  },
+  {
+    "kodas": "191297683",
+    "pavadinimas": "Alksnėnų Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Vilkaviškio r. sav., Pilviškių sen., Alksnėnų k."
+  },
+  {
+    "kodas": "191236260",
+    "pavadinimas": "Alovės Švč. Trejybės parapija",
+    "adresas": "Alytaus r. sav., Alovės sen., Alovės k."
+  },
+  {
+    "kodas": "191276550",
+    "pavadinimas": "Alsėdžių Švč. M. Marijos Nekalto Prasidėjimo parapija",
+    "adresas": "Plungės r. sav., Alsėdžiai, Bažnyčios g. 2, LT-90472"
+  },
+  {
+    "kodas": "191297726",
+    "pavadinimas": "Alvito Šv. Onos parapija",
+    "adresas": "Vilkaviškio r. sav., Šeimenos sen., Alvito k."
+  },
+  {
+    "kodas": "191289811",
+    "pavadinimas": "Alytaus Šv. Angelų Sargų parapija",
+    "adresas": "Alytus, Savanorių g. 14, LT-62142"
+  },
+  {
+    "kodas": "302468748",
+    "pavadinimas": "Alytaus Šv. Brunono Kverfurtiečio parapija",
+    "adresas": "Alytus, Kalnėnų g. 2A, LT-62324"
+  },
+  {
+    "kodas": "192067621",
+    "pavadinimas": "Alytaus Šv. Kazimiero parapija",
+    "adresas": "Alytus, Varėnos g. 24A, LT-62168"
+  },
+  {
+    "kodas": "191800138",
+    "pavadinimas": "Alytaus Švč. M. Marijos Krikščionių Pagalbos parapija",
+    "adresas": "Alytus, Jurgiškių g. 4, LT-63131"
+  },
+  {
+    "kodas": "191236118",
+    "pavadinimas": "Alytaus šv. Liudviko parapija",
+    "adresas": "Alytus, Panemuninkėlių g. 6, LT-62265"
+  },
+  {
+    "kodas": "191248768",
+    "pavadinimas": "Alėjų Švč. Trejybės parapija",
+    "adresas": "Raseinių r. sav., Raseinių sen., Alėjų II k."
+  },
+  {
+    "kodas": "191260037",
+    "pavadinimas": "Anciškio šv. apaštalo evangelisto Mato parapija",
+    "adresas": "Kėdainių r. sav., Truskavos sen., Anciškio k."
+  },
+  {
+    "kodas": "191256672",
+    "pavadinimas": "Andrioniškio šv. apašt. Petro ir Povilo parapija",
+    "adresas": "Anykščių r. sav., Andrioniškis"
+  },
+  {
+    "kodas": "191269748",
+    "pavadinimas": "Antalieptės Šv. Kryžiaus Atradimo parapija",
+    "adresas": "Zarasų r. sav., Antalieptė"
+  },
+  {
+    "kodas": "192076976",
+    "pavadinimas": "Antazavės Dievo Apvaizdos parapija",
+    "adresas": "Zarasų r. sav., Antazavės sen., Antazavės k."
+  },
+  {
+    "kodas": "191259259",
+    "pavadinimas": "Antašavos Šv. Hiacinto (Jackaus) parapija",
+    "adresas": "Kupiškio r. sav., Kupiškio sen., Antašavos mstl."
+  },
+  {
+    "kodas": "191246411",
+    "pavadinimas": "Apytalaukio Šv. apašt. Petro ir Povilo parapija",
+    "adresas": "Kėdainių r. sav., Vilainių sen., Apytalaukio k."
+  },
+  {
+    "kodas": "191045223",
+    "pavadinimas": "Ariogalos Šv. arkangelo Mykolo parapija",
+    "adresas": "Raseinių r. sav., Ariogala, D. Rudzinsko g. 2, LT-60260"
+  },
+  {
+    "kodas": "190950672",
+    "pavadinimas": "Aukštadvario Kristaus Atsimainymo parapija",
+    "adresas": "Trakų r. sav., Aukštadvaris"
+  },
+  {
+    "kodas": "191252275",
+    "pavadinimas": "Aukštelkės Šv. Antano Paduviečio parapija",
+    "adresas": "Šiaulių r. sav., Šiaulių kaimiškoji sen., Aukštelkės k., Ajerų g. 4, LT-80196"
+  },
+  {
+    "kodas": "191288143",
+    "pavadinimas": "Aukštosios Panemunės Švč. M. Marijos Vardo parapija",
+    "adresas": "Kaunas, Vaidoto g. 9, LT-45388"
+  },
+  {
+    "kodas": "191269890",
+    "pavadinimas": "Avilių Šv. Kryžiaus Išaukštinimo parapija",
+    "adresas": "Zarasų r. sav., Zarasų sen., Avilių k."
+  },
+  {
+    "kodas": "191237939",
+    "pavadinimas": "Babriškių Šv. arkangelo Mykolo parapija",
+    "adresas": "Varėnos r. sav., Varėnos sen., Babriškių k."
+  },
+  {
+    "kodas": "191245124",
+    "pavadinimas": "Babtų Šv. apašt. Petro ir Povilo parapija",
+    "adresas": "Kauno r. sav., Babtų sen., Babtų k."
+  },
+  {
+    "kodas": "191240878",
+    "pavadinimas": "Bagaslaviškio šv. Kryžiaus Atradimo parapija",
+    "adresas": "Širvintų r. sav., Gelvonų sen., Bagaslaviškio mstl."
+  },
+  {
+    "kodas": "191292750",
+    "pavadinimas": "Bagotosios Šv. Antano Paduviečio parapija",
+    "adresas": "Kazlų Rūdos sav., Kazlų Rūdos sen., Bagotosios k."
+  },
+  {
+    "kodas": "191252318",
+    "pavadinimas": "Baisogalos Švč. Trejybės parapija",
+    "adresas": "Radviliškio r. sav., Baisogala, Kapų g. 1, LT-82324"
+  },
+  {
+    "kodas": "192066868",
+    "pavadinimas": "Balbieriškio Švč. M. Marijos Rožančinės parapija",
+    "adresas": "Prienų r. sav., Balbieriškis"
+  },
+  {
+    "kodas": "191301085",
+    "pavadinimas": "Balingrado Dievo Apvaizdos parapija",
+    "adresas": "Švenčionių r. sav., Magūnų sen., Balingrado k."
+  },
+  {
+    "kodas": "291254850",
+    "pavadinimas": "Balninkų Šv. vyskupo Stanislovo parapija",
+    "adresas": "Molėtų r. sav., Balninkai"
+  },
+  {
+    "kodas": "191278569",
+    "pavadinimas": "Barstyčių šv. apašt. Simono ir Judo Tado parapija",
+    "adresas": "Skuodo r. sav., Barstyčiai"
+  },
+  {
+    "kodas": "191297879",
+    "pavadinimas": "Bartninkų Šv. apaštalų Petro ir Pauliaus parapija",
+    "adresas": "Vilkaviškio r. sav., Bartninkai"
+  },
+  {
+    "kodas": "191295294",
+    "pavadinimas": "Barzdų Kristaus Karaliaus parapija",
+    "adresas": "Šakių r. sav., Barzdai"
+  },
+  {
+    "kodas": "191283744",
+    "pavadinimas": "Batakių Šv. Onos parapija",
+    "adresas": "Tauragės r. sav., Batakių sen., Batakių k."
+  },
+  {
+    "kodas": "191252460",
+    "pavadinimas": "Bazilionų Šv. Bazilijaus Didžiojo parapija",
+    "adresas": "Šiaulių r. sav., Bubių sen., Bazilionų mstl."
+  },
+  {
+    "kodas": "191243073",
+    "pavadinimas": "Beižionių Šv. Kryžiaus Išaukštinimo parapija",
+    "adresas": "Elektrėnų sav., Beižionių sen., Beižionių k."
+  },
+  {
+    "kodas": "191276746",
+    "pavadinimas": "Beržoro Šv. vysk. Stanislovo parapija",
+    "adresas": "Plungės r. sav., Platelių sen., Beržoro k."
+  },
+  {
+    "kodas": "191248953",
+    "pavadinimas": "Betygalos Šv. Mikalojaus parapija",
+    "adresas": "Raseinių r. sav., Betygala, Dubysos g. 2, LT-60209"
+  },
+  {
+    "kodas": "291238650",
+    "pavadinimas": "Bijutiškio Šv. Onos parapija",
+    "adresas": "Molėtų r. sav., Dubingių sen., Bijutiškio k."
+  },
+  {
+    "kodas": "191268265",
+    "pavadinimas": "Biliakiemio Švč. M. Marijos Vardo parapija",
+    "adresas": "Utenos r. sav., Utenos sen., Biliakiemio k."
+  },
+  {
+    "kodas": "190852413",
+    "pavadinimas": "Birštono šv. Antano Paduviečio parapija",
+    "adresas": "Birštonas, Birutės g."
+  },
+  {
+    "kodas": "191257774",
+    "pavadinimas": "Biržų Šv. Jono Krikštytojo parapija",
+    "adresas": "Biržai, Vytauto g. 2, LT-41175"
+  },
+  {
+    "kodas": "191288296",
+    "pavadinimas": "Braziūkų Švč. M. Marijos Nekaltojo Prasidėjimo parapija",
+    "adresas": "Kauno r. sav., Zapyškio sen., Braziūkų k."
+  },
+  {
+    "kodas": "191275110",
+    "pavadinimas": "Budrių šv. Kryžiaus Išaukštinimo parapija",
+    "adresas": "Kretingos r. sav., Žalgirio sen., Budrių k."
+  },
+  {
+    "kodas": "191301128",
+    "pavadinimas": "Buivydžių Šv. Jurgio parapija",
+    "adresas": "Vilniaus r. sav., Buivydžių sen., Buivydžių I k."
+  },
+  {
+    "kodas": "291247090",
+    "pavadinimas": "Bukonių Šv. arkangelo Mykolo parapija",
+    "adresas": "Jonavos r. sav., Bukonių sen., Bukonių k."
+  },
+  {
+    "kodas": "191256868",
+    "pavadinimas": "Burbiškio Švč. Jėzaus Širdies parapija",
+    "adresas": "Anykščių r. sav., Anykščių sen., Burbiškio k."
+  },
+  {
+    "kodas": "191249140",
+    "pavadinimas": "Butkiškės Šv. Jono Krikštytojo parapija",
+    "adresas": "Raseinių r. sav., Ariogalos sen., Butkiškės k."
+  },
+  {
+    "kodas": "191236456",
+    "pavadinimas": "Butrimonių Išganytojo parapija",
+    "adresas": "Alytaus r. sav., Butrimonys"
+  },
+  {
+    "kodas": "191303093",
+    "pavadinimas": "Butrimonių Šv. Arkangelo Mykolo parapija",
+    "adresas": "Šalčininkų r. sav., Butrimonių sen., Butrimonių k."
+  },
+  {
+    "kodas": "191292946",
+    "pavadinimas": "Būdviečio Jėzaus Nazariečio parapija",
+    "adresas": "Lazdijų r. sav., Būdviečio sen., Būdviečio k."
+  },
+  {
+    "kodas": "191304195",
+    "pavadinimas": "Ceikinių Švč. M. Marijos vardo parapija",
+    "adresas": "Ignalinos r. sav., Ceikinių sen., Ceikinių k."
+  },
+  {
+    "kodas": "191267163",
+    "pavadinimas": "DAMBAVOS DIEVO APVAIZDOS PARAPIJA",
+    "adresas": "Radviliškio r. sav., Pakalniškių apylinkės sen., Dambavos k."
+  },
+  {
+    "kodas": "191279518",
+    "pavadinimas": "DIDKIEMIO ŠV. ANGELŲ SARGŲ PARAPIJA",
+    "adresas": "Šilalės r. sav., Didkiemio sen., Didkiemio k."
+  },
+  {
+    "kodas": "191257055",
+    "pavadinimas": "Dabužių Kristaus Žengimo į dangų parapija",
+    "adresas": "Anykščių r. sav., Kavarsko sen., Dabužių I k."
+  },
+  {
+    "kodas": "191267359",
+    "pavadinimas": "Dapšionių Dievo Apvaizdos parapija",
+    "adresas": "Radviliškio r. sav., Sidabravo apylinkės sen., Dapšionių k."
+  },
+  {
+    "kodas": "191275263",
+    "pavadinimas": "Darbėnų šv. apašt. Petro ir Pauliaus parapija",
+    "adresas": "Kretingos r. sav., Darbėnai, Turgaus a."
+  },
+  {
+    "kodas": "191243116",
+    "pavadinimas": "Darsūniškio Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Kaišiadorių r. sav., Kruonio sen., Darsūniškio k."
+  },
+  {
+    "kodas": "191268450",
+    "pavadinimas": "Daugailių Šv. Antano Paduviečio parapija",
+    "adresas": "Utenos r. sav., Daugailiai"
+  },
+  {
+    "kodas": "191271813",
+    "pavadinimas": "Dauginių Šv. vysk. Stanislovo parapija",
+    "adresas": "Mažeikių r. sav., Viekšnių sen., Dauginių k."
+  },
+  {
+    "kodas": "291283930",
+    "pavadinimas": "Dauglaukio parapija",
+    "adresas": "Tauragės r. sav., Tauragės sen., Dauglaukio k."
+  },
+  {
+    "kodas": "191236641",
+    "pavadinimas": "Daugų Dievo Apvaizdos parapija",
+    "adresas": "Alytaus r. sav., Daugai, Savanorių g. 17, LT-64142"
+  },
+  {
+    "kodas": "191262383",
+    "pavadinimas": "Daujėnų Švč. Jėzaus Vardo parapija",
+    "adresas": "Pasvalio r. sav., Daujėnai, Pirties g. 7, LT-39207"
+  },
+  {
+    "kodas": "191293090",
+    "pavadinimas": "Daukšių Šv. Jurgio parapija",
+    "adresas": "Marijampolės sav., Igliaukos sen., Daukšių mstl."
+  },
+  {
+    "kodas": "191268646",
+    "pavadinimas": "Daunorių Švč. Jėzaus širdies parapija",
+    "adresas": "Utenos r. sav., Tauragnų sen., Daunorių k."
+  },
+  {
+    "kodas": "191257240",
+    "pavadinimas": "Debeikių Šv. Jono Krikštytojo parapija",
+    "adresas": "Anykščių r. sav., Debeikiai, Gedimino g. 11, LT-29371"
+  },
+  {
+    "kodas": "305248433",
+    "pavadinimas": "Degaičių Šv. Apaštalų Petro ir Pauliaus parapija",
+    "adresas": "Telšių r. sav., Degaičių sen., Degaičių k., Degaičių g. 7, LT-88103"
+  },
+  {
+    "kodas": "191281736",
+    "pavadinimas": "Degučių šv. Vincento Ferero parapija",
+    "adresas": "Šilutės r. sav., Žemaičių Naumiesčio sen., Degučių k."
+  },
+  {
+    "kodas": "191255047",
+    "pavadinimas": "Deltuvos Švč. Trejybės parapija",
+    "adresas": "Ukmergės r. sav., Deltuva"
+  },
+  {
+    "kodas": "191313397",
+    "pavadinimas": "Didvyžių Šv. popiežiaus Leono II parapija",
+    "adresas": "Vilkaviškio r. sav., Klausučių sen., Didvyžių k."
+  },
+  {
+    "kodas": "191303136",
+    "pavadinimas": "Dieveniškių Švč. M. Marijos Rožančinės parapija",
+    "adresas": "Šalčininkų r. sav., Dieveniškės, Ašmenos g. 3, LT-17139"
+  },
+  {
+    "kodas": "292057090",
+    "pavadinimas": "Domeikavos Lietuvos Kankinių parapija",
+    "adresas": "Kauno r. sav., Domeikavos sen., Domeikavos k., Tulpių g. 2B"
+  },
+  {
+    "kodas": "190485522",
+    "pavadinimas": "Dotnuvos Viešpaties Apreiškimo Švč. M. Marijai parapija",
+    "adresas": "Kėdainių r. sav., Dotnuva, Vytauto g. 57, LT-58387"
+  },
+  {
+    "kodas": "192052167",
+    "pavadinimas": "Druskininkų (Ratnyčios) Šv. apaštalo Baltramiejaus parapija",
+    "adresas": "Druskininkai, Čečiotos g. 1"
+  },
+  {
+    "kodas": "191308069",
+    "pavadinimas": "Druskininkų Švč. M. Marijos Škaplierinės parapija",
+    "adresas": "Druskininkai, I. Fonbergo g. 15, LT-66120"
+  },
+  {
+    "kodas": "191237177",
+    "pavadinimas": "Dubingių Šv. Jurgio parapija",
+    "adresas": "Molėtų r. sav., Dubingiai"
+  },
+  {
+    "kodas": "191308254",
+    "pavadinimas": "Dubičių Švč. Jėzaus Širdies parapija",
+    "adresas": "Varėnos r. sav., Kaniavos sen., Dubičių k."
+  },
+  {
+    "kodas": "191265155",
+    "pavadinimas": "Duokiškio šv. Onos parapija",
+    "adresas": "Rokiškio r. sav., Kamajų sen., Duokiškio mstl."
+  },
+  {
+    "kodas": "191270145",
+    "pavadinimas": "Dusetų Švč. Trejybės parapija",
+    "adresas": "Zarasų r. sav., Dusetos, K. Būgos g. 30, LT-32304"
+  },
+  {
+    "kodas": "191236794",
+    "pavadinimas": "Dusmenų šv. apašt. Simono ir Judo Tado parapija",
+    "adresas": "Trakų r. sav., Onuškio sen., Dusmenų k."
+  },
+  {
+    "kodas": "191299734",
+    "pavadinimas": "Dūkšto Šv. Stanislovo Kostkos parapija",
+    "adresas": "Ignalinos r. sav., Dūkštas, Bažnyčios g. 15, LT-30261"
+  },
+  {
+    "kodas": "191301313",
+    "pavadinimas": "Dūkštų Šv. Onos parapija",
+    "adresas": "Vilniaus r. sav., Dūkštų sen., Dūkštų k."
+  },
+  {
+    "kodas": "191285414",
+    "pavadinimas": "Eigirdžių Dievo Apvaizdos parapija",
+    "adresas": "Telšių r. sav., Degaičių sen., Eigirdžių mstl., Kalno g. 8, LT-88126"
+  },
+  {
+    "kodas": "191301270",
+    "pavadinimas": "Eitminiškių Šv. Antano Paduviečio parapija",
+    "adresas": "Vilniaus r. sav., Nemenčinės sen., Eitminiškių k."
+  },
+  {
+    "kodas": "291308440",
+    "pavadinimas": "Eišiškių Kristaus Žengimo į dangų parapija",
+    "adresas": "Šalčininkų r. sav., Eišiškės, Bažnyčios g. 37, LT-17170"
+  },
+  {
+    "kodas": "191243269",
+    "pavadinimas": "Elektrėnų Marijos Kankinių Karalienės parapija",
+    "adresas": "Elektrėnai, Atgimimo a. 1, LT-26128"
+  },
+  {
+    "kodas": "191271051",
+    "pavadinimas": "Endriejavo Šv. apašt. Andriejaus parapija",
+    "adresas": "Klaipėdos r. sav., Endriejavas, Gėlių g. 17, LT-96300"
+  },
+  {
+    "kodas": "191249293",
+    "pavadinimas": "Eržvilko Šv. Jurgio parapija",
+    "adresas": "Jurbarko r. sav., Eržvilko sen., Eržvilko k., Ryto a. 15"
+  },
+  {
+    "kodas": "192066291",
+    "pavadinimas": "Ežerėlio Šv. Antano Paduviečio parapija",
+    "adresas": "Kauno r. sav., Ežerėlis, Liepų g. 5, LT-53394"
+  },
+  {
+    "kodas": "191283897",
+    "pavadinimas": "GAURĖS ŠV. ARKANG. MYKOLO PARAPIJA",
+    "adresas": "Tauragės r. sav., Gaurės sen., Gaurės k."
+  },
+  {
+    "kodas": "191279660",
+    "pavadinimas": "GIRDIŠKĖS ŠVČ. MARIJOS SNIEGINĖS PARAPIJA",
+    "adresas": "Šilalės r. sav., Bijotų sen., Girdiškės k."
+  },
+  {
+    "kodas": "191285567",
+    "pavadinimas": "Gadūnavo Švč. Jėzaus Širdies parapija",
+    "adresas": "Telšių r. sav., Gadūnavas"
+  },
+  {
+    "kodas": "191299887",
+    "pavadinimas": "Gaidės Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Ignalinos r. sav., Rimšės sen., Gaidės k."
+  },
+  {
+    "kodas": "191281889",
+    "pavadinimas": "Gardamo Šv. Roko parapija",
+    "adresas": "Šilutės r. sav., Gardamas"
+  },
+  {
+    "kodas": "191271247",
+    "pavadinimas": "Gargždų šv. arkangelo Mykolo parapija",
+    "adresas": "Gargždai, Tilto g. 1, LT-96136"
+  },
+  {
+    "kodas": "191288339",
+    "pavadinimas": "Garliavos Švč. Trejybės parapija",
+    "adresas": "Kauno r. sav., Garliava, Bažnyčios g. 3B, LT-53259"
+  },
+  {
+    "kodas": "291246750",
+    "pavadinimas": "Gasčiūnų Šv. Stanislovo Kostkos parapija",
+    "adresas": "Joniškio r. sav., Kepalių sen., Gasčiūnų k."
+  },
+  {
+    "kodas": "191276899",
+    "pavadinimas": "Gegrėnų Jėzaus Nazariečio parapija",
+    "adresas": "Plungės r. sav., Žemaičių Kalvarijos sen., Gegrėnų k."
+  },
+  {
+    "kodas": "291241970",
+    "pavadinimas": "Gegužinės Viešpaties Apreiškimo Švč. M. Marijai parapija",
+    "adresas": "Kaišiadorių r. sav., Palomenės sen., Gegužinės k."
+  },
+  {
+    "kodas": "191257817",
+    "pavadinimas": "Geidžiūnų Šv. Angelų Sargų parapija",
+    "adresas": "Biržų r. sav., Širvėnos sen., Geidžiūnų k."
+  },
+  {
+    "kodas": "191260222",
+    "pavadinimas": "Geležių Šv. Juozapo parapija",
+    "adresas": "Panevėžio r. sav., Karsakiškio sen., Geležių mstl."
+  },
+  {
+    "kodas": "191295337",
+    "pavadinimas": "Gelgaudiškio Šv. Kryžiaus Išaukštinimo parapija",
+    "adresas": "Šakių r. sav., Gelgaudiškis, Nemuno g. 41, LT-71422"
+  },
+  {
+    "kodas": "191241065",
+    "pavadinimas": "Gelvonų Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Širvintų r. sav., Gelvonai"
+  },
+  {
+    "kodas": "191290557",
+    "pavadinimas": "Gerdašių Švč. M. Marijos Nekaltojo Prasidėjimo parapija",
+    "adresas": "Druskininkų sav., Leipalingio sen., Gerdašių k."
+  },
+  {
+    "kodas": "291237210",
+    "pavadinimas": "Giedraičių Šv. Baltramiejaus parapija",
+    "adresas": "Molėtų r. sav., Giedraičiai, Paežerių g. 7, LT-33277"
+  },
+  {
+    "kodas": "191276931",
+    "pavadinimas": "Gintališkės šv. apašt. evang. Mato parapija",
+    "adresas": "Plungės r. sav., Platelių sen., Gintališkės k."
+  },
+  {
+    "kodas": "306149192",
+    "pavadinimas": "Giraitės Šventosios Šeimos parapija",
+    "adresas": "Kauno r. sav., Domeikavos sen., Domeikavos k., Bažnyčios g. 1, LT-54349"
+  },
+  {
+    "kodas": "191249336",
+    "pavadinimas": "Girdžių Šv. Marijos Magdalietės parapija",
+    "adresas": "Jurbarko r. sav., Girdžių sen., Girdžių k."
+  },
+  {
+    "kodas": "191249489",
+    "pavadinimas": "Girkalnio šv. Jurgio parapija",
+    "adresas": "Raseinių r. sav., Girkalnis, Gėlių g. 2, LT-60313"
+  },
+  {
+    "kodas": "191297911",
+    "pavadinimas": "Gižų Šv. Antano Paduviečio parapija",
+    "adresas": "Vilkaviškio r. sav., Gižų sen., Gižų k."
+  },
+  {
+    "kodas": "191298066",
+    "pavadinimas": "Gražiškių Šv. arkangelo Mykolo parapija",
+    "adresas": "Vilkaviškio r. sav., Gražiškiai"
+  },
+  {
+    "kodas": "191725696",
+    "pavadinimas": "Grigiškių Šventosios Dvasios parapija",
+    "adresas": "Vilniaus m. sav., Grigiškės, Kovo 11-osios g. 36, LT-27112"
+  },
+  {
+    "kodas": "191252656",
+    "pavadinimas": "Grinkiškio Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Radviliškio r. sav., Grinkiškis"
+  },
+  {
+    "kodas": "291295480",
+    "pavadinimas": "Griškabūdžio Kristaus Atsimainymo parapija",
+    "adresas": "Šakių r. sav., Griškabūdis, Alyvų g. 2"
+  },
+  {
+    "kodas": "191245081",
+    "pavadinimas": "Gruzdžių Švč. Trejybės parapija",
+    "adresas": "Šiaulių r. sav., Gruzdžiai, Nepriklausomybės a. 1, LT-81419"
+  },
+  {
+    "kodas": "191275459",
+    "pavadinimas": "Grūšlaukės šv. Jono Nepomūko parapija",
+    "adresas": "Kretingos r. sav., Darbėnų sen., Grūšlaukės k."
+  },
+  {
+    "kodas": "191262426",
+    "pavadinimas": "Grūžių Švč. M. Marijos parapija",
+    "adresas": "Pasvalio r. sav., Vaškų sen., Grūžių k."
+  },
+  {
+    "kodas": "191293133",
+    "pavadinimas": "Gudelių Švč. M. Marijos Škaplierinės parapija",
+    "adresas": "Marijampolės sav., Gudeliai, Vytauto g. 1, LT-69131"
+  },
+  {
+    "kodas": "191247132",
+    "pavadinimas": "Gudžiūnų Švč. Jėzaus Širdies parapija",
+    "adresas": "Kėdainių r. sav., Gudžiūnai"
+  },
+  {
+    "kodas": "191262579",
+    "pavadinimas": "Gulbinėnų Šv. Kūdikėlio Jėzaus Teresės parapija",
+    "adresas": "Pasvalio r. sav., Krinčino sen., Gulbinėnų k."
+  },
+  {
+    "kodas": "191293286",
+    "pavadinimas": "Igliaukos Šv. Kazimiero parapija",
+    "adresas": "Marijampolės sav., Igliaukos sen., Igliaukos k., Vytauto g. 2, LT-69118"
+  },
+  {
+    "kodas": "191304238",
+    "pavadinimas": "Ignalinos Švč. M. Marijos Gimimo parapija",
+    "adresas": "Ignalina, Bažnyčios a. 4, LT-30113"
+  },
+  {
+    "kodas": "191295522",
+    "pavadinimas": "Ilguvos Šv. Kryžiaus Atradimo parapija",
+    "adresas": "Šakių r. sav., Kriūkų sen., Ilguvos k."
+  },
+  {
+    "kodas": "191270298",
+    "pavadinimas": "Imbrado Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Zarasų r. sav., Imbrado sen., Imbrado k."
+  },
+  {
+    "kodas": "191257393",
+    "pavadinimas": "Inkūnų Švč. Aušros Vartų Dievo Motinos parapija",
+    "adresas": "Anykščių r. sav., Anykščių sen., Inkūnų k."
+  },
+  {
+    "kodas": "191238845",
+    "pavadinimas": "Inturkės Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Molėtų r. sav., Inturkės sen., Inturkės k."
+  },
+  {
+    "kodas": "191288481",
+    "pavadinimas": "Išlaužo Švč. M. Marijos, Krikščionių Pagalbos parapija",
+    "adresas": "Prienų r. sav., Išlaužo sen., Išlaužo k., Žvejų g. 23, LT-59302"
+  },
+  {
+    "kodas": "191285752",
+    "pavadinimas": "Janapolės Šv. arkang. Mykolo parapija",
+    "adresas": "Telšių r. sav., Varnių sen., Janapolės mstl."
+  },
+  {
+    "kodas": "191303289",
+    "pavadinimas": "Jašiūnų Šv. Onos parapija",
+    "adresas": "Šalčininkų r. sav., Jašiūnai, M. Balinskio g. 7, LT-17249"
+  },
+  {
+    "kodas": "190860328",
+    "pavadinimas": "Jiezno šv. Arkang. Mykolo ir Jono Krikštytojo parapija",
+    "adresas": "Prienų r. sav., Jieznas, B. Bulikos g. 2, LT-59428"
+  },
+  {
+    "kodas": "191313625",
+    "pavadinimas": "Jokūbavo Švč. M. Marijos parapija",
+    "adresas": "Kretingos r. sav., Žalgirio sen., Jokūbavo k."
+  },
+  {
+    "kodas": "301818964",
+    "pavadinimas": "Jonavos Šv. Apaštalo Jono parapija",
+    "adresas": "Jonava, S. Nėries g. 6, LT-55189"
+  },
+  {
+    "kodas": "190675849",
+    "pavadinimas": "Jonavos Šv. apaštalo Jokūbo parapija",
+    "adresas": "Jonava, Vilniaus g. 13, LT-55181"
+  },
+  {
+    "kodas": "191238998",
+    "pavadinimas": "Joniškio Šv. apaštalo Jokūbo parapija",
+    "adresas": "Molėtų r. sav., Joniškis"
+  },
+  {
+    "kodas": "191033783",
+    "pavadinimas": "Joniškio Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Joniškis, Bažnyčios g. 2, LT-84139"
+  },
+  {
+    "kodas": "191262611",
+    "pavadinimas": "Joniškėlio Švč. Trejybės parapija",
+    "adresas": "Pasvalio r. sav., Joniškėlio sen., Joniškėlio k."
+  },
+  {
+    "kodas": "191247285",
+    "pavadinimas": "Josvainių Visų Šventųjų parapija",
+    "adresas": "Kėdainių r. sav., Josvainiai, Gojaus g. 2A, LT-58187"
+  },
+  {
+    "kodas": "291271390",
+    "pavadinimas": "Judrėnų šv. Antano Paduviečio parapija",
+    "adresas": "Klaipėdos r. sav., Judrėnai"
+  },
+  {
+    "kodas": "292062080",
+    "pavadinimas": "Juknaičių R. katalikų parapija",
+    "adresas": "Šilutės r. sav., Juknaičių sen., Juknaičių k."
+  },
+  {
+    "kodas": "191249521",
+    "pavadinimas": "Juodaičių Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Jurbarko r. sav., Juodaičių sen., Juodaičių k."
+  },
+  {
+    "kodas": "191244022",
+    "pavadinimas": "Juodeikių Šv. Jono Krikštytojo parapija",
+    "adresas": "Joniškio r. sav., Kriukų sen., Juodeikų k."
+  },
+  {
+    "kodas": "190767863",
+    "pavadinimas": "Juodkrantės šv. Pranciškaus Asyžiečio parapija",
+    "adresas": "Neringa, L. Rėzos g. 56, LT-93101"
+  },
+  {
+    "kodas": "191265340",
+    "pavadinimas": "Juodupės švč. Aušros vartų Dievo motinos parapija",
+    "adresas": "Rokiškio r. sav., Juodupė, P. Cvirkos g. 10, LT-42454"
+  },
+  {
+    "kodas": "191271966",
+    "pavadinimas": "Juozapavos Šv. apaštalų Simono ir Judo parapija",
+    "adresas": "Šiaulių r. sav., Raudėnų sen., Juozapavos k."
+  },
+  {
+    "kodas": "290906680",
+    "pavadinimas": "Jurbarko Švč. Trejybės parapija",
+    "adresas": "Jurbarkas, M. Valančiaus g. 1, LT-74120"
+  },
+  {
+    "kodas": "191265493",
+    "pavadinimas": "Jūžintų Šv. Mykolo arkangelo parapija",
+    "adresas": "Rokiškio r. sav., Jūžintai, Ateities g. 2, LT-42266"
+  },
+  {
+    "kodas": "191308592",
+    "pavadinimas": "Kabelių Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Varėnos r. sav., Marcinkonių sen., Kabelių k."
+  },
+  {
+    "kodas": "191295675",
+    "pavadinimas": "Kaimelio Šv. arkangelo Mykolo parapija",
+    "adresas": "Šakių r. sav., Kidulių sen., Kaimelio k."
+  },
+  {
+    "kodas": "191252994",
+    "pavadinimas": "Kairių Švč. M. Marijos Belaisvių Vaduotojos parapija",
+    "adresas": "Šiaulių r. sav., Kairiai, Kaštonų g. 2, LT-80112"
+  },
+  {
+    "kodas": "191242014",
+    "pavadinimas": "Kaišiadorių Kristaus Atsimainymo parapija",
+    "adresas": "Kaišiadorys, T. Brazio g. 6, LT-56121"
+  },
+  {
+    "kodas": "191308635",
+    "pavadinimas": "Kalesninkų Švč. M. Marijos Nekalto Prasidėjimo parapija",
+    "adresas": "Šalčininkų r. sav., Kalesninkų sen., Kalesninkų k."
+  },
+  {
+    "kodas": "191275644",
+    "pavadinimas": "Kalnalio šv. Lauryno parapija",
+    "adresas": "Kretingos r. sav., Imbarės sen., Kalnalio k."
+  },
+  {
+    "kodas": "191249674",
+    "pavadinimas": "Kalnujų Šv. Viktoro parapija",
+    "adresas": "Raseinių r. sav., Kalnujų sen., Kalnujų k."
+  },
+  {
+    "kodas": "191304380",
+    "pavadinimas": "Kaltanėnų Švč. M. Marijos Angeliškosios parapija",
+    "adresas": "Švenčionių r. sav., Kaltanėnai"
+  },
+  {
+    "kodas": "191279856",
+    "pavadinimas": "Kaltinėnų Šv. Jono Krikštytojo parapija",
+    "adresas": "Šilalės r. sav., Kaltinėnai"
+  },
+  {
+    "kodas": "191293329",
+    "pavadinimas": "Kalvarijos Švč. M. Marijos Vardo parapija",
+    "adresas": "Kalvarija, Laisvės g. 17, LT-69206"
+  },
+  {
+    "kodas": "191243454",
+    "pavadinimas": "Kalvių šv. Antano Paduviečio parapija",
+    "adresas": "Kaišiadorių r. sav., Kruonio sen., Kalvių k."
+  },
+  {
+    "kodas": "191265536",
+    "pavadinimas": "Kamajų šv. Kazimiero parapija",
+    "adresas": "Rokiškio r. sav., Kamajai, Kraštinė g. 6, LT-42284"
+  },
+  {
+    "kodas": "191277086",
+    "pavadinimas": "Kantaučių Švč. M. Marijos Nekaltojo Prasidėjimo parapija",
+    "adresas": "Plungės r. sav., Žlibinų sen., Kantaučių k."
+  },
+  {
+    "kodas": "191290742",
+    "pavadinimas": "Kapčiamiesčio Dievo Apvaizdos parapija",
+    "adresas": "Lazdijų r. sav., Kapčiamiestis, Č. Sasnausko g. 5, LT-67314"
+  },
+  {
+    "kodas": "191304423",
+    "pavadinimas": "Karkažiškės Šv. Apaštalų Petro ir Povilo parapija",
+    "adresas": "Švenčionių r. sav., Pabradės sen., Karkažiškės k."
+  },
+  {
+    "kodas": "191280068",
+    "pavadinimas": "Karklėnų Šv. Apaštalo Baltramiejaus parapija",
+    "adresas": "Kelmės r. sav., Kražių sen., Karklėnų mstl."
+  },
+  {
+    "kodas": "291245310",
+    "pavadinimas": "Karmėlavos Šv. Onos parapija",
+    "adresas": "Kauno r. sav., Karmėlava, Piliakalnio g. 17, LT-54447"
+  },
+  {
+    "kodas": "191260375",
+    "pavadinimas": "Karsakiškio Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Panevėžio r. sav., Karsakiškio sen., Karsakiškio k."
+  },
+  {
+    "kodas": "191275797",
+    "pavadinimas": "Kartenos Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Kretingos r. sav., Kartena"
+  },
+  {
+    "kodas": "191301651",
+    "pavadinimas": "Karvio Šv. Juozapo parapija",
+    "adresas": "Vilniaus r. sav., Maišiagalos sen., Karvio k."
+  },
+  {
+    "kodas": "191285948",
+    "pavadinimas": "Kaunatavos Dievo Apvaizdos parapija",
+    "adresas": "Telšių r. sav., Upynos sen., Kaunatavos k."
+  },
+  {
+    "kodas": "192073866",
+    "pavadinimas": "Kauno Gerojo ganytojo parapija",
+    "adresas": "Kaunas, V. Krėvės pr. 95A"
+  },
+  {
+    "kodas": "191118123",
+    "pavadinimas": "Kauno Kristaus Prisikėlimo parapija",
+    "adresas": "Kaunas, Žemaičių g. 31A, LT-44174"
+  },
+  {
+    "kodas": "192054360",
+    "pavadinimas": "Kauno Palaimintojo Jurgio Matulaičio parapija",
+    "adresas": "Kaunas, Žeimenos g. 6, LT-50115"
+  },
+  {
+    "kodas": "190812123",
+    "pavadinimas": "Kauno Šv. Antano Paduviečio parapija",
+    "adresas": "Kaunas, Radvilėnų pl. 11, LT-50257"
+  },
+  {
+    "kodas": "191070963",
+    "pavadinimas": "Kauno Šv. Apaštalų Petro ir Povilo arkikatedros parapija",
+    "adresas": "Kaunas, Vilniaus g. 1, LT-44281"
+  },
+  {
+    "kodas": "303188959",
+    "pavadinimas": "Kauno Šv. Jono Pauliaus II parapija",
+    "adresas": "Kaunas, Rotušės a. 14A, LT-44279"
+  },
+  {
+    "kodas": "191142957",
+    "pavadinimas": "Kauno Šv. Juozapo parapija",
+    "adresas": "Kaunas, Panerių g. 72, LT-48384"
+  },
+  {
+    "kodas": "191220651",
+    "pavadinimas": "Kauno Šv. Kryžiaus (Karmelitų) parapija",
+    "adresas": "Kaunas, Gedimino g. 1, LT-44332"
+  },
+  {
+    "kodas": "191214940",
+    "pavadinimas": "Kauno Šv. Vincento Pauliečio parapija",
+    "adresas": "Kaunas, R. Kalantos g. 38-1"
+  },
+  {
+    "kodas": "192057513",
+    "pavadinimas": "Kauno Šventosios Dvasios (Šilainių) parapija",
+    "adresas": "Kaunas, Milikonių g. 18, LT-48276"
+  },
+  {
+    "kodas": "191207561",
+    "pavadinimas": "Kauno Švč. Jėzaus Širdies parapija",
+    "adresas": "Kaunas, A. Juozapavičiaus pr. 60, LT-45219"
+  },
+  {
+    "kodas": "192056226",
+    "pavadinimas": "Kauno Švč. M. Marijos Rožančiaus Karalienės parapija",
+    "adresas": "Kaunas, Marių g. 24, LT-52247"
+  },
+  {
+    "kodas": "304076183",
+    "pavadinimas": "Kauno šv. apaštalo Jokūbo parapija",
+    "adresas": "Kaunas, Antakalnio g. 35, LT-46275"
+  },
+  {
+    "kodas": "190854236",
+    "pavadinimas": "Kavarsko Šv. Jono Krikštytojo parapija",
+    "adresas": "Anykščių r. sav., Kavarskas, Šaltinio g. 14, LT-29260"
+  },
+  {
+    "kodas": "191300026",
+    "pavadinimas": "Kazitiškio Šv. Vysk. Stanislovo parapija",
+    "adresas": "Ignalinos r. sav., Kazitiškio sen., Kazitiškio k., Bažnyčios g. 1, LT-30245"
+  },
+  {
+    "kodas": "191265689",
+    "pavadinimas": "Kazliškio Švč. Mergelės Marijos parapija",
+    "adresas": "Rokiškio r. sav., Kazliškio sen., Kazliškio k."
+  },
+  {
+    "kodas": "191293471",
+    "pavadinimas": "Kazlų Rūdos Švč. Jėzaus Širdies parapija",
+    "adresas": "Kazlų Rūda, Gedimino g. 2, LT-69401"
+  },
+  {
+    "kodas": "191242167",
+    "pavadinimas": "Kazokiškių Švč. M. Marijos Nugalėtojos parapija",
+    "adresas": "Elektrėnų sav., Kazokiškių sen., Kazokiškių k."
+  },
+  {
+    "kodas": "292066520",
+    "pavadinimas": "Kačerginės Šv. Onos parapija",
+    "adresas": "Kauno r. sav., Kačerginė"
+  },
+  {
+    "kodas": "291066880",
+    "pavadinimas": "Kelmės Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Kelmė, S. Nėries g. 14, LT-86136"
+  },
+  {
+    "kodas": "191241250",
+    "pavadinimas": "Kernavės Švč. M. Marijos Škaplierinės parapija",
+    "adresas": "Širvintų r. sav., Kernavė, Kerniaus g. 6, LT-19172"
+  },
+  {
+    "kodas": "191298251",
+    "pavadinimas": "Keturvalakių Švč. M. Marijos Gimimo parapija",
+    "adresas": "Vilkaviškio r. sav., Keturvalakiai"
+  },
+  {
+    "kodas": "191237558",
+    "pavadinimas": "Kiauklių Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Širvintų r. sav., Zibalų sen., Kiauklių k."
+  },
+  {
+    "kodas": "191249717",
+    "pavadinimas": "Kiaunorių Šv. Juozapo parapija",
+    "adresas": "Kelmės r. sav., Tytuvėnų apylinkių sen., Kiaunorių k."
+  },
+  {
+    "kodas": "291243640",
+    "pavadinimas": "Kietaviškių Švč. Trejybės parapija",
+    "adresas": "Elektrėnų sav., Kietaviškių sen., Naujųjų Kietaviškių k., Bažnyčios g. 39, LT-21412"
+  },
+  {
+    "kodas": "191281921",
+    "pavadinimas": "Kintų parapija",
+    "adresas": "Šilutės r. sav., Kintai"
+  },
+  {
+    "kodas": "191239566",
+    "pavadinimas": "Kirdeikių Šv. Jono Krikštytojo parapija",
+    "adresas": "Utenos r. sav., Saldutiškio sen., Kirdeikių k."
+  },
+  {
+    "kodas": "192052352",
+    "pavadinimas": "Kivylių Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Akmenės r. sav., Naujosios Akmenės kaimiškoji sen., Kivylių k."
+  },
+  {
+    "kodas": "300012016",
+    "pavadinimas": "Klaipėdos Dievo Motinos globėjos ir šv. Mikalojaus parapija",
+    "adresas": "Klaipėda, Smiltelės g. 14A, LT-95135"
+  },
+  {
+    "kodas": "190768246",
+    "pavadinimas": "Klaipėdos Kristaus Karaliaus parapija",
+    "adresas": "Klaipėda, Bokštų g. 10, LT-92125"
+  },
+  {
+    "kodas": "190768050",
+    "pavadinimas": "Klaipėdos Marijos Taikos karalienės parapija",
+    "adresas": "Klaipėda, Rumpiškės g. 6, LT-91131"
+  },
+  {
+    "kodas": "190768399",
+    "pavadinimas": "Klaipėdos Šv. Juozapo Darbininko parapija",
+    "adresas": "Klaipėda, Smiltelės g. 27, LT-94260"
+  },
+  {
+    "kodas": "191312142",
+    "pavadinimas": "Klaipėdos Šv. Kazimiero parapija",
+    "adresas": "Klaipėda, Kretingos g. 40, LT-92307"
+  },
+  {
+    "kodas": "300642851",
+    "pavadinimas": "Klaipėdos šv. Brunono Kverfurtiečio parapija",
+    "adresas": "Klaipėda, Debreceno g. 3A, LT-94175"
+  },
+  {
+    "kodas": "191267544",
+    "pavadinimas": "Klovainių Švč. Trejybės parapija",
+    "adresas": "Pakruojo r. sav., Klovainiai"
+  },
+  {
+    "kodas": "191273789",
+    "pavadinimas": "Klykolių Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Akmenės r. sav., Naujosios Akmenės kaimiškoji sen., Klykolių k."
+  },
+  {
+    "kodas": "191247328",
+    "pavadinimas": "Krakių Šv. apaštalo ir evangelisto Mato parapija",
+    "adresas": "Kėdainių r. sav., Krakės, J. Basanavičiaus g. 8"
+  },
+  {
+    "kodas": "191280253",
+    "pavadinimas": "Kražių Švč. M. Marijos Nekaltojo Prasidėjimo parapija",
+    "adresas": "Kelmės r. sav., Kražiai, Pievų g. 4"
+  },
+  {
+    "kodas": "191260418",
+    "pavadinimas": "Krekenavos Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Panevėžio r. sav., Krekenava, Bažnyčios g. 18, LT-38306"
+  },
+  {
+    "kodas": "190769729",
+    "pavadinimas": "Kretingos Viešpaties Apreiškimo Švč. M. Marijai parapija",
+    "adresas": "Kretinga, Vilniaus g. 2, LT-97125"
+  },
+  {
+    "kodas": "191295718",
+    "pavadinimas": "Kretkampio Šv. diak. Stepono parapija",
+    "adresas": "Šakių r. sav., Lekėčių sen., Kretkampio k."
+  },
+  {
+    "kodas": "191265721",
+    "pavadinimas": "Kriaunų Dievo Apvaizdos parapija",
+    "adresas": "Rokiškio r. sav., Kriaunų sen., Kriaunų k."
+  },
+  {
+    "kodas": "291262950",
+    "pavadinimas": "Kriklinių Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Pasvalio r. sav., Pumpėnų sen., Kriklinių mstl."
+  },
+  {
+    "kodas": "191290895",
+    "pavadinimas": "Krikštonių Kristaus Karaliaus parapija",
+    "adresas": "Lazdijų r. sav., Noragėlių sen., Krikštonių k."
+  },
+  {
+    "kodas": "191241446",
+    "pavadinimas": "Krikštėnų Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Ukmergės r. sav., Pivonijos sen., Krikštėnų k."
+  },
+  {
+    "kodas": "191263147",
+    "pavadinimas": "Krinčino Šv. apašt. Petro ir Povilo parapija",
+    "adresas": "Pasvalio r. sav., Krinčinas, Antano Vienažindžio g. 11, LT-39462"
+  },
+  {
+    "kodas": "191244175",
+    "pavadinimas": "Kriukų Šv. Lauryno parapija",
+    "adresas": "Joniškio r. sav., Kriukų sen., Kriukų k."
+  },
+  {
+    "kodas": "191242352",
+    "pavadinimas": "Krivonių šv. Antano Paduviečio parapija",
+    "adresas": "Kaišiadorių r. sav., Palomenės sen., Krivonių k."
+  },
+  {
+    "kodas": "191289964",
+    "pavadinimas": "Krokialaukio Kristaus Atsimainymo parapija",
+    "adresas": "Alytaus r. sav., Krokialaukis"
+  },
+  {
+    "kodas": "191290938",
+    "pavadinimas": "Krosnos Šv. apašt. evang. Mato parapija",
+    "adresas": "Lazdijų r. sav., Krosna"
+  },
+  {
+    "kodas": "191243792",
+    "pavadinimas": "Kruonio Švč. M. Marijos Angelų Karalienės parapija",
+    "adresas": "Kaišiadorių r. sav., Kruonis, Gojaus g. 27"
+  },
+  {
+    "kodas": "191272153",
+    "pavadinimas": "Kruopių šv. Onos parapija",
+    "adresas": "Akmenės r. sav., Kruopiai"
+  },
+  {
+    "kodas": "191295860",
+    "pavadinimas": "Kudirkos Naumiesčio Šv. Kryžiaus Atradimo parapija",
+    "adresas": "Šakių r. sav., Kudirkos Naumiestis, Bažnyčios g. 28, LT-71318"
+  },
+  {
+    "kodas": "191239751",
+    "pavadinimas": "Kuktiškių Šv. Jono krikštytojo parapija",
+    "adresas": "Utenos r. sav., Kuktiškės"
+  },
+  {
+    "kodas": "191245462",
+    "pavadinimas": "Kulautuvos Švč. M. Marijos Vardo parapija",
+    "adresas": "Kauno r. sav., Kulautuva, Pušyno g. 23, LT-53482"
+  },
+  {
+    "kodas": "191277129",
+    "pavadinimas": "Kulių Šv. vysk. Stanislovo parapija",
+    "adresas": "Plungės r. sav., Kuliai"
+  },
+  {
+    "kodas": "191245658",
+    "pavadinimas": "Kulvos Švč. M. Marijos parapija",
+    "adresas": "Jonavos r. sav., Kulvos sen., Kulvos k., Kauno g. 5, LT-55350"
+  },
+  {
+    "kodas": "191259444",
+    "pavadinimas": "Kupiškio Kristaus Žengimo į dangų parapija",
+    "adresas": "Kupiškis, Pergalės g. 1, LT-40109"
+  },
+  {
+    "kodas": "291257960",
+    "pavadinimas": "Kupreliškio Šv. arkang. Mykolo parapija",
+    "adresas": "Biržų r. sav., Papilio sen., Kupreliškio mstl."
+  },
+  {
+    "kodas": "291255190",
+    "pavadinimas": "Kurklių Šv. Jurgio parapija",
+    "adresas": "Anykščių r. sav., Kurklių sen., Kurklių I k."
+  },
+  {
+    "kodas": "191253181",
+    "pavadinimas": "Kurtuvėnų Šv. apašt. Jokūbo parapija",
+    "adresas": "Šiaulių r. sav., Bubių sen., Kurtuvėnų mstl."
+  },
+  {
+    "kodas": "190768627",
+    "pavadinimas": "Kuršėnų Šv. Jono Krikštytojo parapija",
+    "adresas": "Šiaulių r. sav., Kuršėnai, Vydūno g. 2, LT-81183"
+  },
+  {
+    "kodas": "191253039",
+    "pavadinimas": "Kurų Šv. Antano Paduviečio parapija",
+    "adresas": "Radviliškio r. sav., Radviliškio apylinkės sen., Šniūraičių k."
+  },
+  {
+    "kodas": "191291082",
+    "pavadinimas": "Kučiūnų Šv. Kazimiero parapija",
+    "adresas": "Lazdijų r. sav., Kučiūnų sen., Kučiūnų k."
+  },
+  {
+    "kodas": "191253224",
+    "pavadinimas": "Kužių Švč. M. Marijos Gimimo parapija",
+    "adresas": "Šiaulių r. sav., Kužiai"
+  },
+  {
+    "kodas": "191258157",
+    "pavadinimas": "Kvetkų Šv. Jono Krikštytojo parapija",
+    "adresas": "Biržų r. sav., Papilio sen., Kvetkų k."
+  },
+  {
+    "kodas": "191280449",
+    "pavadinimas": "Kvėdarnos Švč. M. Marijos Nekaltojo Prasidėjimo parapija",
+    "adresas": "Šilalės r. sav., Kvėdarna, Piliakalnio g. 3, LT-75348"
+  },
+  {
+    "kodas": "191298447",
+    "pavadinimas": "Kybartų Eucharistinio Išganytojo parapija",
+    "adresas": "Vilkaviškio r. sav., Kybartai, Darvino g. 12, LT-70440"
+  },
+  {
+    "kodas": "191262764",
+    "pavadinimas": "Kyburių Švč. M. Marijos angeliškosios parapija",
+    "adresas": "Pasvalio r. sav., Vaškų sen., Kyburių k."
+  },
+  {
+    "kodas": "191045180",
+    "pavadinimas": "Kėdainių Šv. Juozapo parapija",
+    "adresas": "Kėdainiai, Radvilų g. 10, LT-57254"
+  },
+  {
+    "kodas": "191045038",
+    "pavadinimas": "Kėdainių Šv. Jurgio parapija",
+    "adresas": "Kėdainiai, Juodkiškio g. 8, LT-57215"
+  },
+  {
+    "kodas": "192054175",
+    "pavadinimas": "Kūlūpėnų parapija",
+    "adresas": "Kretingos r. sav., Kūlupėnų sen., Kūlupėnų k."
+  },
+  {
+    "kodas": "191280591",
+    "pavadinimas": "LAUKUVOS ŠV. KRYŽIAUS ATRADIMO PARAPIJA",
+    "adresas": "Šilalės r. sav., Laukuva, Taikos g. 20, LT-75407"
+  },
+  {
+    "kodas": "191240159",
+    "pavadinimas": "Labanoro Švč. M. Marijos Gimimo parapija",
+    "adresas": "Švenčionių r. sav., Labanoras"
+  },
+  {
+    "kodas": "191247470",
+    "pavadinimas": "Labūnavos Dievo Apvaizdos parapija",
+    "adresas": "Kėdainių r. sav., Pelėdnagių sen., Labūnavos k."
+  },
+  {
+    "kodas": "191273821",
+    "pavadinimas": "Laižuvos Švč. Trejybės parapija",
+    "adresas": "Mažeikių r. sav., Laižuva"
+  },
+  {
+    "kodas": "291298590",
+    "pavadinimas": "Lankeliškių Švč. Trejybės parapija",
+    "adresas": "Vilkaviškio r. sav., Šeimenos sen., Kunigiškių k., Klampučių g. 56, LT-70203"
+  },
+  {
+    "kodas": "191247513",
+    "pavadinimas": "Lančiūnavos Šv. Kazimiero parapija",
+    "adresas": "Kėdainių r. sav., Vilainių sen., Lančiūnavos k."
+  },
+  {
+    "kodas": "191245996",
+    "pavadinimas": "Lapių Šv. Jono Krikštytojo parapija",
+    "adresas": "Kauno r. sav., Lapės, Mokyklos g. 2B, LT-54434"
+  },
+  {
+    "kodas": "191286092",
+    "pavadinimas": "Lauko Sodos Šv. Joachimo parapija",
+    "adresas": "Telšių r. sav., Ryškėnų sen., Lauko Sodos mstl."
+  },
+  {
+    "kodas": "191244218",
+    "pavadinimas": "Lauksodžio Šv. Aloyzo parapija",
+    "adresas": "Pakruojo r. sav., Žeimelio sen., Lauksodžio k."
+  },
+  {
+    "kodas": "291275830",
+    "pavadinimas": "Laukžemės Šv. apašt. Andriejaus parapija",
+    "adresas": "Kretingos r. sav., Darbėnų sen., Laukžemės k."
+  },
+  {
+    "kodas": "291301990",
+    "pavadinimas": "Lavoriškių Šv. Jono Krikštytojo parapija",
+    "adresas": "Vilniaus r. sav., Lavoriškių sen., Lavoriškių k."
+  },
+  {
+    "kodas": "191291125",
+    "pavadinimas": "Lazdijų Šv. Onos parapija",
+    "adresas": "Lazdijai, Dainavos g. 4, LT-67118"
+  },
+  {
+    "kodas": "191273974",
+    "pavadinimas": "Leckavos Šv. Lauryno parapija",
+    "adresas": "Mažeikių r. sav., Reivyčių sen., Leckavos mstl."
+  },
+  {
+    "kodas": "191291278",
+    "pavadinimas": "Leipalingio Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Druskininkų sav., Leipalingis, Kapų g. 2, LT-67280"
+  },
+  {
+    "kodas": "191296058",
+    "pavadinimas": "Lekėčių Šv. Kazimiero parapija",
+    "adresas": "Šakių r. sav., Lekėčiai"
+  },
+  {
+    "kodas": "191268799",
+    "pavadinimas": "Leliūnų Šv. Juozapo parapija",
+    "adresas": "Utenos r. sav., Leliūnai, Kauno g. 19, LT-28361"
+  },
+  {
+    "kodas": "291278940",
+    "pavadinimas": "Lenkimų Šv. Onos parapija",
+    "adresas": "Skuodo r. sav., Lenkimai"
+  },
+  {
+    "kodas": "191306431",
+    "pavadinimas": "Lentvario Viešpaties Apreiškimo Švč. M. Marijai parapija",
+    "adresas": "Trakų r. sav., Lentvaris, Pietų g. 28, LT-25117"
+  },
+  {
+    "kodas": "291249860",
+    "pavadinimas": "Lesčių Dievo Apvaizdos parapija",
+    "adresas": "Raseinių r. sav., Ariogalos sen., Lesčių k."
+  },
+  {
+    "kodas": "191286135",
+    "pavadinimas": "Lieplaukės Šv. Jurgio parapija",
+    "adresas": "Telšių r. sav., Ryškėnų sen., Lieplaukės k."
+  },
+  {
+    "kodas": "191304576",
+    "pavadinimas": "Linkmenų Švč. Trejybės parapija",
+    "adresas": "Ignalinos r. sav., Linkmenų sen., Linkmenų k."
+  },
+  {
+    "kodas": "291263290",
+    "pavadinimas": "Linkuvos Švč. M. Marijos Škaplierinės parapija",
+    "adresas": "Pakruojo r. sav., Linkuva, Laisvės g. 25, LT-83445"
+  },
+  {
+    "kodas": "191253377",
+    "pavadinimas": "Liolių Šv. apašt. Simono ir Judo Tado parapija",
+    "adresas": "Kelmės r. sav., Lioliai"
+  },
+  {
+    "kodas": "191293514",
+    "pavadinimas": "Liubavo Švč. Trejybės parapija",
+    "adresas": "Kalvarijos sav., Liubavo sen., Liubavo k."
+  },
+  {
+    "kodas": "191293667",
+    "pavadinimas": "Liudvinavo Šv. Liudviko parapija",
+    "adresas": "Marijampolės sav., Liudvinavas"
+  },
+  {
+    "kodas": "191291310",
+    "pavadinimas": "Liškiavos Švč. Trejybės parapija",
+    "adresas": "Varėnos r. sav., Merkinės sen., Liškiavos k."
+  },
+  {
+    "kodas": "191284084",
+    "pavadinimas": "Lomių Kristaus Atsimainymo parapija",
+    "adresas": "Tauragės r. sav., Mažonų sen., Lomių k."
+  },
+  {
+    "kodas": "191296243",
+    "pavadinimas": "Lukšių Šv. Juozapo parapija",
+    "adresas": "Šakių r. sav., Lukšiai, A. Tatarės g. 31, LT-71180"
+  },
+  {
+    "kodas": "191265874",
+    "pavadinimas": "Lukštų Šv. Jono apaštalo ir evangelisto parapija",
+    "adresas": "Rokiškio r. sav., Juodupės sen., Lukštų k."
+  },
+  {
+    "kodas": "191286288",
+    "pavadinimas": "Luokės Visų Šventųjų parapija",
+    "adresas": "Telšių r. sav., Luokė"
+  },
+  {
+    "kodas": "191255232",
+    "pavadinimas": "Lyduokių Šv. arkangelo Mykolo parapija",
+    "adresas": "Ukmergės r. sav., Lyduokiai"
+  },
+  {
+    "kodas": "191250071",
+    "pavadinimas": "Lyduvėnų Šv. apaštalų Petro ir Povilo parapija",
+    "adresas": "Raseinių r. sav., Šiluvos sen., Lyduvėnų mstl."
+  },
+  {
+    "kodas": "291253410",
+    "pavadinimas": "Lygumų Švč. Trejybės parapija",
+    "adresas": "Pakruojo r. sav., Lygumai, Sodo g. 6, LT-83306"
+  },
+  {
+    "kodas": "191264053",
+    "pavadinimas": "Lėno Šv. Antano Paduviečio parapija",
+    "adresas": "Ukmergės r. sav., Taujėnų sen., Lėno k."
+  },
+  {
+    "kodas": "191253562",
+    "pavadinimas": "Maironių Švč. M. Marijos parapija",
+    "adresas": "Kelmės r. sav., Liolių sen., Maironių k."
+  },
+  {
+    "kodas": "191302034",
+    "pavadinimas": "Maišiagalos Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Vilniaus r. sav., Maišiagala, Vilniaus g. 18, LT-14242"
+  },
+  {
+    "kodas": "191308788",
+    "pavadinimas": "Marcinkonių Šv. apaštalų Simono ir Judo Tado parapija",
+    "adresas": "Varėnos r. sav., Marcinkonių sen., Marcinkonių k."
+  },
+  {
+    "kodas": "191288524",
+    "pavadinimas": "Margininkų Švč. M. Marijos Škaplierinės parapija",
+    "adresas": "Kauno r. sav., Taurakiemio sen., Margininkų k."
+  },
+  {
+    "kodas": "291294040",
+    "pavadinimas": "Marijampolės Šv. Vincento Pauliečio parapija",
+    "adresas": "Marijampolė, Vytauto g. 31A, LT-68293"
+  },
+  {
+    "kodas": "191293852",
+    "pavadinimas": "Marijampolės šv. Arkangelo Mykolo parapija",
+    "adresas": "Marijampolė, Bažnyčios g. 1"
+  },
+  {
+    "kodas": "302944567",
+    "pavadinimas": "Marijampolės šventojo Jono Pauliaus II-ojo parapija",
+    "adresas": "Marijampolė, Vytauto g. 33, LT-68293"
+  },
+  {
+    "kodas": "300065809",
+    "pavadinimas": "Mažeikių Šv. Pranciškaus Asyžiečio parapija",
+    "adresas": "Mažeikiai, Naftininkų g. 13, LT-89239"
+  },
+  {
+    "kodas": "190768965",
+    "pavadinimas": "Mažeikių Švč. Jėzaus Širdies parapija",
+    "adresas": "Mažeikiai, J. Basanavičiaus g. 18, LT-89218"
+  },
+  {
+    "kodas": "191277271",
+    "pavadinimas": "Medingėnų Švč. Trejybės parapija",
+    "adresas": "Rietavo sav., Medingėnų sen., Medingėnų k."
+  },
+  {
+    "kodas": "191307490",
+    "pavadinimas": "Medininkų Švč. Trejybės ir Šv. Kazimiero parapija",
+    "adresas": "Vilniaus r. sav., Medininkų sen., Medininkų k."
+  },
+  {
+    "kodas": "191238083",
+    "pavadinimas": "Merkinės Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Varėnos r. sav., Merkinė, Piliakalnio g. 1"
+  },
+  {
+    "kodas": "191291463",
+    "pavadinimas": "Metelių Kristaus Atsimainymo parapija",
+    "adresas": "Lazdijų r. sav., Seirijų sen., Metelių k."
+  },
+  {
+    "kodas": "191246564",
+    "pavadinimas": "Meškuičių Šv. vysk. Stanislovo parapija",
+    "adresas": "Šiaulių r. sav., Meškuičių sen., Meškuičių k."
+  },
+  {
+    "kodas": "191272349",
+    "pavadinimas": "Micaičių Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Šiaulių r. sav., Kuršėnų kaimiškoji sen., Micaičių k., Draugystės g. 2, LT-81210"
+  },
+  {
+    "kodas": "191302187",
+    "pavadinimas": "Mickūnų Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Vilniaus r. sav., Mickūnai, Mokyklos g. 8, LT-13116"
+  },
+  {
+    "kodas": "191304619",
+    "pavadinimas": "Mielagėnų Šv. Jono Krikštytojo parapija",
+    "adresas": "Ignalinos r. sav., Mielagėnai"
+  },
+  {
+    "kodas": "191260560",
+    "pavadinimas": "Miežiškių Šv. M. Marijos parapija",
+    "adresas": "Panevėžio r. sav., Miežiškiai, Nevėžio g. 17, LT-38116"
+  },
+  {
+    "kodas": "191275982",
+    "pavadinimas": "Mikoliškių Šv. Juozapo parapija",
+    "adresas": "Kretingos r. sav., Žalgirio sen., Mikoliškių k."
+  },
+  {
+    "kodas": "191250114",
+    "pavadinimas": "Milašaičių Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Raseinių r. sav., Ariogalos sen., Milašaičių k."
+  },
+  {
+    "kodas": "191294192",
+    "pavadinimas": "Mindaugų Šv. Mykolo parapija",
+    "adresas": "Kalvarijos sav., Kalvarijos sen., Sūsninkų k."
+  },
+  {
+    "kodas": "191290023",
+    "pavadinimas": "Miroslavo Švč. Trejybės parapija",
+    "adresas": "Alytaus r. sav., Miroslavo sen., Miroslavo k."
+  },
+  {
+    "kodas": "191286320",
+    "pavadinimas": "Mitkaičių Švč. M. Marijos parapija",
+    "adresas": "Telšių r. sav., Nevarėnų sen., Mitkaičių k."
+  },
+  {
+    "kodas": "191239032",
+    "pavadinimas": "Molėtų Šv. apaštalų Petro ir Povilo parapija",
+    "adresas": "Molėtai, Šv. Jono Pauliaus II g. 3, LT-33101"
+  },
+  {
+    "kodas": "191279094",
+    "pavadinimas": "Mosėdžio Šv. arkang. Mykolo parapija",
+    "adresas": "Skuodo r. sav., Mosėdis"
+  },
+  {
+    "kodas": "191241599",
+    "pavadinimas": "Musninkų Švč. Trejybės parapija",
+    "adresas": "Širvintų r. sav., Musninkai"
+  },
+  {
+    "kodas": "191260756",
+    "pavadinimas": "Naujamiesčio Šv. apašt. evang. Mato parapija",
+    "adresas": "Panevėžio r. sav., Naujamiestis, J. Basanavičiaus g. 16, LT-38340"
+  },
+  {
+    "kodas": "191304761",
+    "pavadinimas": "Naujojo Daugeliškio Šv. Joakimo ir Šv. Onos parapija",
+    "adresas": "Ignalinos r. sav., Naujojo Daugėliškio sen., Naujojo Daugėliškio k."
+  },
+  {
+    "kodas": "191274019",
+    "pavadinimas": "Naujosios Akmenės Šv. Dvasios Atsiuntimo parapija",
+    "adresas": "Naujoji Akmenė"
+  },
+  {
+    "kodas": "192097237",
+    "pavadinimas": "Naujosios Vilnios Švč. M. Marijos Taikos Karalienės parapija",
+    "adresas": "Vilnius, Pergalės g. 34A, LT-11202"
+  },
+  {
+    "kodas": "191288677",
+    "pavadinimas": "Naujosios Ūtos Šv. Vincento Pauliečio parapija",
+    "adresas": "Prienų r. sav., Naujosios Ūtos sen., Naujosios Ūtos k."
+  },
+  {
+    "kodas": "191238126",
+    "pavadinimas": "Nedzingės Švč. Trejybės parapija",
+    "adresas": "Varėnos r. sav., Varėnos sen., Nedzingės k."
+  },
+  {
+    "kodas": "191284127",
+    "pavadinimas": "Nemakščių Švč. Trejybės parapija",
+    "adresas": "Raseinių r. sav., Nemakščiai, Laisvės g. 27A, LT-60383"
+  },
+  {
+    "kodas": "191240344",
+    "pavadinimas": "Nemaniūnų Šv. apaštalų Petro ir Pauliaus parapija",
+    "adresas": "Birštono sav., Nemajūnų k."
+  },
+  {
+    "kodas": "291302220",
+    "pavadinimas": "Nemenčinės Šv. arkangelo Mykolo parapija",
+    "adresas": "Vilniaus r. sav., Nemenčinė, Bažnyčios g. 13, LT-15172"
+  },
+  {
+    "kodas": "191296396",
+    "pavadinimas": "Nemirų Šventosios Dvasios parapija",
+    "adresas": "Kazlų Rūdos sav., Jankų sen., Nemirų k."
+  },
+  {
+    "kodas": "191238311",
+    "pavadinimas": "Nemunaičio Švč. M. Marijos Gimimo parapija",
+    "adresas": "Alytaus r. sav., Nemunaitis"
+  },
+  {
+    "kodas": "191258342",
+    "pavadinimas": "Nemunėlio Radviliškio Švč. M. Marijos parapija",
+    "adresas": "Biržų r. sav., Nemunėlio Radviliškis"
+  },
+  {
+    "kodas": "304642197",
+    "pavadinimas": "Nemėžio Šv. Rapolo Kalinausko parapija",
+    "adresas": "Vilniaus r. sav., Nemėžio sen., Nemėžio k., Stadiono g. 2A, LT-13260"
+  },
+  {
+    "kodas": "191286473",
+    "pavadinimas": "Nerimdaičių Šv. apaštalo Baltramiejaus parapija",
+    "adresas": "Telšių r. sav., Nevarėnų sen., Nerimdaičių mstl."
+  },
+  {
+    "kodas": "191286516",
+    "pavadinimas": "Nevarėnų Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Telšių r. sav., Nevarėnai"
+  },
+  {
+    "kodas": "190768431",
+    "pavadinimas": "Nidos Marijos Krikščionių pagalbos parapija",
+    "adresas": "Neringa, Taikos g. 17, LT-93121"
+  },
+  {
+    "kodas": "191303321",
+    "pavadinimas": "Norviliškių Švč. M. Marijos Gailestingumo Motinos parapija",
+    "adresas": "Šalčininkų r. sav., Dieveniškių sen., Norviliškių k."
+  },
+  {
+    "kodas": "191279137",
+    "pavadinimas": "Notėnų Šv. kank. Kotrynos parapija",
+    "adresas": "Skuodo r. sav., Notėnų sen., Notėnų k."
+  },
+  {
+    "kodas": "191265917",
+    "pavadinimas": "Obelių Šv. Onos parapija",
+    "adresas": "Rokiškio r. sav., Obeliai, Stoties g. 11, LT-42216"
+  },
+  {
+    "kodas": "191266061",
+    "pavadinimas": "Onuškio šv. Mykolo arkangelo parapija",
+    "adresas": "Rokiškio r. sav., Juodupės sen., Onuškio k."
+  },
+  {
+    "kodas": "191240497",
+    "pavadinimas": "Onuškio šv. apašt. Pilypo ir Jokūbo parapija",
+    "adresas": "Trakų r. sav., Onuškis"
+  },
+  {
+    "kodas": "191261096",
+    "pavadinimas": "PANEVĖŽIO KRISTAUS KARALIAUS KATEDROS PARAPIJA",
+    "adresas": "Panevėžys, Katedros a. 7, LT-35240"
+  },
+  {
+    "kodas": "191255385",
+    "pavadinimas": "Pabaisko Švč. Trejybės parapija",
+    "adresas": "Ukmergės r. sav., Pabaiskas"
+  },
+  {
+    "kodas": "191303474",
+    "pavadinimas": "Pabarės Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Šalčininkų r. sav., Pabarės sen., Pabarės k."
+  },
+  {
+    "kodas": "191302372",
+    "pavadinimas": "Paberžės Švč. Jėzaus Širdies parapija",
+    "adresas": "Vilniaus r. sav., Paberžės sen., Paberžės k."
+  },
+  {
+    "kodas": "191247666",
+    "pavadinimas": "Paberžės Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Kėdainių r. sav., Gudžiūnų sen., Paberžės k."
+  },
+  {
+    "kodas": "191258495",
+    "pavadinimas": "Pabiržės Švč. Trejybės parapija",
+    "adresas": "Biržų r. sav., Pabiržė, Bažnyčios a. 1, LT-41383"
+  },
+  {
+    "kodas": "191304957",
+    "pavadinimas": "Pabradės Švč. Mergelės Marijos, Šeimos Karalienės, parapija",
+    "adresas": "Švenčionių r. sav., Pabradė, Įkalnės g. 7, LT-18175"
+  },
+  {
+    "kodas": "192068495",
+    "pavadinimas": "Paežerėlių Šv. Angelų Sargų parapija",
+    "adresas": "Šakių r. sav., Kriūkų sen., Paežerėlių k."
+  },
+  {
+    "kodas": "191247851",
+    "pavadinimas": "Pagirių Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Kėdainių r. sav., Šėtos sen., Pagirių mstl., Ramygalos g. 17, LT-58483"
+  },
+  {
+    "kodas": "291284270",
+    "pavadinimas": "Pagramančio Švč. M. Marijos Nekaltojo Prasidėjimo parapija",
+    "adresas": "Tauragės r. sav., Mažonų sen., Pagramančio mstl."
+  },
+  {
+    "kodas": "191282076",
+    "pavadinimas": "Pagėgių Šv. Kryžiaus parapija",
+    "adresas": "Pagėgiai, Vydūno g. 6, LT-99293"
+  },
+  {
+    "kodas": "191298632",
+    "pavadinimas": "Pajevonio Šv. Jono Krikštytojo parapija",
+    "adresas": "Vilkaviškio r. sav., Pajevonio sen., Pajevonio k."
+  },
+  {
+    "kodas": "191248049",
+    "pavadinimas": "Pajieslio Švč. M. Marijos, Liūdinčiųjų Guodėjos parapija",
+    "adresas": "Kėdainių r. sav., Krakių sen., Pajieslio k."
+  },
+  {
+    "kodas": "191280634",
+    "pavadinimas": "Pajūralio Šv. Joakimo parapija",
+    "adresas": "Šilalės r. sav., Kvėdarnos sen., Pajūralio k."
+  },
+  {
+    "kodas": "191280787",
+    "pavadinimas": "Pajūrio Švč. Trejybės parapija",
+    "adresas": "Šilalės r. sav., Pajūris"
+  },
+  {
+    "kodas": "191268831",
+    "pavadinimas": "Pakalnių Švč. Trejybės parapija",
+    "adresas": "Utenos r. sav., Leliūnų sen., Pakalnių k."
+  },
+  {
+    "kodas": "191253758",
+    "pavadinimas": "Pakapės Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Šiaulių r. sav., Šiaulių kaimiškoji sen., Pakapės k."
+  },
+  {
+    "kodas": "191284312",
+    "pavadinimas": "Pakražančio Apreiškimo Švč. M. Marijai parapija",
+    "adresas": "Kelmės r. sav., Pakražančio sen., Pakražančio k."
+  },
+  {
+    "kodas": "191267697",
+    "pavadinimas": "Pakruojo Šv. Jono Krikštytojo parapija",
+    "adresas": "Pakruojis, Vytauto Didžiojo g. 67A"
+  },
+  {
+    "kodas": "291288710",
+    "pavadinimas": "Pakuonio Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Prienų r. sav., Pakuonis, Tylos g. 18, LT-59319"
+  },
+  {
+    "kodas": "191277314",
+    "pavadinimas": "Pakutuvėnų Šv. Antano Paduviečio parapija",
+    "adresas": "Plungės r. sav., Šateikių sen., Pakutuvėnų k."
+  },
+  {
+    "kodas": "191276027",
+    "pavadinimas": "Palangos Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Palanga, Vytauto g. 51, LT-00134"
+  },
+  {
+    "kodas": "191250267",
+    "pavadinimas": "Paliepių Šv. Kryžiaus parapija",
+    "adresas": "Raseinių r. sav., Ariogalos sen., Paliepių k."
+  },
+  {
+    "kodas": "191242548",
+    "pavadinimas": "Palomenės šv. Arkang. Mykolo parapija",
+    "adresas": "Kaišiadorių r. sav., Palomenės sen., Palomenės k."
+  },
+  {
+    "kodas": "191253943",
+    "pavadinimas": "Palonų Dievo Apvaizdos parapija",
+    "adresas": "Radviliškio r. sav., Baisogalos apylinkės sen., Palonų mstl."
+  },
+  {
+    "kodas": "191306584",
+    "pavadinimas": "Paluknio Šv. Jono Krikštytojo parapija",
+    "adresas": "Trakų r. sav., Paluknio sen., Paluknio k."
+  },
+  {
+    "kodas": "191296439",
+    "pavadinimas": "Paluobių Šv. Angelų Sargų parapija",
+    "adresas": "Šakių r. sav., Griškabūdžio sen., Paluobių k."
+  },
+  {
+    "kodas": "192094127",
+    "pavadinimas": "Palėvenėlės Nekalto Prasidėjimo parapija",
+    "adresas": "Kupiškio r. sav., Alizavos sen., Palėvenėlės k."
+  },
+  {
+    "kodas": "191259597",
+    "pavadinimas": "Palėvenės Šv. Domininko parapija",
+    "adresas": "Kupiškio r. sav., Noriūnų sen., Palėvenės mstl."
+  },
+  {
+    "kodas": "191305144",
+    "pavadinimas": "Palūšės Šv. Juozapo parapija",
+    "adresas": "Ignalinos r. sav., Ignalinos sen., Palūšės k."
+  },
+  {
+    "kodas": "291267730",
+    "pavadinimas": "Pamūšio Šv. Antano Paduviečio parapija",
+    "adresas": "Pakruojo r. sav., Pašvitinio sen., Pamūšio k."
+  },
+  {
+    "kodas": "191266257",
+    "pavadinimas": "Pandėlio Švč. M. Marijos Vardo parapija",
+    "adresas": "Rokiškio r. sav., Pandėlys, Panemunio g. 26, LT-42373"
+  },
+  {
+    "kodas": "191266595",
+    "pavadinimas": "Panemunio Švč. Trejybės parapija",
+    "adresas": "Rokiškio r. sav., Pandėlio sen., Panemunio k."
+  },
+  {
+    "kodas": "191266442",
+    "pavadinimas": "Panemunėlio šv. Juozapo globos parapija",
+    "adresas": "Rokiškio r. sav., Panemunėlio sen., Panemunėlio mstl."
+  },
+  {
+    "kodas": "191261139",
+    "pavadinimas": "Panevėžio Šv. apašt. Petro ir Povilo parapija",
+    "adresas": "Panevėžys, Smėlynės g. 10A, LT-35143"
+  },
+  {
+    "kodas": "191245843",
+    "pavadinimas": "Panevėžiuko Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Kauno r. sav., Babtų sen., Panevėžiuko k."
+  },
+  {
+    "kodas": "191255428",
+    "pavadinimas": "Panoterių Šv. Kryžiaus Atradimo parapija",
+    "adresas": "Jonavos r. sav., Šilų sen., Panoterių mstl."
+  },
+  {
+    "kodas": "191242690",
+    "pavadinimas": "Paparčių šv. vysk. Stanislovo ir šv. Pranciškaus Asyžiečio parapija",
+    "adresas": "Kaišiadorių r. sav., Paparčių sen., Paparčių k."
+  },
+  {
+    "kodas": "191258538",
+    "pavadinimas": "Papilio Nekaltosios Švč. M. Marijos parapija",
+    "adresas": "Biržų r. sav., Papilys"
+  },
+  {
+    "kodas": "191272491",
+    "pavadinimas": "Papilės Šv. Juozapo parapija",
+    "adresas": "Akmenės r. sav., Papilė, J. Basanavičiaus g. 4, LT-85243"
+  },
+  {
+    "kodas": "191305297",
+    "pavadinimas": "Paringio Švč. Jėzaus Širdies parapija",
+    "adresas": "Ignalinos r. sav., Naujojo Daugėliškio sen., Paringio k."
+  },
+  {
+    "kodas": "191307533",
+    "pavadinimas": "Parudaminio Kristaus Atsimainymo parapija",
+    "adresas": "Vilniaus r. sav., Marijampolio sen., Parudaminio k."
+  },
+  {
+    "kodas": "191263332",
+    "pavadinimas": "Pasvalio Šv. Jono Krikštytojo parapija",
+    "adresas": "Pasvalys, Vytauto Didžiojo a. 5, LT-39149"
+  },
+  {
+    "kodas": "292067960",
+    "pavadinimas": "Patašinės Šv. Kryžiaus Išaukštinimo parapija",
+    "adresas": "Marijampolės sav., Marijampolės sen., Patašinės k., Vyšnialaukio g. 11, LT-69104"
+  },
+  {
+    "kodas": "191294235",
+    "pavadinimas": "Patilčių Šv. Petro Išvadavimo parapija",
+    "adresas": "Marijampolės sav., Patašinės sen., Patilčių k. 5, LT-69102"
+  },
+  {
+    "kodas": "191250452",
+    "pavadinimas": "Paupio Šv. Šeimos-Jėzaus, Marijos ir Juozapo parapija",
+    "adresas": "Raseinių r. sav., Viduklės sen., Paupio k."
+  },
+  {
+    "kodas": "191286669",
+    "pavadinimas": "Pavandenės Šv. Onos parapija",
+    "adresas": "Telšių r. sav., Varnių sen., Pavandenės mstl."
+  },
+  {
+    "kodas": "291305330",
+    "pavadinimas": "Pavoverės Šv. Kazimiero parapija",
+    "adresas": "Švenčionių r. sav., Pabradės sen., Pavoverės k."
+  },
+  {
+    "kodas": "191260941",
+    "pavadinimas": "Paįstrio Švč. M. Marijos globos parapija",
+    "adresas": "Panevėžio r. sav., Panevėžio sen., Paįstrio k."
+  },
+  {
+    "kodas": "191284465",
+    "pavadinimas": "Pašaltuonio Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Jurbarko r. sav., Eržvilko sen., Pašaltuonio k."
+  },
+  {
+    "kodas": "192057328",
+    "pavadinimas": "Pašilės Šv. Barboros parapija",
+    "adresas": "Ukmergė"
+  },
+  {
+    "kodas": "291280820",
+    "pavadinimas": "Pašilės Šv. Jurgio parapija",
+    "adresas": "Kelmės r. sav., Kražių sen., Pašilės mstl."
+  },
+  {
+    "kodas": "191246030",
+    "pavadinimas": "Paštuvos Šv. Barboros parapija",
+    "adresas": "Kauno r. sav., Raudondvario sen., Paštuvos k."
+  },
+  {
+    "kodas": "191254098",
+    "pavadinimas": "Pašušvio Visų Šventųjų parapija",
+    "adresas": "Radviliškio r. sav., Šiaulėnų apylinkės sen., Pašušvio k."
+  },
+  {
+    "kodas": "191244360",
+    "pavadinimas": "Pašvitinio Švč. Trejybės parapija",
+    "adresas": "Pakruojo r. sav., Pašvitinys, K. Korsako g. 6, LT-83341"
+  },
+  {
+    "kodas": "191288862",
+    "pavadinimas": "Pažėrų Švč. Jėzaus Širdies parapija",
+    "adresas": "Kauno r. sav., Alšėnų sen., Pažėrų k."
+  },
+  {
+    "kodas": "191238279",
+    "pavadinimas": "Perlojos Švč. M. Marijos ir Šv. Pranciškaus Asyžiečio parapija",
+    "adresas": "Varėnos r. sav., Varėnos sen., Perlojos k."
+  },
+  {
+    "kodas": "191248191",
+    "pavadinimas": "Pernaravos Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Kėdainių r. sav., Pernarava"
+  },
+  {
+    "kodas": "191274161",
+    "pavadinimas": "Pievėnų Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Mažeikių r. sav., Tirkšlių sen., Pievėnų k."
+  },
+  {
+    "kodas": "191274542",
+    "pavadinimas": "Pikelių Švč. Trejybės parapija",
+    "adresas": "Mažeikių r. sav., Židikų sen., Pikelių mstl."
+  },
+  {
+    "kodas": "191298785",
+    "pavadinimas": "Pilviškių Švč. Trejybės parapija",
+    "adresas": "Vilkaviškio r. sav., Pilviškiai, Vasario 16-osios g. 26, LT-70495"
+  },
+  {
+    "kodas": "191236837",
+    "pavadinimas": "Pivašiūnų Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Alytaus r. sav., Pivašiūnų sen., Pivašiūnų k."
+  },
+  {
+    "kodas": "191277467",
+    "pavadinimas": "Platelių Šv. apašt. Petro ir Pauliaus parapija",
+    "adresas": "Plungės r. sav., Plateliai, Didžioji g. 15, LT-90420"
+  },
+  {
+    "kodas": "191271432",
+    "pavadinimas": "Plikių Šv. Šeimos-Jėzaus, Marijos ir Juozapo parapija",
+    "adresas": "Klaipėdos r. sav., Kretingalės sen., Plikių mstl."
+  },
+  {
+    "kodas": "191296581",
+    "pavadinimas": "Plokščių Švč. M. Marijos Vardo parapija",
+    "adresas": "Šakių r. sav., Gelgaudiškio sen., Plokščių k."
+  },
+  {
+    "kodas": "191277652",
+    "pavadinimas": "Plungės Šv. Jono Krikštytojo parapija",
+    "adresas": "Plungė, Vytauto g. 32, LT-90123"
+  },
+  {
+    "kodas": "191294388",
+    "pavadinimas": "Plutiškių Šv. Juozapo parapija",
+    "adresas": "Kazlų Rūdos sav., Plutiškių sen., Plutiškių k."
+  },
+  {
+    "kodas": "191254130",
+    "pavadinimas": "Pociūnėlių Šv. Jono Krikštytojo parapija",
+    "adresas": "Radviliškio r. sav., Skėmių apylinkės sen., Pociūnėlių mstl."
+  },
+  {
+    "kodas": "191254283",
+    "pavadinimas": "Polekėlės Švč. M. Marijos Širdies parapija",
+    "adresas": "Radviliškio r. sav., Tyrulių gyvenvietės sen., Polekėlės k."
+  },
+  {
+    "kodas": "191313059",
+    "pavadinimas": "Požerės Kristaus Atsimainymo parapija",
+    "adresas": "Šilalės r. sav., Laukuvos sen., Požerės k."
+  },
+  {
+    "kodas": "190768584",
+    "pavadinimas": "Priekulės Šv. Antano Paduviečio parapija",
+    "adresas": "Klaipėdos r. sav., Priekulė, Turgaus g. 11, LT-96340"
+  },
+  {
+    "kodas": "291289050",
+    "pavadinimas": "Prienų Kristaus Apsireiškimo parapija",
+    "adresas": "Prienai, Kęstučio g. 7, LT-59129"
+  },
+  {
+    "kodas": "191263485",
+    "pavadinimas": "Pumpėnų Švč. M. Marijos Škaplierinės parapija",
+    "adresas": "Pasvalio r. sav., Pumpėnai"
+  },
+  {
+    "kodas": "291236980",
+    "pavadinimas": "Punios Šv. apaštalo Jokūbo parapija",
+    "adresas": "Alytaus r. sav., Punios sen., Punios k."
+  },
+  {
+    "kodas": "191237362",
+    "pavadinimas": "Pusnės Šv. Juozapo Globos parapija",
+    "adresas": "Molėtų r. sav., Giedraičių sen., Pusnės k."
+  },
+  {
+    "kodas": "191263528",
+    "pavadinimas": "Pušaloto Šv. apašt. Petro ir Povilo parapija",
+    "adresas": "Pasvalio r. sav., Pušalotas, Savanorių g. 19, LT-39258"
+  },
+  {
+    "kodas": "191067839",
+    "pavadinimas": "Radviliškio Švč. M. Marijos Gimimo parapija",
+    "adresas": "Radviliškis, Maironio g. 8, LT-82133"
+  },
+  {
+    "kodas": "191266638",
+    "pavadinimas": "Ragelių Švč. Mergelės Marijos parapija",
+    "adresas": "Rokiškio r. sav., Jūžintų sen., Ragelių k."
+  },
+  {
+    "kodas": "191264249",
+    "pavadinimas": "Raguvos Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Panevėžio r. sav., Raguva, Laisvės g. 28, LT-38155"
+  },
+  {
+    "kodas": "191264391",
+    "pavadinimas": "Raguvėlės Šv. diak. Stepono parapija",
+    "adresas": "Anykščių r. sav., Troškūnų sen., Raguvėlės k."
+  },
+  {
+    "kodas": "191261324",
+    "pavadinimas": "Ramygalos Šv. Jono Krikštytojo parapija",
+    "adresas": "Panevėžio r. sav., Ramygala, Bažnyčios g. 6, LT-38261"
+  },
+  {
+    "kodas": "190844128",
+    "pavadinimas": "Raseinių Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Raseiniai, Bažnyčios g. 2, LT-60169"
+  },
+  {
+    "kodas": "191246183",
+    "pavadinimas": "Raudondvario Šv. Kūdikėlio Jėzaus Teresės parapija",
+    "adresas": "Kauno r. sav., Raudondvario sen., Raudondvario k., M. Valančiaus g. 24, LT-54137"
+  },
+  {
+    "kodas": "191250648",
+    "pavadinimas": "Raudonės Švč. Jėzaus Širdies parapija",
+    "adresas": "Jurbarko r. sav., Raudonės sen., Raudonės k."
+  },
+  {
+    "kodas": "191272534",
+    "pavadinimas": "Raudėnų Šv. apaštalo Baltramiejaus parapija",
+    "adresas": "Šiaulių r. sav., Raudėnų sen., Raudėnų k."
+  },
+  {
+    "kodas": "191274357",
+    "pavadinimas": "Renavo Šv. Izidoriaus parapija",
+    "adresas": "Mažeikių r. sav., Sedos sen., Renavo k."
+  },
+  {
+    "kodas": "191305482",
+    "pavadinimas": "Reškutėnų Šv. Izidoriaus parapija",
+    "adresas": "Švenčionių r. sav., Švenčionėlių sen., Reškutėnų k."
+  },
+  {
+    "kodas": "191277848",
+    "pavadinimas": "Rietavo Šv. arkang. Mykolo parapija",
+    "adresas": "Rietavas, Laisvės g. 2A"
+  },
+  {
+    "kodas": "191302415",
+    "pavadinimas": "Riešės Šv. vysk. Stanislovo parapija",
+    "adresas": "Vilniaus r. sav., Riešės sen., Didžiosios Riešės k., Molėtų g. 4, LT-14260"
+  },
+  {
+    "kodas": "191300211",
+    "pavadinimas": "Rimšės Švč. Trejybės parapija",
+    "adresas": "Ignalinos r. sav., Rimšė"
+  },
+  {
+    "kodas": "191266780",
+    "pavadinimas": "Rokiškio Šv. apaštalo evangelisto Mato parapija",
+    "adresas": "Rokiškis, Nepriklausomybės a. 1A, LT-42114"
+  },
+  {
+    "kodas": "300151560",
+    "pavadinimas": "Rokų Šv. Antano Paduviečio parapija",
+    "adresas": "Kaunas, J. Borutos g. 23, LT-46115"
+  },
+  {
+    "kodas": "191282119",
+    "pavadinimas": "Ropkojų Šv. Jono Krikštytojo parapija",
+    "adresas": "Pagėgių sav., Natkiškių sen., Ropkojų k."
+  },
+  {
+    "kodas": "191267882",
+    "pavadinimas": "Rozalimo Švč. M. Marijos Vardo parapija",
+    "adresas": "Pakruojo r. sav., Rozalimas"
+  },
+  {
+    "kodas": "191274695",
+    "pavadinimas": "Rubikų Šv. Roko parapija",
+    "adresas": "Mažeikių r. sav., Šerkšnėnų sen., Rubikų k."
+  },
+  {
+    "kodas": "191312861",
+    "pavadinimas": "Rudaminos Švč. M. Marijos Gerosios Patarėjos parapija",
+    "adresas": "Vilniaus r. sav., Rudaminos sen., Rudaminos k., Vilniaus g. 8, LT-13246"
+  },
+  {
+    "kodas": "191291844",
+    "pavadinimas": "Rudaminos Švč. Trejybės parapija",
+    "adresas": "Lazdijų r. sav., Šeštokų sen., Rudaminos mstl."
+  },
+  {
+    "kodas": "191244556",
+    "pavadinimas": "Rudiškių Šv. apašt. Pilypo ir Jokūbo parapija",
+    "adresas": "Joniškio r. sav., Rudiškių sen., Rudiškių k., Pamūšio g. 2, LT-84274"
+  },
+  {
+    "kodas": "191308820",
+    "pavadinimas": "Rudnios Švč. M. Marijos Nuolatinės Globėjos parapija",
+    "adresas": "Varėnos r. sav., Kaniavos sen., Rudnios k."
+  },
+  {
+    "kodas": "191307686",
+    "pavadinimas": "Rukainių Šv. arkangelo Mykolo parapija",
+    "adresas": "Vilniaus r. sav., Rukainių sen., Rukainių k."
+  },
+  {
+    "kodas": "192058191",
+    "pavadinimas": "Ruklos Šventosios Dvasios parapija",
+    "adresas": "Jonavos r. sav., Ruklos sen., Ruklos k."
+  },
+  {
+    "kodas": "191282261",
+    "pavadinimas": "Rukų Šv. Antano Paduviečio parapija",
+    "adresas": "Pagėgių sav., Stoniškių sen., Rukų k."
+  },
+  {
+    "kodas": "191290176",
+    "pavadinimas": "Rumbonių Švč. Trejybės parapija",
+    "adresas": "Alytaus r. sav., Alytaus sen., Rumbonių k., Nemuno g. 55, LT-62187"
+  },
+  {
+    "kodas": "191246226",
+    "pavadinimas": "Rumšiškių Šv. arkangelo Mykolo parapija",
+    "adresas": "Kaišiadorių r. sav., Rumšiškės, Marių g. 64, LT-56337"
+  },
+  {
+    "kodas": "191306627",
+    "pavadinimas": "Rykantų Švč. Trejybės parapija",
+    "adresas": "Trakų r. sav., Lentvario sen., Rykantų k."
+  },
+  {
+    "kodas": "191238464",
+    "pavadinimas": "Ryliškių Šv. Monikos parapija",
+    "adresas": "Alytaus r. sav., Raitininkų sen., Ryliškių k."
+  },
+  {
+    "kodas": "302426329",
+    "pavadinimas": "Rėkyvos Šv. Juozapo Darbininko parapija",
+    "adresas": "Šiauliai, Poilsio g. 1A, LT-79228"
+  },
+  {
+    "kodas": "291306770",
+    "pavadinimas": "Rūdiškių Švč. Jėzaus Širdies parapija",
+    "adresas": "Trakų r. sav., Rūdiškės, Bažnyčios g. 1, LT-21176"
+  },
+  {
+    "kodas": "191303517",
+    "pavadinimas": "Rūdninkų Švč. Trejybės parapija",
+    "adresas": "Šalčininkų r. sav., Jašiūnų sen., Rūdninkų k., Bažnyčios g. 45, LT-17237"
+  },
+  {
+    "kodas": "191270330",
+    "pavadinimas": "Salako Švč. M. Marijos Sopulingosios parapija",
+    "adresas": "Zarasų r. sav., Salakas, Bažnyčios g. 28, LT-32217"
+  },
+  {
+    "kodas": "291259630",
+    "pavadinimas": "Salamiesčio Šv. Antano Paduviečio parapija",
+    "adresas": "Kupiškio r. sav., Alizavos sen., Salamiesčio mstl., Biržų g. 16, LT-40438"
+  },
+  {
+    "kodas": "291276170",
+    "pavadinimas": "Salantų Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Kretingos r. sav., Salantai, Dariaus ir Girėno g. 10, LT-97312"
+  },
+  {
+    "kodas": "191239947",
+    "pavadinimas": "Saldutiškio Šv. Pranciškaus Asyžiečio parapija",
+    "adresas": "Utenos r. sav., Saldutiškis"
+  },
+  {
+    "kodas": "191263670",
+    "pavadinimas": "Saločių Šv. Juozapo parapija",
+    "adresas": "Pasvalio r. sav., Saločiai, Mūšos g. 1, LT-39423"
+  },
+  {
+    "kodas": "191266823",
+    "pavadinimas": "Salų šv. Kryžiaus parapija",
+    "adresas": "Rokiškio r. sav., Kamajų sen., Salų k."
+  },
+  {
+    "kodas": "191294573",
+    "pavadinimas": "Sangrūdos Šv. Kūdikėlio Jėzaus Teresės parapija",
+    "adresas": "Kalvarijos sav., Sangrūdos sen., Sangrūdos k."
+  },
+  {
+    "kodas": "191290219",
+    "pavadinimas": "Santaikos Kristaus Karaliaus parapija",
+    "adresas": "Alytaus r. sav., Krokialaukio sen., Santaikos k."
+  },
+  {
+    "kodas": "191284650",
+    "pavadinimas": "Sartininkų Šv. Jurgio parapija",
+    "adresas": "Tauragės r. sav., Žygaičių sen., Sartininkų k."
+  },
+  {
+    "kodas": "191294616",
+    "pavadinimas": "Sasnavos Švč. M. Marijos Vardo parapija",
+    "adresas": "Marijampolės sav., Sasnava"
+  },
+  {
+    "kodas": "191282457",
+    "pavadinimas": "Saugų Šv. Kazimiero parapija",
+    "adresas": "Šilutės r. sav., Saugų sen., Saugų k."
+  },
+  {
+    "kodas": "190769152",
+    "pavadinimas": "Sedos Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Mažeikių r. sav., Seda, Varduvos g. 1, LT-89380"
+  },
+  {
+    "kodas": "191291997",
+    "pavadinimas": "Seirijų Švč. M. Marijos Škaplierinės parapija",
+    "adresas": "Lazdijų r. sav., Seirijai, Vytauto g. 35, LT-67227"
+  },
+  {
+    "kodas": "191242733",
+    "pavadinimas": "Semeliškių šv. Lauryno parapija",
+    "adresas": "Elektrėnų sav., Semeliškės"
+  },
+  {
+    "kodas": "192065428",
+    "pavadinimas": "Senosios Varėnos šv. Arkang. Mykolo parapija",
+    "adresas": "Varėnos r. sav., Varėnos sen., Senosios Varėnos k."
+  },
+  {
+    "kodas": "191306812",
+    "pavadinimas": "Senųjų Trakų Viešpaties Apreiškimo Švč. M. Marijai ir Šv. Benedikto parapija",
+    "adresas": "Trakų r. sav., Senųjų Trakų sen., Senųjų Trakų k."
+  },
+  {
+    "kodas": "191250790",
+    "pavadinimas": "Seredžiaus Šv. Jono Krikštytojo parapija",
+    "adresas": "Jurbarko r. sav., Seredžius, P. Cvirkos g. 13, LT-74423"
+  },
+  {
+    "kodas": "191267925",
+    "pavadinimas": "Sidabravo Švč. Trejybės parapija",
+    "adresas": "Radviliškio r. sav., Sidabravas"
+  },
+  {
+    "kodas": "191255570",
+    "pavadinimas": "Siesikų Šv. apaštalo Baltramiejaus parapija",
+    "adresas": "Ukmergės r. sav., Siesikai, Nepriklausomybės g. 5"
+  },
+  {
+    "kodas": "192067393",
+    "pavadinimas": "Simno Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Alytaus r. sav., Simnas, Kreivoji g. 3, LT-64312"
+  },
+  {
+    "kodas": "191296624",
+    "pavadinimas": "Sintautų Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Šakių r. sav., Sintautai, P. Vaičaičio g. 37, LT-71336"
+  },
+  {
+    "kodas": "191244741",
+    "pavadinimas": "Skaistgirio Šv. Jurgio parapija",
+    "adresas": "Joniškio r. sav., Skaistgirys"
+  },
+  {
+    "kodas": "191259782",
+    "pavadinimas": "Skapiškio Šv. Hiacinto (Jackaus) parapija",
+    "adresas": "Kupiškio r. sav., Skapiškis, Dariaus ir Girėno g. 2A, LT-40464"
+  },
+  {
+    "kodas": "191294769",
+    "pavadinimas": "Skardupių Švč. M. Marijos Krikščionių Pagalbos parapija",
+    "adresas": "Marijampolės sav., Marijampolės sen., Skardupių k."
+  },
+  {
+    "kodas": "191284846",
+    "pavadinimas": "Skaudvilės Šv. Kryžiaus parapija",
+    "adresas": "Tauragės r. sav., Skaudvilė, Tauragės g. 2, LT-73423"
+  },
+  {
+    "kodas": "191257436",
+    "pavadinimas": "Skiemonių Švč. M. Marijos parapija",
+    "adresas": "Anykščių r. sav., Skiemonys"
+  },
+  {
+    "kodas": "191250833",
+    "pavadinimas": "Skirsnemunės Šv. Jurgio parapija",
+    "adresas": "Jurbarko r. sav., Skirsnemunės sen., Skirsnemunės k., Mikalojaus Gadliausko g. 8, LT-74484"
+  },
+  {
+    "kodas": "191263713",
+    "pavadinimas": "Skrebotiškio Švč. Jėzaus Širdies parapija",
+    "adresas": "Pasvalio r. sav., Vaškų sen., Skrebotiškio k."
+  },
+  {
+    "kodas": "191289245",
+    "pavadinimas": "Skriaudžių Šv. Lauryno parapija",
+    "adresas": "Prienų r. sav., Veiverių sen., Skriaudžių k., Ramybės g. 8, LT-59277"
+  },
+  {
+    "kodas": "191239185",
+    "pavadinimas": "Skudutiškio Švč. Trejybės parapija",
+    "adresas": "Molėtų r. sav., Suginčių sen., Skudutiškio k."
+  },
+  {
+    "kodas": "291279280",
+    "pavadinimas": "Skuodo Švč. Trejybės parapija",
+    "adresas": "Skuodas, Gedimino g. 12, LT-98126"
+  },
+  {
+    "kodas": "191296777",
+    "pavadinimas": "Slavikų Šv. Onos parapija",
+    "adresas": "Šakių r. sav., Šakių sen., Slavikų k."
+  },
+  {
+    "kodas": "303566444",
+    "pavadinimas": "Slengių Šv. Jono Pauliaus II parapija",
+    "adresas": "Klaipėdos r. sav., Vėžaičiai, Gargždų g. 23B, LT-96214"
+  },
+  {
+    "kodas": "191282642",
+    "pavadinimas": "Smalininkų Šv. Juozapo parapija",
+    "adresas": "Jurbarko r. sav., Smalininkai"
+  },
+  {
+    "kodas": "191300364",
+    "pavadinimas": "Smalvų Švč. M. Marijos Rožančinės parapija",
+    "adresas": "Zarasų r. sav., Turmanto sen., Smalvų k."
+  },
+  {
+    "kodas": "191258680",
+    "pavadinimas": "Smilgių Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Biržų r. sav., Pačeriaukštės sen., Smilgių k."
+  },
+  {
+    "kodas": "291268070",
+    "pavadinimas": "Smilgių Šv. Jurgio parapija",
+    "adresas": "Panevėžio r. sav., Smilgiai"
+  },
+  {
+    "kodas": "191261477",
+    "pavadinimas": "Spirakių Švč. Trejybės parapija",
+    "adresas": "Panevėžio r. sav., Panevėžio sen., Spirakių k."
+  },
+  {
+    "kodas": "191268984",
+    "pavadinimas": "Spitrėnų Švč. M. Marijos, Taikos Karalienės parapija",
+    "adresas": "Utenos r. sav., Utenos sen., Spitrėnų k."
+  },
+  {
+    "kodas": "191271585",
+    "pavadinimas": "Spraudės Šv. apašt. Pauliaus parapija",
+    "adresas": "Rietavo sav., Rietavo sen., Spraudžio k."
+  },
+  {
+    "kodas": "191250986",
+    "pavadinimas": "Stakių Šv. Antano Paduviečio parapija",
+    "adresas": "Jurbarko r. sav., Raudonės sen., Stakių k."
+  },
+  {
+    "kodas": "291240530",
+    "pavadinimas": "Stakliškių Švč. Trejybės parapija",
+    "adresas": "Prienų r. sav., Stakliškių sen., Stakliškių k."
+  },
+  {
+    "kodas": "191277990",
+    "pavadinimas": "Stalgėnų Šv. apašt. Petro ir Pauliaus parapija",
+    "adresas": "Plungės r. sav., Stalgėnų sen., Stalgėnų k."
+  },
+  {
+    "kodas": "191254326",
+    "pavadinimas": "Stačiūnų Šv. Lauryno parapija",
+    "adresas": "Pakruojo r. sav., Lygumų sen., Stačiūnų k."
+  },
+  {
+    "kodas": "191282795",
+    "pavadinimas": "Stemplių Šv. Aloyzo parapija",
+    "adresas": "Šilutės r. sav., Švėkšnos sen., Stemplių k."
+  },
+  {
+    "kodas": "191239228",
+    "pavadinimas": "Stirnių Šv. Jono Krikštytojo Nukankinimo parapija",
+    "adresas": "Molėtų r. sav., Čiulėnų sen., Stirnių k."
+  },
+  {
+    "kodas": "191305525",
+    "pavadinimas": "Strūnaičio Šv. Apaštalų Petro ir Povilo parapija",
+    "adresas": "Švenčionių r. sav., Strūnaičio sen., Naujo Strūnaičio k."
+  },
+  {
+    "kodas": "191284999",
+    "pavadinimas": "Stulgių Šv. Mato parapija",
+    "adresas": "Kelmės r. sav., Tytuvėnų apylinkių sen., Stulgių k."
+  },
+  {
+    "kodas": "191259825",
+    "pavadinimas": "Subačiaus Šv. Pranciškaus Asyžiečio parapija",
+    "adresas": "Kupiškio r. sav., Subačius, Biržų g. 4, LT-40405"
+  },
+  {
+    "kodas": "300113499",
+    "pavadinimas": "Subačiaus Švč. Trejybės parapija",
+    "adresas": "Kupiškio r. sav., Subačiaus sen., Subačiaus mstl."
+  },
+  {
+    "kodas": "291296810",
+    "pavadinimas": "Sudargo Šv. Jono Krikštytojo parapija",
+    "adresas": "Šakių r. sav., Kidulių sen., Sudargo k."
+  },
+  {
+    "kodas": "191269029",
+    "pavadinimas": "Sudeikių Švč. M. Marijos parapija",
+    "adresas": "Utenos r. sav., Sudeikiai"
+  },
+  {
+    "kodas": "191302568",
+    "pavadinimas": "Sudervės Švč. Trejybės parapija",
+    "adresas": "Vilniaus r. sav., Sudervės sen., Sudervės k., Kernavės g. 1, LT-14201"
+  },
+  {
+    "kodas": "191239413",
+    "pavadinimas": "Suginčių Šv. Kryžiaus Atradimo parapija",
+    "adresas": "Molėtų r. sav., Suginčių sen., Suginčių k., Darželio g. 8, LT-33334"
+  },
+  {
+    "kodas": "191258723",
+    "pavadinimas": "Suosto Šv. Kryžiaus Išaukštinimo parapija",
+    "adresas": "Biržų r. sav., Nemunėlio Radviliškio sen., Suosto k."
+  },
+  {
+    "kodas": "191264434",
+    "pavadinimas": "Surdegio Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Anykščių r. sav., Troškūnų sen., Surdegio mstl."
+  },
+  {
+    "kodas": "191248234",
+    "pavadinimas": "Surviliškio Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Kėdainių r. sav., Surviliškis"
+  },
+  {
+    "kodas": "191296962",
+    "pavadinimas": "Sutkų Švč. M. Marijos, Belaisvių vaduotojos parapija",
+    "adresas": "Šakių r. sav., Kriūkų sen., Sutkų k."
+  },
+  {
+    "kodas": "191266976",
+    "pavadinimas": "Suvainiškio šv. Jokūbo apaštalo parapija",
+    "adresas": "Rokiškio r. sav., Pandėlio sen., Suvainiškio mstl."
+  },
+  {
+    "kodas": "191302753",
+    "pavadinimas": "Sužionių Šv. Felikso Valua parapija",
+    "adresas": "Vilniaus r. sav., Sužionių sen., Sužionių k."
+  },
+  {
+    "kodas": "191257589",
+    "pavadinimas": "Svėdasų Šv. arkang. Mykolo parapija",
+    "adresas": "Anykščių r. sav., Svėdasai, Alaušo g. 2, LT-29352"
+  },
+  {
+    "kodas": "191289583",
+    "pavadinimas": "Tabariškių Kristaus Karaliaus parapija",
+    "adresas": "Kauno r. sav., Ringaudų sen., Tabariškių k."
+  },
+  {
+    "kodas": "191307871",
+    "pavadinimas": "Tabariškių Šv. arkangelo Mykolo parapija",
+    "adresas": "Šalčininkų r. sav., Turgelių sen., Tabariškių k."
+  },
+  {
+    "kodas": "191255613",
+    "pavadinimas": "Taujėnų šv. Kryžiaus Išaukštinimo parapija",
+    "adresas": "Ukmergės r. sav., Taujėnai, Užugirio g. 1A, LT-20348"
+  },
+  {
+    "kodas": "192079748",
+    "pavadinimas": "Tauragnų Šv. Jurgio parapija",
+    "adresas": "Utenos r. sav., Tauragnai, A. Musteikio g. 2, LT-28316"
+  },
+  {
+    "kodas": "191285033",
+    "pavadinimas": "Tauragės Švč. Trejybės parapija",
+    "adresas": "Tauragė, Stoties g. 2, LT-72260"
+  },
+  {
+    "kodas": "191286854",
+    "pavadinimas": "Telšių I Šv. Antano Paduviečio parapija",
+    "adresas": "Telšiai, Katedros a. 2, LT-87131"
+  },
+  {
+    "kodas": "191287041",
+    "pavadinimas": "Telšių II Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Telšiai, Šviesos g. 2, LT-87127"
+  },
+  {
+    "kodas": "191281017",
+    "pavadinimas": "Tenenių Šv. Barboros parapija",
+    "adresas": "Šilalės r. sav., Teneniai"
+  },
+  {
+    "kodas": "191300745",
+    "pavadinimas": "Tilžės Švč. M. Marijos Karalienės parapija",
+    "adresas": "Zarasų r. sav., Turmanto sen., Tilžės k."
+  },
+  {
+    "kodas": "190769533",
+    "pavadinimas": "Tirkšlių Kristaus Karaliaus parapija",
+    "adresas": "Mažeikių r. sav., Tirkšliai"
+  },
+  {
+    "kodas": "191306965",
+    "pavadinimas": "Trakų Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Trakai, Vytauto Pranciškaus Rūko g. 8, LT-21106"
+  },
+  {
+    "kodas": "291264620",
+    "pavadinimas": "Traupio Šv. Onos parapija",
+    "adresas": "Anykščių r. sav., Traupis"
+  },
+  {
+    "kodas": "191264772",
+    "pavadinimas": "Troškūnų Švč. Trejybės parapija",
+    "adresas": "Anykščių r. sav., Troškūnai, Vytauto g. 1"
+  },
+  {
+    "kodas": "291261510",
+    "pavadinimas": "Truskavos Šventosios Dvasios parapija",
+    "adresas": "Kėdainių r. sav., Truskavos sen., Truskavos mstl., Linkuvės g. 5, LT-58462"
+  },
+  {
+    "kodas": "191272915",
+    "pavadinimas": "Tryškių Švč. Trejybės parapija",
+    "adresas": "Telšių r. sav., Tryškiai, M. Valančiaus g. 6, LT-88153"
+  },
+  {
+    "kodas": "191307914",
+    "pavadinimas": "Turgelių Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Šalčininkų r. sav., Turgelių sen., Turgelių k."
+  },
+  {
+    "kodas": "191305863",
+    "pavadinimas": "Tverečiaus Švč. Trejybės parapija",
+    "adresas": "Ignalinos r. sav., Tverečius"
+  },
+  {
+    "kodas": "191278188",
+    "pavadinimas": "Tverų Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Rietavo sav., Tverai"
+  },
+  {
+    "kodas": "191310853",
+    "pavadinimas": "Tytuvėnų Švč. M. Marijos Angelų Karalienės parapija",
+    "adresas": "Kelmės r. sav., Tytuvėnai, Piliakalnio g. 1"
+  },
+  {
+    "kodas": "191276365",
+    "pavadinimas": "Tūbausių Šv. apaštalo Andriejaus parapija",
+    "adresas": "Kretingos r. sav., Kretingos sen., Tūbausių k."
+  },
+  {
+    "kodas": "291281160",
+    "pavadinimas": "Tūbinių Dievo Apvaizdos parapija",
+    "adresas": "Šilalės r. sav., Šilalės kaimiškoji sen., Tūbinių I k."
+  },
+  {
+    "kodas": "191287194",
+    "pavadinimas": "Ubiškės Angelų Sargų parapija",
+    "adresas": "Telšių r. sav., Tryškių sen., Ubiškės mstl., D. Bubėno g. 19, LT-88188"
+  },
+  {
+    "kodas": "291311760",
+    "pavadinimas": "Ukmergės Švč. Trejybės parapija",
+    "adresas": "Ukmergė, Kauno g. 1, LT-20130"
+  },
+  {
+    "kodas": "191256487",
+    "pavadinimas": "Ukmergės šv. apaštalų Petro ir Povilo parapija",
+    "adresas": "Ukmergė, Bažnyčios g. 8, LT-20106"
+  },
+  {
+    "kodas": "191274738",
+    "pavadinimas": "Ukrinų Šv. Antano Paduviečio parapija",
+    "adresas": "Mažeikių r. sav., Židikų sen., Ukrinų k."
+  },
+  {
+    "kodas": "191261662",
+    "pavadinimas": "Uliūnų Kristaus Žengimo į Dangų parapija",
+    "adresas": "Panevėžio r. sav., Ramygalos sen., Uliūnų k."
+  },
+  {
+    "kodas": "191255766",
+    "pavadinimas": "Upninkų Šv. arkangelo Mykolo parapija",
+    "adresas": "Jonavos r. sav., Upninkų sen., Upninkų k."
+  },
+  {
+    "kodas": "191287237",
+    "pavadinimas": "Upynos Šv. Jono Labdario parapija",
+    "adresas": "Telšių r. sav., Upynos sen., Upynos k."
+  },
+  {
+    "kodas": "191281355",
+    "pavadinimas": "Upynos Švč. M. Marijos Vardo parapija",
+    "adresas": "Šilalės r. sav., Upyna"
+  },
+  {
+    "kodas": "191261858",
+    "pavadinimas": "Upytės Šv. Karolio Boromiejaus parapija",
+    "adresas": "Panevėžio r. sav., Upytės sen., Upytės k."
+  },
+  {
+    "kodas": "191311955",
+    "pavadinimas": "Utenos Dievo Apvaizdos parapija",
+    "adresas": "Utena, Aušros g. 78, LT-28150"
+  },
+  {
+    "kodas": "191269171",
+    "pavadinimas": "Utenos Kristaus žengimo į dangų parapija",
+    "adresas": "Utena, Vytauto a. 4, LT-28242"
+  },
+  {
+    "kodas": "191274880",
+    "pavadinimas": "Užlieknės Marijos Magdalietės parapija",
+    "adresas": "Mažeikių r. sav., Tirkšlių sen., Užlieknės k."
+  },
+  {
+    "kodas": "191269214",
+    "pavadinimas": "Užpalių Švč. Trejybės parapija",
+    "adresas": "Utenos r. sav., Užpaliai, J. Basanavičiaus g. 4, LT-28385"
+  },
+  {
+    "kodas": "191240682",
+    "pavadinimas": "Užuguosčio šv. apašt. Petro ir Pauliaus parapija",
+    "adresas": "Prienų r. sav., Stakliškių sen., Užuguosčio k."
+  },
+  {
+    "kodas": "191255951",
+    "pavadinimas": "Užunevėžių Švč. M. Marijos parapija",
+    "adresas": "Anykščių r. sav., Kurklių sen., Užunvėžių k."
+  },
+  {
+    "kodas": "290768770",
+    "pavadinimas": "Užvenčio Šv. Marijos Magdalietės parapija",
+    "adresas": "Kelmės r. sav., Užventis, Kolainių g. 5, LT-86346"
+  },
+  {
+    "kodas": "191262045",
+    "pavadinimas": "VADAKTŲ ŠV. AGOTOS PARAPIJA",
+    "adresas": "Radviliškio r. sav., Sidabravo apylinkės sen., Vadaktų mstl."
+  },
+  {
+    "kodas": "191258876",
+    "pavadinimas": "Vabalninko Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Biržų r. sav., Vabalninkas, S. Nėries g. 2, LT-41318"
+  },
+  {
+    "kodas": "191262198",
+    "pavadinimas": "Vadaktėlių Šv. Jono Nepomuko parapija",
+    "adresas": "Panevėžio r. sav., Naujamiesčio sen., Vadaktėlių k."
+  },
+  {
+    "kodas": "191264815",
+    "pavadinimas": "Vadoklių Švč. Jėzaus Širdies parapija",
+    "adresas": "Panevėžio r. sav., Vadokliai, Tulpių g. 1, LT-38200"
+  },
+  {
+    "kodas": "191251369",
+    "pavadinimas": "Vadžgirio Šv. Juozapo parapija",
+    "adresas": "Jurbarko r. sav., Šimkaičių sen., Vadžgirio mstl."
+  },
+  {
+    "kodas": "191306399",
+    "pavadinimas": "Vaidotų Šv. apaštalo Pauliaus Atsivertimo parapija",
+    "adresas": "Vilniaus r. sav., Pagirių sen., Vaidotų k., Statybininkų g. 3, LT-14148"
+  },
+  {
+    "kodas": "291273060",
+    "pavadinimas": "Vaiguvos Šv. Jono Krikštytojo parapija",
+    "adresas": "Kelmės r. sav., Vaiguvos sen., Vaiguvos k."
+  },
+  {
+    "kodas": "191283025",
+    "pavadinimas": "Vainuto Šv. Jono Krikštytojo parapija",
+    "adresas": "Šilutės r. sav., Vainutas"
+  },
+  {
+    "kodas": "191285186",
+    "pavadinimas": "Vaitimėnų Šv. Kryžiaus Išaukštinimo parapija",
+    "adresas": "Tauragės r. sav., Mažonų sen., Vaitimėnų k."
+  },
+  {
+    "kodas": "191279475",
+    "pavadinimas": "Vaičaičių Šv. Onos parapija",
+    "adresas": "Skuodo r. sav., Ylakių sen., Vaičaičių k."
+  },
+  {
+    "kodas": "191270679",
+    "pavadinimas": "Vajasiškio Šv. Jono Krikštytojo parapija",
+    "adresas": "Zarasų r. sav., Degučių sen., Vajasiškio k."
+  },
+  {
+    "kodas": "191307152",
+    "pavadinimas": "Valkininkų Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Varėnos r. sav., Valkininkai"
+  },
+  {
+    "kodas": "191246379",
+    "pavadinimas": "Vandžiogalos Švč. Trejybės parapija",
+    "adresas": "Kauno r. sav., Vandžiogala, Parko g. 4, LT-54388"
+  },
+  {
+    "kodas": "191285229",
+    "pavadinimas": "Varlaukio Švč. Trejybės parapija",
+    "adresas": "Jurbarko r. sav., Eržvilko sen., Varlaukio k."
+  },
+  {
+    "kodas": "291287380",
+    "pavadinimas": "Varnių I Šv. apašt. Petro ir Pauliaus parapija",
+    "adresas": "Telšių r. sav., Varniai, M. Valančiaus g. 4, LT-88319"
+  },
+  {
+    "kodas": "191312338",
+    "pavadinimas": "Varnių II Šv. Aleksandro parapija",
+    "adresas": "Telšių r. sav., Varniai, Vytauto g. 10, LT-88320"
+  },
+  {
+    "kodas": "191273255",
+    "pavadinimas": "Varputėnų Šv. Antano Paduviečio parapija",
+    "adresas": "Kelmės r. sav., Šaukėnų sen., Vidsodžio k."
+  },
+  {
+    "kodas": "191281540",
+    "pavadinimas": "Varsėdžių Šv. Roko parapija",
+    "adresas": "Šilalės r. sav., Upynos sen., Varsėdžių k."
+  },
+  {
+    "kodas": "191308973",
+    "pavadinimas": "Varėnos Šv. arkangelo Mykolo parapija",
+    "adresas": "Varėna, Savanorių g. 10, LT-65187"
+  },
+  {
+    "kodas": "191263866",
+    "pavadinimas": "Vaškų Šv. Juozapo parapija",
+    "adresas": "Pasvalio r. sav., Vaškai, Taikos g. 3, LT-39374"
+  },
+  {
+    "kodas": "291292370",
+    "pavadinimas": "Veisiejų Šv. Jurgio parapija",
+    "adresas": "Lazdijų r. sav., Veisiejai, Dariaus ir Girėno g. 1, LT-67340"
+  },
+  {
+    "kodas": "191289626",
+    "pavadinimas": "Veiverių Šv. Liudviko parapija",
+    "adresas": "Prienų r. sav., Veiveriai, Minties tak. 1, LT-59294"
+  },
+  {
+    "kodas": "191271628",
+    "pavadinimas": "Veiviržėnų Šv. apaštalo evangelisto Mato parapija",
+    "adresas": "Klaipėdos r. sav., Veiviržėnai, Laisvės g."
+  },
+  {
+    "kodas": "191251554",
+    "pavadinimas": "Veliuonos Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Jurbarko r. sav., Veliuona, Draugystės g. 1, LT-74442"
+  },
+  {
+    "kodas": "191262230",
+    "pavadinimas": "Velykių Šv. apašt. Andriejaus parapija",
+    "adresas": "Panevėžio r. sav., Velžio sen., Velykių k."
+  },
+  {
+    "kodas": "301289532",
+    "pavadinimas": "Velžio Švč. Jėzaus Širdies parapija",
+    "adresas": "Panevėžio r. sav., Velžio sen., Velžio k., Alantos g. 38, LT-38128"
+  },
+  {
+    "kodas": "191312295",
+    "pavadinimas": "Ventos Švč. Mergelės Marijos Nekaltojo Prasidėjimo parapija",
+    "adresas": "Akmenės r. sav., Venta, Stoties g. 37, LT-85309"
+  },
+  {
+    "kodas": "191256149",
+    "pavadinimas": "Veprių Švč. M. Marijos Rožančinės parapija",
+    "adresas": "Ukmergės r. sav., Vepriai"
+  },
+  {
+    "kodas": "291251740",
+    "pavadinimas": "Vertimų Šv. Jono Krikštytojo parapija",
+    "adresas": "Jurbarko r. sav., Jurbarkų sen., Vertimų k., Bažnyčios g. 6, LT-74264"
+  },
+  {
+    "kodas": "191239370",
+    "pavadinimas": "Videniškių Šv. Lauryno parapija",
+    "adresas": "Molėtų r. sav., Videniškių sen., Videniškių k."
+  },
+  {
+    "kodas": "191306050",
+    "pavadinimas": "Vidiškių Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Ignalinos r. sav., Vidiškių sen., Vidiškių k."
+  },
+  {
+    "kodas": "191256291",
+    "pavadinimas": "Vidiškių Švč. Trejybės parapija",
+    "adresas": "Ukmergės r. sav., Žemaitkiemio sen., Vidiškių vs."
+  },
+  {
+    "kodas": "191273440",
+    "pavadinimas": "Vidsodžio Šv. Antano Paduviečio parapija",
+    "adresas": "Kelmės r. sav., Šaukėnų sen., Vidsodžio k."
+  },
+  {
+    "kodas": "191251892",
+    "pavadinimas": "Viduklės Šv. Kryžiaus parapija",
+    "adresas": "Raseinių r. sav., Viduklė, S. Stanevičiaus g. 1, LT-60349"
+  },
+  {
+    "kodas": "191287422",
+    "pavadinimas": "Viekšnalių Švč. M. Marijos Globos parapija",
+    "adresas": "Telšių r. sav., Luokės sen., Viekšnalių k."
+  },
+  {
+    "kodas": "190769686",
+    "pavadinimas": "Viekšnių šv. Jono Krikštytojo parapija",
+    "adresas": "Mažeikių r. sav., Viekšniai, Bažnyčios g. 4, LT-89491"
+  },
+  {
+    "kodas": "191242886",
+    "pavadinimas": "Vievio šv. Onos parapija",
+    "adresas": "Elektrėnų sav., Vievis, Ežero g. 9, LT-21377"
+  },
+  {
+    "kodas": "191257621",
+    "pavadinimas": "Viešintų Šv. arkang. Mykolo parapija",
+    "adresas": "Anykščių r. sav., Viešintos, Klevų g. 2, LT-29324"
+  },
+  {
+    "kodas": "191283178",
+    "pavadinimas": "Viešvilės Kristaus Atsimainymo parapija",
+    "adresas": "Jurbarko r. sav., Viešvilė"
+  },
+  {
+    "kodas": "191287575",
+    "pavadinimas": "Viešvėnų Švč. Trejybės parapija",
+    "adresas": "Telšių r. sav., Viešvėnų sen., Viešvėnų I k."
+  },
+  {
+    "kodas": "191298828",
+    "pavadinimas": "Vilkaviškio Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Vilkaviškis, Vysk. A. Karoso g. 2, LT-70140"
+  },
+  {
+    "kodas": "190676036",
+    "pavadinimas": "Vilkijos Šv. Jurgio parapija",
+    "adresas": "Kauno r. sav., Vilkija, Bažnyčios g. 17, LT-54227"
+  },
+  {
+    "kodas": "300011996",
+    "pavadinimas": "Vilkyčių šv. Brunono parapija",
+    "adresas": "Šilutės r. sav., Saugų sen., Vilkyčių k."
+  },
+  {
+    "kodas": "191283210",
+    "pavadinimas": "Vilkyškių Šv. Onos parapija",
+    "adresas": "Pagėgių sav., Vilkyškiai"
+  },
+  {
+    "kodas": "191301466",
+    "pavadinimas": "Vilniaus (Kalvarijos) Šv. Kryžiaus Atradimo parapija",
+    "adresas": "Vilnius, Kalvarijų g. 225"
+  },
+  {
+    "kodas": "191309160",
+    "pavadinimas": "Vilniaus (Naujosios Vilnios) Šv. Kazimiero parapija",
+    "adresas": "Vilnius, Palydovo g. 15, LT-11107"
+  },
+  {
+    "kodas": "191309356",
+    "pavadinimas": "Vilniaus (Pavilnio) Kristaus Karaliaus ir šv. Kūdikėlio Jėzaus Teresės parapija",
+    "adresas": "Vilnius, J. Kolaso g. 34, LT-11306"
+  },
+  {
+    "kodas": "191310472",
+    "pavadinimas": "Vilniaus Pal. Jurgio Matulaičio parapija",
+    "adresas": "Vilnius, Jurgio Matulaičio a. 3, LT-05111"
+  },
+  {
+    "kodas": "191312719",
+    "pavadinimas": "Vilniaus Visų Šventųjų parapija",
+    "adresas": "Vilnius, Rūdninkų g. 20"
+  },
+  {
+    "kodas": "191310515",
+    "pavadinimas": "Vilniaus Šv. Jono Bosko parapija",
+    "adresas": "Vilnius, Erfurto g. 3, LT-04220"
+  },
+  {
+    "kodas": "304938367",
+    "pavadinimas": "Vilniaus Šv. Jono Pauliaus II parapija",
+    "adresas": "Vilnius, Medeinos g. 14, LT-06156"
+  },
+  {
+    "kodas": "192084880",
+    "pavadinimas": "Vilniaus Šv. Juozapo parapija",
+    "adresas": "Vilnius, Tolminkiemio g. 4, LT-06212"
+  },
+  {
+    "kodas": "191310091",
+    "pavadinimas": "Vilniaus Šv. Mikalojaus parapija",
+    "adresas": "Vilnius, Šv. Mikalojaus g. 4, LT-01133"
+  },
+  {
+    "kodas": "192051599",
+    "pavadinimas": "Vilniaus Šv. Pranciškaus Asyžiečio parapija",
+    "adresas": "Vilnius, Maironio g. 10, LT-01124"
+  },
+  {
+    "kodas": "191310287",
+    "pavadinimas": "Vilniaus Šv. Teresės parapija",
+    "adresas": "Vilnius, Aušros Vartų g. 12, LT-01303"
+  },
+  {
+    "kodas": "191309922",
+    "pavadinimas": "Vilniaus Šv. apaštalų Petro ir Povilo parapija",
+    "adresas": "Vilnius, Antakalnio g. 1, LT-10312"
+  },
+  {
+    "kodas": "291309880",
+    "pavadinimas": "Vilniaus Šv. arkangelo Rapolo parapija",
+    "adresas": "Vilnius, Šnipiškių g. 1, LT-09309"
+  },
+  {
+    "kodas": "191309018",
+    "pavadinimas": "Vilniaus Šv. vyskupo Stanislovo ir šv. Vladislovo Arkikatedros Bazilikos parapija",
+    "adresas": "Vilnius, Katedros a."
+  },
+  {
+    "kodas": "191309541",
+    "pavadinimas": "Vilniaus Šventosios Dvasios parapija",
+    "adresas": "Vilnius, Dominikonų g. 8, LT-01131"
+  },
+  {
+    "kodas": "191309694",
+    "pavadinimas": "Vilniaus Švč. Jėzaus Širdies parapija",
+    "adresas": "Vilnius, Gerosios Vilties g. 17, LT-03147"
+  },
+  {
+    "kodas": "191309737",
+    "pavadinimas": "Vilniaus Švč. M. Marijos Nekaltojo Prasidėjimo parapija",
+    "adresas": "Vilnius, Sėlių g. 17, LT-08125"
+  },
+  {
+    "kodas": "191243835",
+    "pavadinimas": "Vilūnų šv. apašt. Petro ir Pauliaus parapija",
+    "adresas": "Kaišiadorių r. sav., Kruonio sen., Vilūnų k."
+  },
+  {
+    "kodas": "191298970",
+    "pavadinimas": "Virbalio Šv. arkangelo Mykolo parapija",
+    "adresas": "Vilkaviškio r. sav., Virbalis, Gedimino g. 2, LT-70384"
+  },
+  {
+    "kodas": "291300550",
+    "pavadinimas": "Visagino Šv. Apaštalo Pauliaus parapija",
+    "adresas": "Visaginas, Santarvės g. 1, LT-31138"
+  },
+  {
+    "kodas": "191295141",
+    "pavadinimas": "Višakio Rūdos Šv. vyskupo Stanislovo parapija",
+    "adresas": "Kazlų Rūdos sav., Kazlų Rūdos sen., Višakio Rūdos k."
+  },
+  {
+    "kodas": "191299015",
+    "pavadinimas": "Vištyčio Švč. Trejybės parapija",
+    "adresas": "Vilkaviškio r. sav., Vištytis"
+  },
+  {
+    "kodas": "191251935",
+    "pavadinimas": "Vosiliškio Šv. Juozapo parapija",
+    "adresas": "Raseinių r. sav., Pagojukų sen., Vosiliškio k."
+  },
+  {
+    "kodas": "191306246",
+    "pavadinimas": "Vosiūnų Švč. M. Marijos parapija",
+    "adresas": "Ignalinos r. sav., Didžiasalio sen., Vosiūnų k."
+  },
+  {
+    "kodas": "192089856",
+    "pavadinimas": "Vydmantų Šv. Jono Krikštytojo parapija",
+    "adresas": "Kretingos r. sav., Kretingos sen., Vydmantų k."
+  },
+  {
+    "kodas": "191240725",
+    "pavadinimas": "Vytautavos šv. Antano Paduviečio parapija",
+    "adresas": "Trakų r. sav., Rūdiškių sen., Vytautavos k."
+  },
+  {
+    "kodas": "191269367",
+    "pavadinimas": "Vyžuonų Šv. Jurgio parapija",
+    "adresas": "Utenos r. sav., Vyžuonos"
+  },
+  {
+    "kodas": "191271770",
+    "pavadinimas": "Vėžaičių Šv. Kazimiero parapija",
+    "adresas": "Klaipėdos r. sav., Vėžaičiai, Samališkės g. 8, LT-96214"
+  },
+  {
+    "kodas": "191278754",
+    "pavadinimas": "Ylakių Viešpaties Apreiškimo Švč. M. Marijai parapija",
+    "adresas": "Skuodo r. sav., Ylakiai, Židikų g. 1, LT-98350"
+  },
+  {
+    "kodas": "191289779",
+    "pavadinimas": "Zapyškio Šv. Jono Krikštytojo parapija",
+    "adresas": "Kauno r. sav., Zapyškio sen., Zapyškio mstl."
+  },
+  {
+    "kodas": "191270711",
+    "pavadinimas": "Zarasų Švč. M. Marijos Ėmimo į dangų parapija",
+    "adresas": "Zarasai, Bažnyčios g. 3, LT-32132"
+  },
+  {
+    "kodas": "191241827",
+    "pavadinimas": "Zibalų šv. Jurgio parapija",
+    "adresas": "Širvintų r. sav., Zibalai"
+  },
+  {
+    "kodas": "191292565",
+    "pavadinimas": "Ąžuolų Būdos Šv. Antano Paduviečio parapija",
+    "adresas": "Kazlų Rūdos sav., Kazlų Rūdos sen., Ąžuolų Būdos k."
+  },
+  {
+    "kodas": "191264968",
+    "pavadinimas": "Čedasų Šv. apaštalų Petro ir Povilo parapija",
+    "adresas": "Rokiškio r. sav., Rokiškio kaimiškoji sen., Čedasų k."
+  },
+  {
+    "kodas": "191245277",
+    "pavadinimas": "Čekiškės Švč. Trejybės parapija",
+    "adresas": "Kauno r. sav., Čekiškė"
+  },
+  {
+    "kodas": "191240910",
+    "pavadinimas": "Čiobiškio šv. Jono Krikštytojo parapija",
+    "adresas": "Širvintų r. sav., Čiobiškio sen., Čiobiškio k."
+  },
+  {
+    "kodas": "291260180",
+    "pavadinimas": "Ėriškių Švč. Jėzaus vardo parapija",
+    "adresas": "Panevėžio r. sav., Upytės sen., Ėriškių k."
+  },
+  {
+    "kodas": "291297150",
+    "pavadinimas": "Šakių Šv. Jono Krikštytojo parapija",
+    "adresas": "Šakiai, Vasario 16-osios g. 9, LT-71126"
+  },
+  {
+    "kodas": "191272687",
+    "pavadinimas": "Šakynos Šv. arkangelo Mykolo parapija",
+    "adresas": "Šiaulių r. sav., Šakyna"
+  },
+  {
+    "kodas": "191303855",
+    "pavadinimas": "Šalčininkėlių Šv. Jurgio parapija",
+    "adresas": "Šalčininkų r. sav., Šalčininkų sen., Šalčininkėlių k."
+  },
+  {
+    "kodas": "291303660",
+    "pavadinimas": "Šalčininkų Šv. Apaštalo Petro parapija",
+    "adresas": "Šalčininkai"
+  },
+  {
+    "kodas": "191278035",
+    "pavadinimas": "Šateikių Šv. evang. Morkaus parapija",
+    "adresas": "Plungės r. sav., Šateikių sen., Šateikių k."
+  },
+  {
+    "kodas": "191254479",
+    "pavadinimas": "Šaukoto Švč. Trejybės parapija",
+    "adresas": "Radviliškio r. sav., Šaukoto apylinkės sen., Šaukoto I k."
+  },
+  {
+    "kodas": "291272720",
+    "pavadinimas": "Šaukėnų Švč. Trejybės parapija",
+    "adresas": "Kelmės r. sav., Šaukėnai, Prekybos g. 6, LT-86382"
+  },
+  {
+    "kodas": "191279322",
+    "pavadinimas": "Šačių Šv. Jono Krikštytojo parapija",
+    "adresas": "Skuodo r. sav., Šačių sen., Šačių k."
+  },
+  {
+    "kodas": "191268112",
+    "pavadinimas": "Šeduvos Šv. Kryžiaus Atradimo parapija",
+    "adresas": "Radviliškio r. sav., Šeduva, Vilniaus g. 16, LT-82225"
+  },
+  {
+    "kodas": "191292031",
+    "pavadinimas": "Šeštokų Švč. M. Marijos Nuolatinės Gelbėtojos parapija",
+    "adresas": "Lazdijų r. sav., Šeštokai"
+  },
+  {
+    "kodas": "191237743",
+    "pavadinimas": "Šešuolių šv. Juozapo parapija",
+    "adresas": "Ukmergės r. sav., Šešuolių sen., Šešuolių mstl."
+  },
+  {
+    "kodas": "191241631",
+    "pavadinimas": "Šešuolėlių Švč. M. Marijos Visų Malonių Tarpininkės parapija",
+    "adresas": "Širvintų r. sav., Zibalų sen., Šešuolėlių I k."
+  },
+  {
+    "kodas": "191272872",
+    "pavadinimas": "Šiaudinės Švč. M. Marijos parapija",
+    "adresas": "Akmenės r. sav., Papilės sen., Šiaudinės k."
+  },
+  {
+    "kodas": "191068211",
+    "pavadinimas": "Šiaulių Šv. Jurgio parapija",
+    "adresas": "Šiauliai, Kražių g. 17-1"
+  },
+  {
+    "kodas": "190852185",
+    "pavadinimas": "Šiaulių Šv. apašt. Petro ir Pauliaus katedros parapija",
+    "adresas": "Šiauliai, Aušros tak. 3, LT-76294"
+  },
+  {
+    "kodas": "192057666",
+    "pavadinimas": "Šiaulių Švč. M. Marijos Nekaltojo Prasidėjimo parapija",
+    "adresas": "Šiauliai, Gegužių g. 57, LT-78327"
+  },
+  {
+    "kodas": "191254511",
+    "pavadinimas": "Šiaulėnų Šv. Onos parapija",
+    "adresas": "Radviliškio r. sav., Šiaulėnai"
+  },
+  {
+    "kodas": "191280972",
+    "pavadinimas": "Šilalės Šv. Pranciškaus Asyžiečio parapija",
+    "adresas": "Šilalė, M. Valančiaus g. 2, LT-75132"
+  },
+  {
+    "kodas": "191289398",
+    "pavadinimas": "Šilavoto Švč. Jėzaus Širdies parapija",
+    "adresas": "Prienų r. sav., Šilavoto sen., Šilavoto k."
+  },
+  {
+    "kodas": "191282838",
+    "pavadinimas": "Šilutės Šv. Kryžiaus parapija",
+    "adresas": "Šilutė, Katalikų Bažnyčios g. 1, LT-99169"
+  },
+  {
+    "kodas": "191251020",
+    "pavadinimas": "Šiluvos Švč. M. Marijos Gimimo parapija",
+    "adresas": "Raseinių r. sav., Šiluva, Raseinių g. 27, LT-60433"
+  },
+  {
+    "kodas": "191302949",
+    "pavadinimas": "Šilėnų Švč. M. Marijos parapija",
+    "adresas": "Vilniaus r. sav., Zujūnų sen., Šilėnų k."
+  },
+  {
+    "kodas": "191264587",
+    "pavadinimas": "Šilų Švč. Jėzaus Vardo parapija",
+    "adresas": "Panevėžio r. sav., Krekenavos sen., Šilų k."
+  },
+  {
+    "kodas": "191251173",
+    "pavadinimas": "Šimkaičių šv. vyskupo Martyno parapija",
+    "adresas": "Jurbarko r. sav., Šimkaičiai"
+  },
+  {
+    "kodas": "191259978",
+    "pavadinimas": "Šimonių Švč. Mergelės Marijos Ėmimo į dangų parapija",
+    "adresas": "Kupiškio r. sav., Šimonys"
+  },
+  {
+    "kodas": "191241784",
+    "pavadinimas": "Širvintų šv. Arkang. Mykolo parapija",
+    "adresas": "Širvintos, Vilniaus g. 108, LT-19127"
+  },
+  {
+    "kodas": "191254664",
+    "pavadinimas": "Šiupylių Šv. Aloyzo parapija",
+    "adresas": "Šiaulių r. sav., Gruzdžių sen., Šiupylių k."
+  },
+  {
+    "kodas": "191248572",
+    "pavadinimas": "Šlapaberžės Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Kėdainių r. sav., Dotnuvos sen., Šlapaberžės k."
+  },
+  {
+    "kodas": "191292184",
+    "pavadinimas": "Šlavantų Viešpaties Apreiškimo Švč. M. Marijai parapija",
+    "adresas": "Lazdijų r. sav., Šlavantų sen., Šlavantų k."
+  },
+  {
+    "kodas": "191289430",
+    "pavadinimas": "Šlienavos Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Kauno r. sav., Samylų sen., Šlienavos k."
+  },
+  {
+    "kodas": "191307729",
+    "pavadinimas": "Šumsko Šv. arkangelo Mykolo parapija",
+    "adresas": "Vilniaus r. sav., Kalvelių sen., Šumsko mstl."
+  },
+  {
+    "kodas": "191294954",
+    "pavadinimas": "Šunskų Šv. Marijos Magdalietės parapija",
+    "adresas": "Marijampolės sav., Šunskai"
+  },
+  {
+    "kodas": "191270526",
+    "pavadinimas": "Švedriškės Šv. Jono Krikštytojo parapija",
+    "adresas": "Ignalinos r. sav., Kazitiškio sen., Švedriškės k."
+  },
+  {
+    "kodas": "191292227",
+    "pavadinimas": "Šventežerio Švč. M. Marijos Gimimo parapija",
+    "adresas": "Lazdijų r. sav., Šventežerio sen., Šventežerio k."
+  },
+  {
+    "kodas": "191276212",
+    "pavadinimas": "Šventosios Švč. Mergelės Marijos Jūrų žvaigždės parapija",
+    "adresas": "Palanga, Šventosios g. 4, LT-00306"
+  },
+  {
+    "kodas": "191248615",
+    "pavadinimas": "Šventybrasčio Kristaus Atsimainymo parapija",
+    "adresas": "Kėdainių r. sav., Vilainių sen., Šventybrasčio k."
+  },
+  {
+    "kodas": "191305710",
+    "pavadinimas": "Švenčionių Visų Šventųjų parapija",
+    "adresas": "Švenčionys, Laisvės a. 5, LT-18111"
+  },
+  {
+    "kodas": "191305678",
+    "pavadinimas": "Švenčionėlių Šv. Edvardo parapija",
+    "adresas": "Švenčionių r. sav., Švenčionėliai, Bažnyčios g. 26, LT-18221"
+  },
+  {
+    "kodas": "191282980",
+    "pavadinimas": "Švėkšnos Šv. apaštalo Jokūbo parapija",
+    "adresas": "Šilutės r. sav., Švėkšna"
+  },
+  {
+    "kodas": "291248420",
+    "pavadinimas": "Šėtos Švč. Trejybės parapija",
+    "adresas": "Kėdainių r. sav., Šėta, Lakštingalų g. 2, LT-58127"
+  },
+  {
+    "kodas": "191290361",
+    "pavadinimas": "Ūdrijos Švč. Jėzaus Širdies parapija",
+    "adresas": "Alytaus r. sav., Krokialaukio sen., Ūdrijos k."
+  },
+  {
+    "kodas": "191244894",
+    "pavadinimas": "Žagarės Šv. apašt. Petro ir Povilo parapija",
+    "adresas": "Joniškio r. sav., Žagarė, Miesto a. 1, LT-84322"
+  },
+  {
+    "kodas": "291252080",
+    "pavadinimas": "Žaiginio Šv. Antano Paduviečio parapija",
+    "adresas": "Raseinių r. sav., Šiluvos sen., Žaiginio mstl."
+  },
+  {
+    "kodas": "291313430",
+    "pavadinimas": "Žaliosios Šv. Roko parapija",
+    "adresas": "Vilkaviškio r. sav., Klausučių sen., Žaliosios k., Žaliosios g. 9, LT-70460"
+  },
+  {
+    "kodas": "191252122",
+    "pavadinimas": "Žalpių Šv. Benedikto parapija",
+    "adresas": "Kelmės r. sav., Pakražančio sen., Žalpių mstl."
+  },
+  {
+    "kodas": "191287618",
+    "pavadinimas": "Žarėnų Šv. vysk. Stanislovo parapija",
+    "adresas": "Telšių r. sav., Žarėnai"
+  },
+  {
+    "kodas": "191273593",
+    "pavadinimas": "Žarėnų-Latvelių Šv. Mikalojaus parapija",
+    "adresas": "Šiaulių r. sav., Šakynos sen., Žarėnų k."
+  },
+  {
+    "kodas": "191242929",
+    "pavadinimas": "Žaslių Šv. Jurgio parapija",
+    "adresas": "Kaišiadorių r. sav., Žaslių sen., Žaslių k."
+  },
+  {
+    "kodas": "191244937",
+    "pavadinimas": "Žeimelio Šv. apašt. Petro ir Povilo parapija",
+    "adresas": "Pakruojo r. sav., Žeimelis"
+  },
+  {
+    "kodas": "191310668",
+    "pavadinimas": "Žeimių Švč. M. Marijos Gimimo parapija",
+    "adresas": "Jonavos r. sav., Žeimiai, Taikos g. 5, LT-55384"
+  },
+  {
+    "kodas": "191237896",
+    "pavadinimas": "Želvos šv. Ignaco Lojolos parapija",
+    "adresas": "Ukmergės r. sav., Želva, Dariaus ir Girėno g. 6, LT-20208"
+  },
+  {
+    "kodas": "191256334",
+    "pavadinimas": "Žemaitkiemio Šv. Kazimiero parapija",
+    "adresas": "Ukmergės r. sav., Žemaitkiemis"
+  },
+  {
+    "kodas": "191278220",
+    "pavadinimas": "Žemaičių Kalvarijos Švč. M. Marijos Apsilankymo parapija",
+    "adresas": "Plungės r. sav., Žemaičių Kalvarija, Vienuolyno g. 1, LT-90443"
+  },
+  {
+    "kodas": "191283363",
+    "pavadinimas": "Žemaičių Naumiesčio šv. arkangelo Mykolo parapija",
+    "adresas": "Šilutės r. sav., Žemaičių Naumiestis"
+  },
+  {
+    "kodas": "191274923",
+    "pavadinimas": "Žemalės Viešpaties Apreiškimo Švč. M. Marijai parapija",
+    "adresas": "Mažeikių r. sav., Šerkšnėnų sen., Žemalės k."
+  },
+  {
+    "kodas": "191297498",
+    "pavadinimas": "Žemosios Panemunės Šv. Vincento Pauliečio parapija",
+    "adresas": "Šakių r. sav., Kriūkų sen., Žemosios Panemunės mstl."
+  },
+  {
+    "kodas": "191275078",
+    "pavadinimas": "Židikų Šv. Jono Krikštytojo parapija",
+    "adresas": "Mažeikių r. sav., Židikai"
+  },
+  {
+    "kodas": "191243988",
+    "pavadinimas": "Žiežmarių šv. apašt. Jokūbo parapija",
+    "adresas": "Kaišiadorių r. sav., Žiežmariai, A. Ažubalio g. 5, LT-56239"
+  },
+  {
+    "kodas": "191237024",
+    "pavadinimas": "Žilinų Šv. Antano Paduviečio parapija",
+    "adresas": "Varėnos r. sav., Jakėnų sen., Žilinų k."
+  },
+  {
+    "kodas": "191267010",
+    "pavadinimas": "Žiobiškio šv. arkangelo Mykolo parapija",
+    "adresas": "Rokiškio r. sav., Rokiškio kaimiškoji sen., Žiobiškio k., Šilo g. 9, LT-42411"
+  },
+  {
+    "kodas": "191278373",
+    "pavadinimas": "Žlibinų Švč. M. Marijos Krikščionių Pagalbos parapija",
+    "adresas": "Plungės r. sav., Žlibinų sen., Žlibinų k."
+  },
+  {
+    "kodas": "191273636",
+    "pavadinimas": "Žukančių Nukryžiuotojo Jėzaus parapija",
+    "adresas": "Joniškio r. sav., Gaižaičių sen., Žukančių k."
+  },
+  {
+    "kodas": "191281693",
+    "pavadinimas": "Žvingių Šv. Kryžiaus Išaukštinimo parapija",
+    "adresas": "Šilalės r. sav., Pajūrio sen., Žvingių mstl."
+  },
+  {
+    "kodas": "191297530",
+    "pavadinimas": "Žvirgždaičių Švč. Jėzaus Širdies parapija",
+    "adresas": "Šakių r. sav., Sintautų sen., Žvirgždaičių mstl."
+  },
+  {
+    "kodas": "191285371",
+    "pavadinimas": "Žygaičių Šv. Apaštalų Petro ir Pauliaus parapija",
+    "adresas": "Tauragės r. sav., Žygaičiai"
+  }
+]
