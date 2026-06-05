@@ -32,6 +32,9 @@ function toPublicMemorial(
     birthDate: owned.birthDate,
     deathDate: owned.deathDate,
     biography: owned.biography,
+    isPremium: owned.isPremium,
+    familyTree: owned.familyTree,
+    anniversaryRemindersEnabled: owned.anniversaryRemindersEnabled,
     portraitUrl: owned.portraitUrl,
     farewellMessage: owned.farewellMessage ?? null,
     mediaGallery: owned.mediaGallery ?? [],
@@ -224,7 +227,14 @@ export function MemorialPageClient({ slug }: Props) {
           </button>
         </section>
       )}
-      <MemorialProfile memorial={memorial} slug={slug} geo={geo ?? memorial.geoLocation} canEdit={canEdit} />
+      <MemorialProfile
+        memorial={memorial}
+        slug={slug}
+        geo={geo ?? memorial.geoLocation}
+        canEdit={canEdit}
+        canClaim={canClaim}
+        onGeoUpdated={(lat, lng) => setGeo({ lat, lng })}
+      />
     </>
   );
 }

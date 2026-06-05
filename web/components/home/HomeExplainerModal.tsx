@@ -49,8 +49,8 @@ export function HomeExplainerModal() {
               Kaip AETERNA sujungia kapą ir telefoną
             </h2>
             <p className="ae-modal__lead">
-              Ant paminklo — memorialinė QR plokštelė. Nuskenavus — atsidaro skaitmeninė atmintis su nuotraukomis,
-              žvakute ir parama parapijai.
+              Skaitmeninė atmintis su nuotraukomis ir vieta žemėlapyje. Nuskenuokite QR arba atidarykite nuorodą —
+              uždekite žvakutę ir paremkite parapiją nuotoliniu būdu.
             </p>
             <div className="ae-modal__video">
               <video

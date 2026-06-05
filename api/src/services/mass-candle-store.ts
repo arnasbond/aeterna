@@ -21,7 +21,7 @@ import {
   getPriestParishIdFromSession,
   getPriestParishIdSync,
 } from "./priest-session-store.js";
-import { CANDLE_SERVICE_FEE_CENTS, processCandlePayment } from "./stripe-connect-mock.js";
+import { CANDLE_SERVICE_FEE_CENTS, processCandlePayment } from "./stripe.js";
 
 const MASSES_KEY = "aeterna-masses";
 const CANDLES_KEY = "aeterna-candles";
@@ -143,7 +143,9 @@ export async function bookMass(input: MassBookingInput): Promise<MassSchedule> {
   slot.donationAmountCents = amount;
   massesCache = masses;
   await saveMasses();
-  await recordDonation(slot.parishId, amount, "mass", slot.id, slot.id);
+  // Platformos aptarnavimo mokestis (+0.50 €) atskiriamas nuo parapijos gaunamos sumos.
+  const serviceFeeCents = CANDLE_SERVICE_FEE_CENTS;
+  await recordDonation(slot.parishId, amount + serviceFeeCents, "mass", slot.id, slot.id);
   return slot;
 }
 
@@ -215,12 +217,11 @@ export async function lightCandle(input: LightCandleInput): Promise<LightCandleR
   candles.push(candle);
   candlesCache = candles;
   await saveCandles();
-  await recordDonation(memorial.parishId, donationCents, "candle", candle.id, memorial.id);
   await recordDonation(
     memorial.parishId,
-    CANDLE_SERVICE_FEE_CENTS,
+    payment.totalChargedCents,
     "candle",
-    `${candle.id}-fee`,
+    candle.id,
     memorial.id
   );
   return {

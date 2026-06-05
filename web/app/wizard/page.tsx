@@ -13,7 +13,9 @@ import {
   uploadMemorialFile,
   type Parish,
 } from "@/lib/api";
-import { formatPrice, getPlateTier, MEMORIAL_PACKAGE_CENTS, packageTotalCents, type PlateTierId } from "@/lib/qr-plates";
+import { MemorialQrHub } from "@/components/memorial/MemorialQrHub";
+import { formatPrice } from "@/lib/qr-plates";
+import { downloadQrPdf } from "@/lib/qr-pdf";
 import { clearWizardDraft, loadWizardDraft, saveWizardDraft } from "@/lib/wizard-draft";
 
 const WIZARD_STEPS = [
@@ -26,9 +28,7 @@ const WIZARD_STEPS = [
 function WizardInner() {
   const params = useSearchParams();
   const preParish = params.get("parish") ?? "";
-  const prePlate = params.get("plate") as PlateTierId | null;
   const freshWizard = params.get("naujas") === "1";
-  const plateTier = getPlateTier(prePlate);
   const doneOrder = params.get("order");
 
   const [step, setStep] = useState(1);
@@ -64,7 +64,13 @@ function WizardInner() {
   const [videoUrl, setVideoUrl] = useState("");
   const [mediaBusy, setMediaBusy] = useState(false);
   const [parishId, setParishId] = useState(preParish);
+  const [plateAddOn, setPlateAddOn] = useState(false);
+  const BASE_MEMBERSHIP_CENTS = 3900; // 39 €
+  const PLATE_ADDON_CENTS = 2500; // +25 €
+  const totalCents = BASE_MEMBERSHIP_CENTS + (plateAddOn ? PLATE_ADDON_CENTS : 0);
+  const MAX_GALLERY_PHOTOS = 10;
   const [loggedIn, setLoggedIn] = useState(false);
+  const [pdfBusy, setPdfBusy] = useState(false);
 
   useEffect(() => {
     fetchParishes().then(setParishes).catch(() => {});
@@ -106,6 +112,8 @@ function WizardInner() {
     setVideoUrl("");
     setMediaBusy(false);
     setBusy(false);
+    setPlateAddOn(false);
+    setPdfBusy(false);
   }, [freshWizard]);
 
   useEffect(() => {
@@ -164,11 +172,17 @@ function WizardInner() {
 
   async function handleGalleryFiles(files: FileList | null) {
     if (!files?.length) return;
+    const remaining = Math.max(0, MAX_GALLERY_PHOTOS - galleryUrls.length);
+    const filesArr = Array.from(files).slice(0, remaining);
+    if (filesArr.length === 0) {
+      setErr("Pagrindinė narystė leidžia iki 10 nuotraukų. Premium suteikia neribotą galeriją.");
+      return;
+    }
     setMediaBusy(true);
     setErr(null);
     try {
       const uploaded: string[] = [];
-      for (const file of Array.from(files)) {
+      for (const file of filesArr) {
         uploaded.push(await uploadMemorialFile(file));
       }
       setGalleryUrls((prev) => [...prev, ...uploaded]);
@@ -213,7 +227,7 @@ function WizardInner() {
         : await createMemorial(memorialPayload());
       const checkoutMsg = skipCheckout
         ? "Profilis išsaugotas (be apmokėjimo simuliacijos)."
-        : (await checkout(parishId, packageTotalCents(plateTier?.id ?? null))).message;
+        : (await checkout(parishId, totalCents, memorial.slug)).message;
       clearWizardDraft();
       setResult({
         slug: memorial.slug,
@@ -242,12 +256,6 @@ function WizardInner() {
       <p className="ae-wizard-lead">
         Paspauskite žingsnio juostą, jei norite grįžti ir pataisyti įvestus duomenis.
       </p>
-      {plateTier && (
-        <p className="ae-wizard-plate-hint">
-          QR plokštelė: <strong>{plateTier.name}</strong> ({formatPrice(plateTier.priceCents)}) ·{" "}
-          <Link href="/qr-ploksteles">Keisti variantą</Link>
-        </p>
-      )}
       <div className="ae-wizard">
         <nav className="ae-wizard-steps" aria-label="Kūrimo žingsniai">
           {WIZARD_STEPS.map(({ n, label }) => {
@@ -362,14 +370,14 @@ function WizardInner() {
             </div>
 
             <div className="ae-field ae-wizard-upload">
-              <label>Vaizdo įrašas (nebūtina)</label>
+              <label>Vaizdo įrašas (Premium)</label>
               <label className="ae-wizard-upload__btn">
                 📁 Įkelti vaizdo įrašą iš telefono galerijos
                 <input
                   type="file"
                   accept="video/mp4,video/webm,video/quicktime,video/*,.mov"
                   hidden
-                  disabled={mediaBusy}
+                  disabled
                   onChange={(e) => {
                     void handleVideoFile(e.target.files?.[0] ?? null);
                     e.target.value = "";
@@ -377,6 +385,11 @@ function WizardInner() {
                 />
               </label>
               {videoUrl && <p className="ae-wizard-upload__ok">✓ Vaizdo įrašas įkeltas</p>}
+              {!videoUrl && (
+                <p className="ae-hint" style={{ marginTop: "0.5rem" }}>
+                  Premium narystė suteikia galimybę įkelti vaizdo įrašą.
+                </p>
+              )}
             </div>
 
             {mediaBusy && <p className="ae-hint">Įkeliama…</p>}
@@ -430,23 +443,22 @@ function WizardInner() {
             <h2 style={{ fontSize: "1.2rem" }}>4. Apmokėjimas</h2>
             <div className="ae-card" style={{ marginBottom: "1rem" }}>
               <p>
-                <strong>Skaitmeninis memorialas:</strong> {formatPrice(MEMORIAL_PACKAGE_CENTS)}
+                <strong>Vienkartinis skaitmeninis narystės mokestis:</strong> {formatPrice(BASE_MEMBERSHIP_CENTS)}
               </p>
-              {plateTier ? (
-                <p>
-                  <strong>QR plokštelė ({plateTier.name}):</strong> {formatPrice(plateTier.priceCents)}
-                </p>
-              ) : (
-                <p style={{ fontSize: "0.85rem", color: "var(--ae-muted)" }}>
-                  Be fizinės plokštelės.{" "}
-                  <Link href="/qr-ploksteles">Pasirinkti plokštelę →</Link>
-                </p>
-              )}
-              <p style={{ marginTop: "0.75rem", fontSize: "1.1rem" }}>
-                <strong>Iš viso:</strong> {formatPrice(packageTotalCents(plateTier?.id ?? null))}
+
+              <label style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start", marginTop: "0.75rem" }}>
+                <input type="checkbox" checked={plateAddOn} onChange={(e) => setPlateAddOn(e.target.checked)} />
+                <span style={{ fontSize: "0.95rem", lineHeight: 1.55 }}>
+                  Pageidauju užsakyti gamyklinę nerūdijančio plieno plokštelę į paštomatą (+25 €)
+                </span>
+              </label>
+
+              <p style={{ marginTop: "1rem", fontSize: "1.1rem" }}>
+                <strong>Iš viso:</strong> {formatPrice(totalCents)}
               </p>
+
               <p style={{ fontSize: "0.85rem", color: "var(--ae-muted)" }}>
-                20% parapijai · likutis platformai ir saugojimui
+                Skaitmeninio memorialo išsaugojimas platformoje ir QR generation.
               </p>
             </div>
             <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(3)}>
@@ -460,7 +472,7 @@ function WizardInner() {
                 disabled={busy}
                 onClick={() => finish(true)}
               >
-                {busy ? "Saugoma…" : "Išsaugoti profilį (be apmokėjimo)"}
+                {busy ? "Saugoma…" : "Išsaugoti profilį (demo, be apmokėjimo)"}
               </button>
             )}
             <button
@@ -470,25 +482,53 @@ function WizardInner() {
               disabled={busy}
               onClick={() => finish(false)}
             >
-              {busy ? "Kuriama…" : "Apmokėti ir sukurti (MVP)"}
+              {busy ? "Kuriama…" : `Apmokėti ${formatPrice(totalCents)} ir sukurti`}
             </button>
           </>
         )}
 
         {step === 5 && result && (
           <>
-            <h2 style={{ fontSize: "1.2rem" }}>Paruošta</h2>
-            {result.qrCodeUrl && (
-              <img
-                src={result.qrCodeUrl}
-                alt="QR kodas"
-                width={200}
-                height={200}
-                style={{ display: "block", margin: "1rem auto" }}
-              />
-            )}
-            <Link href={`/m/${result.slug}`} className="ae-btn ae-btn--primary" style={{ width: "100%" }}>
-              Atidaryti profilį
+            <h2 style={{ fontSize: "1.2rem" }}>Paruošta — atmintis ir QR</h2>
+            <p className="ae-hint" style={{ marginBottom: "0.75rem" }}>
+              Išsaugota visa informacija. Viešame puslapyje lankytojai mato tekstą ir nuotraukas, po jų — QR (paspaudus
+              atsidaro pilnas meniu).
+            </p>
+            <MemorialQrHub
+              slug={result.slug}
+              fullName={fullName}
+              qrCodeUrl={result.qrCodeUrl}
+              profileUrl={result.profileUrl}
+              showPlateLink={plateAddOn}
+            />
+
+            <button
+              type="button"
+              className="ae-btn ae-btn--outline ae-btn--wide"
+              style={{ marginTop: "0.75rem" }}
+              disabled={pdfBusy}
+              onClick={() =>
+                void (async () => {
+                  try {
+                    setPdfBusy(true);
+                    await downloadQrPdf({
+                      slug: result.slug,
+                      fullName,
+                      qrCodeUrl: result.qrCodeUrl,
+                      profileUrl: result.profileUrl,
+                    });
+                  } catch (e) {
+                    setErr(e instanceof Error ? e.message : "Nepavyko atsisiųsti QR PDF");
+                  } finally {
+                    setPdfBusy(false);
+                  }
+                })()
+              }
+            >
+              {pdfBusy ? "Generuojama PDF…" : "Atsisiųsti QR PDF"}
+            </button>
+            <Link href={`/m/${result.slug}`} className="ae-btn ae-btn--primary" style={{ width: "100%", marginTop: "1rem" }}>
+              Peržiūrėti suskleistą profilį
             </Link>
             <p style={{ fontSize: "0.8rem", color: "var(--ae-muted)", marginTop: "1rem" }}>
               {result.checkout?.message}

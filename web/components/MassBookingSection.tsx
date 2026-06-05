@@ -9,6 +9,8 @@ import {
 import { RequestMassSlotsButton } from "@/components/mass/RequestMassSlotsButton";
 import { bookMass, fetchAvailableMasses, fetchParishes, type MassSlot, type Parish } from "@/lib/api";
 
+const SERVICE_FEE_EUR = 0.5;
+
 function formatSlot(dt: string) {
   const d = new Date(dt);
   return d.toLocaleString("lt-LT", {
@@ -69,6 +71,9 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
   const amountCents = donationAmountCents(amountEur, customMode, customInput);
   const amountLabel =
     amountCents != null ? `${(amountCents / 100).toFixed(2).replace(/\.00$/, "")} €` : null;
+  const totalCents = amountCents != null ? amountCents + SERVICE_FEE_EUR * 100 : null;
+  const totalLabel =
+    totalCents != null ? `${(totalCents / 100).toFixed(2).replace(/\.00$/, "")} €` : null;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -184,7 +189,10 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
             onCustomInput={setCustomInput}
             label="Auka už Šv. Mišias (€)"
           />
-          <p className="ch-fee-note">Mokėjimas (mock) — visa suma skiriama parapijos sąskaitai.</p>
+          <p className="ch-fee-note">
+            Mokėjimas (mock): {SERVICE_FEE_EUR.toFixed(2).replace(/\\.00$/, "")} € aptarnavimo mokestis atskiriamas
+            nuo parapijai skiriamos sumos.
+          </p>
 
           {err && <p className="ae-error">{err}</p>}
           {msg && <p className="ae-ok">{msg}</p>}
@@ -196,7 +204,7 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
             {busy
               ? "Užsakoma…"
               : amountLabel
-                ? `Užsakyti Mišias ir paaukoti (${amountLabel})`
+                ? `Užsakyti Mišias ir paaukoti (${amountLabel}) — viso ${totalLabel}`
                 : "Pasirinkite sumą"}
           </button>
         </form>

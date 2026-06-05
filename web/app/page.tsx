@@ -33,23 +33,23 @@ export default function HomePage() {
                   />
                 </svg>
                 <span className="ae-donate-ring__label" style={{ color: "#fff" }}>
-                  20%
+                  100%
                 </span>
                 <span className="ae-donate-ring__sub" style={{ color: "rgba(255,255,255,0.85)" }}>
-                  parapijai
+                  aukos parapijai
                 </span>
               </div>
             </div>
             <div>
               <h2 className="ae-section-title" style={{ textAlign: "left" }}>
-                Kiekvienas užsakymas remia bažnyčią
+                Virtuali žvakutė ir mišios remia parapiją
               </h2>
               <p style={{ color: "rgba(255,255,255,0.92)", lineHeight: 1.75, marginBottom: "1.25rem" }}>
-                Pasirinkite parapiją žemėlapyje. Dalis sumos automatiškai skiriama parapijos fondams —
-                socialinei pagalbai ir bendruomenei.
+                Skaitmeninė narystė (39 €) finansuoja platformą. O kai uždegate žvakutę ar užsakote Šv. Mišias —
+                visa auka keliauja į pasirinktą parapiją (platformos aptarnavimas +0,50 €).
               </p>
               <ul className="ae-home-parish__list" style={{ color: "rgba(255,255,255,0.9)" }}>
-                <li>Skaidrus paskirstymas kiekvienoje sąskaitoje</li>
+                <li>Skaidrus aukų ataskaitavimas parapijų skydelyje</li>
                 <li>Memorialas, mišios ir žvakutė vienoje platformoje</li>
                 <li>Parapijų žemėlapis ir profiliai</li>
               </ul>

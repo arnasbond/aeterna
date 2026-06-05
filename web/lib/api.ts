@@ -71,6 +71,15 @@ export type MapData = {
   parishes: ParishMapPoint[];
 };
 
+export type FamilyTreeNode = {
+  id: string;
+  name: string;
+  relation: string;
+  birthDate?: string | null;
+  deathDate?: string | null;
+  note?: string | null;
+};
+
 export type MemorialPublic = {
   id: string;
   slug: string;
@@ -79,6 +88,9 @@ export type MemorialPublic = {
   birthDate: string | null;
   deathDate: string | null;
   biography: string;
+  isPremium: boolean;
+  familyTree?: FamilyTreeNode[];
+  anniversaryRemindersEnabled?: boolean;
   portraitUrl?: string | null;
   farewellMessage?: string | null;
   mediaGallery: string[];
@@ -309,11 +321,11 @@ export async function fixMemorialLocation(slug: string, lat: number, lng: number
   return parse<{ geoLocation: { lat: number; lng: number } }>(r);
 }
 
-export async function checkout(parishId: string, amountCents = 14900) {
+export async function checkout(parishId: string, amountCents = 3900, memorialSlug?: string) {
   const r = await fetch(`${base()}/api/v1/checkout`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ parishId, amountCents }),
+    body: JSON.stringify({ parishId, amountCents, memorialSlug }),
   });
   return parse<{
     sessionId: string;
@@ -435,6 +447,9 @@ export type OwnedMemorialDetail = {
   birthDate: string | null;
   deathDate: string | null;
   biography: string;
+  isPremium: boolean;
+  familyTree?: FamilyTreeNode[];
+  anniversaryRemindersEnabled?: boolean;
   portraitUrl?: string | null;
   farewellMessage?: string | null;
   mediaGallery: string[];
@@ -455,6 +470,9 @@ export type UpdateMemorialPayload = {
   portraitUrl?: string | null;
   mediaGallery?: string[];
   privacyStatus?: "public" | "private";
+  parishId?: string;
+  familyTree?: FamilyTreeNode[];
+  anniversaryRemindersEnabled?: boolean;
 };
 
 export function getUserToken(): string | null {
@@ -539,6 +557,15 @@ export async function updateUserMemorial(slug: string, payload: UpdateMemorialPa
     body: JSON.stringify(payload),
   });
   return parse<OwnedMemorialDetail>(r);
+}
+
+export async function upgradeMemorialPremium(slug: string, plan: "monthly" | "yearly") {
+  const r = await fetch(`${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}/premium`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...userHeaders() },
+    body: JSON.stringify({ plan }),
+  });
+  return parse<{ isPremium: boolean; plan: string; amountCents: number; message: string }>(r);
 }
 
 export async function createUserMemorial(payload: CreateMemorialPayload) {

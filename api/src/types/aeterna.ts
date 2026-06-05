@@ -15,6 +15,10 @@ export type Parish = {
   source?: string;
   sourceUrl?: string;
   updatedAt?: string;
+  /** Registrų centro JAR juridinio asmens kodas */
+  jarCode?: string;
+  /** Registracijos adresas iš RC */
+  address?: string;
 };
 
 export type DeaneryFeatureProperties = {
@@ -42,6 +46,15 @@ export type ParishMapPoint = Pick<
 
 export type GeoLocation = { lat: number; lng: number };
 
+export type FamilyTreeNode = {
+  id: string;
+  name: string;
+  relation: string;
+  birthDate?: string | null;
+  deathDate?: string | null;
+  note?: string | null;
+};
+
 export type AeternaMemorial = {
   id: string;
   slug: string;
@@ -51,6 +64,12 @@ export type AeternaMemorial = {
   birthDate: string | null;
   deathDate: string | null;
   biography: string;
+  /** Premium narystės funkcijų išjungimas/įjungimas */
+  isPremium: boolean;
+  /** Premium — giminės medžio įrašai */
+  familyTree?: FamilyTreeNode[];
+  /** Premium — el. pašto priminimai prieš mirties metines */
+  anniversaryRemindersEnabled?: boolean;
   /** Pagrindinė portreto nuotrauka (hero) */
   portraitUrl?: string | null;
   /** Palinkėjimas / žinutė palikuonims */
@@ -79,6 +98,8 @@ export type CreateMemorialInput = {
   birthDate?: string;
   deathDate?: string;
   biography?: string;
+  /** Premium feature flag (default: false) */
+  isPremium?: boolean;
   portraitUrl?: string;
   mediaGallery?: string[];
   videoUrl?: string;

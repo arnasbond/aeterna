@@ -28,3 +28,39 @@ export async function sendPriestOtpEmail(to: string, code: string, parishTitle: 
   }
   return true;
 }
+
+export async function sendAnniversaryReminderOptInEmail(
+  to: string,
+  memorialName: string,
+  deathDate: string | null
+): Promise<boolean> {
+  if (!config.resendApiKey) return false;
+
+  const dateLabel = deathDate
+    ? new Date(deathDate).toLocaleDateString("lt-LT", { year: "numeric", month: "long", day: "numeric" })
+    : "metinės";
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${config.resendApiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: config.emailFrom,
+      to: [to],
+      subject: `AETERNA — priminimai apie ${memorialName} metines`,
+      html: `<p>Sveiki,</p>
+<p>Premium narystėje įjungėte automatinius priminimus apie <strong>${memorialName}</strong> mirties metines (${dateLabel}).</p>
+<p>Prieš metines gausite el. laišką su nuoroda į memorialinį puslapį.</p>
+<p>Jei nebe norite priminimų — išjunkite juos atminties redagavimo skiltyje.</p>`,
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    console.error(`[email] anniversary opt-in failed (${res.status}): ${text}`);
+    return false;
+  }
+  return true;
+}

@@ -1,5 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import {
+  activateMemorialPremium,
   claimMemorialForUser,
   createMemorial,
   getMemorialBySlug,
@@ -7,6 +8,8 @@ import {
   setMemorialLocation,
   updateMemorialByOwner,
 } from "../services/aeterna-store.js";
+import { processPremiumSubscription } from "../services/stripe.js";
+import { sendAnniversaryReminderOptInEmail } from "../services/email-service.js";
 import {
   listGuestbookForOwner,
   setGuestbookEntryStatus,
@@ -138,19 +141,65 @@ export async function userRoutes(app: FastifyInstance) {
     return { success: true, data: row };
   });
 
+  app.post<{
+    Params: { slug: string };
+    Body: { plan?: "monthly" | "yearly" };
+  }>("/api/v1/user/memorials/:slug/premium", async (req, reply) => {
+    const userId = await requireUser(req, reply);
+    if (!userId) return;
+    const plan = req.body?.plan === "yearly" ? "yearly" : "monthly";
+    try {
+      const payment = processPremiumSubscription({ memorialSlug: req.params.slug, plan });
+      const row = await activateMemorialPremium(req.params.slug, userId, plan);
+      return {
+        success: true,
+        data: {
+          isPremium: row.isPremium,
+          plan,
+          amountCents: payment.amountCents,
+          message: payment.message,
+        },
+      };
+    } catch (e) {
+      return reply.status(400).send({
+        success: false,
+        error: { message: e instanceof Error ? e.message : "Premium aktyvavimas nepavyko" },
+      });
+    }
+  });
+
   app.patch<{ Params: { slug: string }; Body: UpdateMemorialInput }>(
     "/api/v1/user/memorials/:slug",
     async (req, reply) => {
       const userId = await requireUser(req, reply);
       if (!userId) return;
-      const row = await updateMemorialByOwner(req.params.slug, userId, req.body ?? {});
-      if (!row) {
-        return reply.status(404).send({
+      try {
+        const before = await getMemorialBySlug(req.params.slug);
+        const body = req.body ?? {};
+        const row = await updateMemorialByOwner(req.params.slug, userId, body);
+        if (!row) {
+          return reply.status(404).send({
+            success: false,
+            error: { message: "Profilis nerastas arba priklauso kitam vartotojui" },
+          });
+        }
+        if (
+          body.anniversaryRemindersEnabled &&
+          !before?.anniversaryRemindersEnabled &&
+          row.isPremium
+        ) {
+          const user = await getUserById(userId);
+          if (user?.email) {
+            void sendAnniversaryReminderOptInEmail(user.email, row.fullName, row.deathDate);
+          }
+        }
+        return { success: true, data: row };
+      } catch (e) {
+        return reply.status(400).send({
           success: false,
-          error: { message: "Profilis nerastas arba priklauso kitam vartotojui" },
+          error: { message: e instanceof Error ? e.message : "Nepavyko išsaugoti" },
         });
       }
-      return { success: true, data: row };
     }
   );
 

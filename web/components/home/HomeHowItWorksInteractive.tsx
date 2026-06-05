@@ -7,7 +7,7 @@ const STEPS = [
   {
     id: 1,
     title: "Nuskenuokite QR kodą",
-    text: "Kapinėse pakanka telefono — AETERNA plokštelė ant paminklo atveria memorialą.",
+    text: "Kapinėse ar namuose — nuskenuokite QR arba atidarykite nuorodą telefone.",
     screen: "scan" as const,
   },
   {

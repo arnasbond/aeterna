@@ -14,7 +14,7 @@ export type PlateTier = {
 };
 
 /** Skaitmeninio memorialo paketas (be plokštelės) */
-export const MEMORIAL_PACKAGE_CENTS = 14900;
+export const MEMORIAL_PACKAGE_CENTS = 3900; // 39 €
 
 export const PLATE_TIERS: PlateTier[] = [
   {

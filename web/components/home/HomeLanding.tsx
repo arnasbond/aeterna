@@ -11,12 +11,12 @@ const siteBase = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https:
 const exampleQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&color=4a2f7a&bgcolor=ffffff&data=${encodeURIComponent(`${siteBase}${EXAMPLE}`)}`;
 
 const BENEFITS = [
-  { icon: "✦", title: "Skaitmeninė atmintis", text: "Nuotraukos, vaizdo įrašai ir gyvenimo istorija" },
-  { icon: "📍", title: "Kapo vieta žemėlapyje", text: "Maršrutas kapinėse ir tikslus adresas" },
-  { icon: "⬡", title: "QR plokštelė ant paminklo", text: "Atspari orui — paruošta montavimui" },
-  { icon: "📱", title: "Nuskanavus telefonu", text: "Atsidaro visa memorialinė erdvė" },
-  { icon: "🕯️", title: "Virtuali žvakutė", text: "Pagerbimas ir auka parapijai" },
-  { icon: "⛪", title: "Parama parapijai", text: "Dalį sumos gauna Jūsų pasirinkta bendruomenė" },
+  { icon: "✦", title: "Skaitmeninė narystė", text: "Memorialinis puslapis nuo 39 € — be privalomų plokštelių" },
+  { icon: "📍", title: "Pasaulinis žemėlapis", text: "GPS arba rankinė paieška — bet kurioje šalyje" },
+  { icon: "📄", title: "QR kodas ir PDF", text: "Atsisiųskite ir spausdinkite patys arba užsisakykite plokštelę (+25 €)" },
+  { icon: "📱", title: "Nuskanavus telefonu", text: "Atsidaro visa memorialinė erdvė bet kur" },
+  { icon: "🕯️", title: "Virtuali žvakutė", text: "Auka eina parapijai; platformos aptarnavimas +0,50 €" },
+  { icon: "⭐", title: "Premium", text: "Neribota galerija, video, giminės medis ir metinių priminimai" },
 ] as const;
 
 export function HomeLanding() {
@@ -34,17 +34,17 @@ export function HomeLanding() {
           <div className="vk-hero__card vk-hero__card--immersive">
             <span className="vk-badge">AETERNA — skaitmeninė atmintis</span>
             <h1>
-              Virtuali atmintis ir <span>QR kodas ant kapo</span>
+              Pasaulinis lietuvių atminimo tinklas. Išsaugokite savo šeimos istoriją skaitmeniniame metraštyje iš bet
+              kurio pasaulio krašto.
             </h1>
             <p className="vk-hero__lead">
-              Sukurkite vietą, kur artimųjų istorijos, nuotraukos ir prisiminimai lieka pasiekiami visiems
-              šeimos nariams. Sujunkite paminklą su skaitmenine erdve — vienu QR nuskaitymu kapinėse.
+              Sukurkite amžiną skaitmeninį memorialą giminaičiui, pažymėkite kapavietę pasauliniame žemėlapyje, dalinkitės su
+              artimaisiais ir remkite gimtąją parapiją nuotoliniu būdu. Jokių privalomų plokštelių ar siuntimo mokesčių.
             </p>
             <MemorialSearchBox />
             <ul className="vk-hero__list">
               <li>Memorialinis puslapis — nuotraukos, istorijos ir vieta žemėlapyje</li>
-              <li>QR plokštelė ant paminklo — paruošta montavimui</li>
-              <li>Nuskanavus — telefone atveriama visa atmintis ir žvakutė</li>
+              <li>Nuskanavus — telefone atveriama visa skaitmeninė atmintis ir žvakutė</li>
             </ul>
             <div className="vk-hero__actions">
               <Link href="/wizard" className="vk-btn vk-btn--primary vk-btn--lg">
@@ -125,7 +125,7 @@ export function HomeLanding() {
           <span className="vk-badge vk-badge--center">Privalumai</span>
           <h2 className="vk-title vk-title--center">Kodėl verta rinktis AETERNA?</h2>
           <p className="vk-subtitle vk-subtitle--center">
-            Viskas, ko reikia skaitmeninei atminčiai ir QR kodui kapui:
+            Skaitmeninė narystė pirmiausia — fizinė plokštelė tik jei jos norite:
           </p>
           <div className="vk-benefits vk-benefits--icons">
             {BENEFITS.map((b) => (
@@ -144,31 +144,28 @@ export function HomeLanding() {
       <section className="vk-section vk-section--soft">
         <div className="vk-container">
           <span className="vk-badge vk-badge--center">Žingsniai</span>
-          <h2 className="vk-title vk-title--center">Kaip sukurti atmintį ir gauti QR kodą?</h2>
+          <h2 className="vk-title vk-title--center">Kaip sukurti skaitmeninę atmintį?</h2>
           <p className="vk-subtitle vk-subtitle--center">
-            Keturi paprasti žingsniai nuo registracijos iki plokštelės ant paminklo:
+            Keturi žingsniai — nuo registracijos iki QR kodo ir pasidalinimo su artimaisiais:
           </p>
           <ol className="vk-steps-4">
             <li>
-              <h3>1. Prisiregistruokite nemokamai</h3>
+              <h3>1. Prisijunkite</h3>
               <p>
-                <Link href="/prisijungti">El. paštas ir slaptažodis</Link> — apsaugota paskyra su redagavimu bet
-                kada.
+                <Link href="/prisijungti">El. paštas ir slaptažodis</Link> — saugi paskyra su redagavimu bet kada.
               </p>
             </li>
             <li>
               <h3>2. Sukurkite memorialą</h3>
-              <p>Vardas, datos, nuotraukos, video ir palinkėjimas — per kūrimo vedlys.</p>
+              <p>Vardas, datos, nuotraukos ir vieta žemėlapyje — per kūrimo vedlį (39 € narystė).</p>
             </li>
             <li>
-              <h3>3. Užsisakykite QR plokštelę</h3>
-              <p>
-                <Link href="/qr-ploksteles">Pasirinkite variantą</Link> — paruošta montavimui ant paminklo.
-              </p>
+              <h3>3. Atsisiųskite QR PDF</h3>
+              <p>Spausdinkite patys arba pasirinkite neprivalomą plokštelę į paštomatą (+25 €).</p>
             </li>
             <li>
-              <h3>4. Priklijuokite ant paminklo</h3>
-              <p>Lankytojai skenuoja — prisiminimai visada pasiekiami telefone.</p>
+              <h3>4. Pasidalinkite nuoroda</h3>
+              <p>Lankytojai skenuoja arba atidaro nuorodą — prisiminimai visada pasiekiami telefone.</p>
             </li>
           </ol>
           <p className="vk-section__cta">

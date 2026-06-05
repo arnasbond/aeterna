@@ -21,6 +21,8 @@ export type UserLoginInput = {
   password: string;
 };
 
+import type { FamilyTreeNode } from "./aeterna.js";
+
 export type UpdateMemorialInput = {
   fullName?: string;
   birthDate?: string | null;
@@ -31,4 +33,7 @@ export type UpdateMemorialInput = {
   portraitUrl?: string | null;
   mediaGallery?: string[];
   privacyStatus?: "public" | "private";
+  parishId?: string;
+  familyTree?: FamilyTreeNode[];
+  anniversaryRemindersEnabled?: boolean;
 };

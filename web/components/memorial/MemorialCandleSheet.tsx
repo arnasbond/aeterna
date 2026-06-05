@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { lightCandle } from "@/lib/api";
 
@@ -11,12 +12,13 @@ const MAX_CUSTOM = 5000;
 type Props = {
   slug: string;
   parishTitle: string;
+  isPremium?: boolean;
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
 };
 
-export function MemorialCandleSheet({ slug, parishTitle, open, onClose, onSuccess }: Props) {
+export function MemorialCandleSheet({ slug, parishTitle, isPremium, open, onClose, onSuccess }: Props) {
   const [donorName, setDonorName] = useState("");
   const [amount, setAmount] = useState<number>(10);
   const [customMode, setCustomMode] = useState(false);
@@ -175,6 +177,22 @@ export function MemorialCandleSheet({ slug, parishTitle, open, onClose, onSucces
             Atšaukti
           </button>
         </form>
+
+        {!isPremium && (
+          <div style={{ marginTop: "1rem" }}>
+            <p className="ch-sheet__lead" style={{ margin: "0 0 0.5rem", fontSize: "0.95rem" }}>
+              Premium narystės privalumai (atrakinti)
+            </p>
+            <ul style={{ margin: "0 0 0.75rem", paddingLeft: "1.1rem", color: "var(--ch-muted)", lineHeight: 1.65 }}>
+              <li>Neribota media galerija (daugiau nei 10 nuotraukų + kontroliuojamas video)</li>
+              <li>Giminės medžio skiltis</li>
+              <li>Automatiniai priminimai apie metines</li>
+            </ul>
+            <Link href={`/paskyra/atmintis/${slug}#premium`} className="ch-btn ch-btn--outline ch-btn--block">
+              Atnaujinti į Premium
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

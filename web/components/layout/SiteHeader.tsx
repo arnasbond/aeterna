@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 const NAV = [
   { href: "/paieska", label: "Ieškoti atminties", highlight: true },
   { href: "/#apie", label: "Apie iniciatyvą" },
-  { href: "/qr-ploksteles", label: "Atminimo plokštelės", highlight: true },
+  { href: "/wizard", label: "Narystė ir galimybės", highlight: true },
   { href: "/parishes", label: "Parapijos" },
   { href: "/#misios", label: "Šv. Mišių užsakymas" },
   { href: "/#zvakute", label: "Uždegti žvakutę" },

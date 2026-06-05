@@ -30,8 +30,8 @@ export function QrPlateCatalog({ preselectedParish }: Props) {
   return (
     <>
       <p className="ae-qr-catalog-lead">
-        Pasirinkite plokštelės medžiagą ir kokybę. Kartu su skaitmeniniu memorialu (149 €) — vienas
-        užsakymas, unikalus QR kodas, paruoštas montavimui ant paminklo.
+        Pasirinkite plokštelės medžiagą ir kokybę. Kartu su skaitmenine naryste ({formatPrice(MEMORIAL_PACKAGE_CENTS)}) —
+        neprivalomas priedas, paruoštas montavimui ant paminklo.
       </p>
 
       <div className="ae-qr-catalog-grid">
@@ -102,7 +102,9 @@ export function QrPlateCatalog({ preselectedParish }: Props) {
             <p className="ae-qr-catalog-summary__total">
               Iš viso: <strong>{formatPrice(total)}</strong>
             </p>
-            <p className="ae-hint">20% sumos skiriama pasirinktai parapijai</p>
+            <p className="ae-hint">
+              Narystės mokestis — AETERNA platformai. Žvakutės ir mišios remia parapiją (+0,50 € aptarnavimas).
+            </p>
             <Link href={wizardHref} className="ae-btn ae-btn--gold ae-btn--wide">
               Tęsti — sukurti atmintį ir užsakyti
             </Link>
@@ -111,7 +113,7 @@ export function QrPlateCatalog({ preselectedParish }: Props) {
           <p className="ae-hint">Pasirinkite vieną iš trijų plokštelių variantų aukščiau.</p>
         )}
         <Link href="/wizard" className="ae-btn ae-btn--outline ae-btn--wide" style={{ marginTop: "0.5rem" }}>
-          Tik memorialas be plokštelės (149 €)
+          Tik skaitmeninė narystė ({formatPrice(MEMORIAL_PACKAGE_CENTS)})
         </Link>
       </aside>
     </>

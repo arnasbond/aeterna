@@ -20,6 +20,7 @@ const DEMOS: Record<string, MemorialPublic> = {
     deathDate: "2024-12-24",
     biography:
       "Stasė — visi ją vadino tiesiog Močiute. Gimė 1936 m. gegužę, užaugino keturis vaikus ir džiaugėsi dvylika anūkų. Jos virtuvėje visada kvepėjo cinamonu — obuolių pyragas buvo šeimos sekmadienio ritualas. Stasė mokėjo išklausyti be skubėjimo, siūti sagą ant megztinio ir paslėpti saldainį kišenėje „tik tam, kas buvo geras“.\n\nJi mėgo sodą, senas dainas ir rankas, kurios niekada nebuvo tuščios — ar apkabinti, ar paduoti arbatinuką. Paskutiniais metais dažnai sakydavo: „Geriausia dovana — laikas kartu ir šiltas žodis.“ Jos šypsena liko namuose, kai ji pati jau išėjo ramiai, Kūčių išvakarėse.",
+    isPremium: false,
     portraitUrl: `${MEDIA_BASE}/portrait.jpg`,
     farewellMessage:
       "Mano saldžiausieji vaikai ir anūkai — būkite švelnūs vieni kitam, dalinkitės maistu ir juokais. Aš jus myliu labiau, nei žodžiai telpa.",
@@ -48,6 +49,7 @@ const DEMOS: Record<string, MemorialPublic> = {
     deathDate: "2020-06-01",
     biography:
       "Vardenis Pavardenis — ramus žmogus, mylėjęs šeimą ir parapijos bendruomenę. Demo profilis paieškai ir navigacijai iki kapo.",
+    isPremium: false,
     portraitUrl: null,
     farewellMessage: "Amžinąją šviesą tegu mato artimieji.",
     mediaGallery: [],

@@ -15,8 +15,8 @@ import {
   parishAdminSummary,
   recordOrder,
   setMemorialLocation,
-  splitAmount,
 } from "../services/aeterna-store.js";
+import { BASE_MEMBERSHIP_CENTS, processMembershipPayment } from "../services/stripe.js";
 import {
   bookMass,
   findMemorialSlug,
@@ -36,7 +36,7 @@ import { getUserIdFromToken } from "../services/user-store.js";
 import { getMapData, getParishesByDeanery, searchParishes } from "../services/map-store.js";
 import { getParishDetail, listParishesForPublic } from "../services/parish-profile-store.js";
 
-const DEFAULT_PLAN_CENTS = 14900;
+const DEFAULT_PLAN_CENTS = BASE_MEMBERSHIP_CENTS;
 
 export async function apiRoutes(app: FastifyInstance) {
   app.get("/api/v1/parishes", async () => ({
@@ -181,20 +181,19 @@ export async function apiRoutes(app: FastifyInstance) {
     }
 
     const total = body.amountCents ?? DEFAULT_PLAN_CENTS;
-    const split = splitAmount(total);
-    const order = await recordOrder(body.parishId, total, null);
+    const payment = processMembershipPayment({ parishId: body.parishId, amountCents: total });
+    const order = await recordOrder(body.parishId, total, body.memorialSlug ?? null);
 
     return {
       success: true,
       data: {
         sessionId: order.id,
         totalAmountCents: total,
-        parishCommissionCents: split.parishCommissionCents,
-        serviceFeeCents: split.serviceFeeCents,
+        parishCommissionCents: payment.parishAmountCents,
+        serviceFeeCents: payment.platformAmountCents,
         currency: "EUR",
         checkoutUrl: `/wizard?step=done&order=${order.id}`,
-        message:
-          "MVP: mokėjimas simuliuotas. Production — Stripe/Paysera Marketplace su 20% parapijai.",
+        message: payment.message,
       },
     };
   });

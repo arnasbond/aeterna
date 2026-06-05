@@ -15,14 +15,16 @@ import type {
   ParishSummary,
 } from "../types/aeterna.js";
 import { sanitizeMediaGallery, sanitizeMediaUrl } from "../media-url-sanitize.js";
+import { getParishById, resolveParishId } from "../lib/parish-id-legacy.js";
 import { loadJsonStore, saveJsonStore } from "./persistent-json-store.js";
+import { CANDLE_SERVICE_FEE_CENTS, PREMIUM_MONTHLY_CENTS, PREMIUM_YEARLY_CENTS } from "./stripe.js";
 
 const MEMORIALS_KEY = "aeterna-memorials";
 const ORDERS_KEY = "aeterna-orders";
 
 const PARISH_COMMISSION_BPS = Number(process.env.AETERNA_PARISH_COMMISSION_BPS || 2000);
 
-export type DonationKind = "memorial" | "candle" | "mass";
+export type DonationKind = "memorial" | "candle" | "mass" | "premium";
 
 export type DonationRow = {
   id: string;
@@ -144,6 +146,9 @@ async function loadMemorials(): Promise<Map<string, AeternaMemorial>> {
   }
   let approvedPending = false;
   for (const row of memorialsCache.values()) {
+    row.isPremium = row.isPremium ?? false;
+    row.familyTree = row.familyTree ?? [];
+    row.anniversaryRemindersEnabled = row.anniversaryRemindersEnabled ?? false;
     if (row.moderationStatus === "pending") {
       row.moderationStatus = "approved";
       row.updatedAt = new Date().toISOString();
@@ -175,7 +180,24 @@ export function listParishes(): Parish[] {
 }
 
 export function getParish(id: string): Parish | null {
-  return LT_PARISHES.find((p) => p.id === id) ?? null;
+  return getParishById(id);
+}
+
+/** Atnaujina memorialų parishId po parapijų sąrašo migracijos (katalikai → RC JAR). */
+export async function repairMemorialParishIds(): Promise<number> {
+  const map = await loadMemorials();
+  let fixed = 0;
+  for (const row of map.values()) {
+    const resolved = resolveParishId(row.parishId);
+    if (resolved !== row.parishId && getParishById(resolved)) {
+      row.parishId = resolved;
+      row.updatedAt = new Date().toISOString();
+      map.set(row.slug, row);
+      fixed++;
+    }
+  }
+  if (fixed > 0) await saveMemorials();
+  return fixed;
 }
 
 export function splitAmount(totalCents: number): {
@@ -286,6 +308,7 @@ export async function getMemorialPublic(slug: string): Promise<AeternaMemorialPu
   const { userId, ...rest } = row;
   return {
     ...rest,
+    isPremium: row.isPremium ?? false,
     linkedToAccount: !!userId,
     parish: {
       id: parish.id,
@@ -352,14 +375,17 @@ export async function createMemorial(
     slug = `${base}-${n++}`;
   }
 
-  const gallery = sanitizeMediaGallery(input.mediaGallery);
+  const isPremium = !!input.isPremium;
+  const galleryAll = sanitizeMediaGallery(input.mediaGallery);
+  const gallery = isPremium ? galleryAll : galleryAll.slice(0, 10);
   const portrait = input.portraitUrl
     ? sanitizeMediaUrl(input.portraitUrl)
     : (gallery[0] ?? null);
-  const video =
-    input.videoUrl && !input.videoUrl.trim().startsWith("data:")
+  const video = isPremium
+    ? input.videoUrl && !input.videoUrl.trim().startsWith("data:")
       ? sanitizeMediaUrl(input.videoUrl) ?? input.videoUrl.trim()
-      : null;
+      : null
+    : null;
 
   const now = new Date().toISOString();
   const row: AeternaMemorial = {
@@ -371,6 +397,9 @@ export async function createMemorial(
     birthDate: input.birthDate ?? null,
     deathDate: input.deathDate ?? null,
     biography: input.biography ?? "",
+    isPremium,
+    familyTree: [],
+    anniversaryRemindersEnabled: false,
     portraitUrl: portrait,
     mediaGallery: gallery,
     videoUrl: video,
@@ -400,11 +429,20 @@ export async function updateMemorialByOwner(
     portraitUrl?: string | null;
     mediaGallery?: string[];
     privacyStatus?: "public" | "private";
+    parishId?: string;
+    familyTree?: import("../types/aeterna.js").FamilyTreeNode[];
+    anniversaryRemindersEnabled?: boolean;
   }
 ): Promise<AeternaMemorial | null> {
   const map = await loadMemorials();
   const row = map.get(slug);
   if (!row || row.userId !== userId) return null;
+
+  if (patch.parishId !== undefined) {
+    const parish = getParish(patch.parishId);
+    if (!parish) throw new Error("Parapija nerasta — pasirinkite iš sąrašo");
+    row.parishId = parish.id;
+  }
 
   if (patch.fullName?.trim()) row.fullName = patch.fullName.trim();
   if (patch.birthDate !== undefined) row.birthDate = patch.birthDate;
@@ -412,16 +450,101 @@ export async function updateMemorialByOwner(
   if (patch.biography !== undefined) row.biography = patch.biography;
   if (patch.farewellMessage !== undefined) row.farewellMessage = patch.farewellMessage;
   if (patch.videoUrl !== undefined) {
-    row.videoUrl =
-      patch.videoUrl && patch.videoUrl.trim()
-        ? sanitizeMediaUrl(patch.videoUrl) ?? patch.videoUrl.trim()
-        : null;
+    if (!row.isPremium) {
+      row.videoUrl = null;
+    } else {
+      row.videoUrl =
+        patch.videoUrl && patch.videoUrl.trim()
+          ? sanitizeMediaUrl(patch.videoUrl) ?? patch.videoUrl.trim()
+          : null;
+    }
   }
   if (patch.portraitUrl !== undefined) {
-    row.portraitUrl = patch.portraitUrl ? sanitizeMediaUrl(patch.portraitUrl) : null;
+    if (patch.portraitUrl) {
+      row.portraitUrl = sanitizeMediaUrl(patch.portraitUrl);
+    }
+    /** Tuščias portraitUrl neištrina esamos nuotraukos — tik aiškus [] gallery arba naujas URL */
   }
-  if (patch.mediaGallery !== undefined) row.mediaGallery = sanitizeMediaGallery(patch.mediaGallery);
+  if (patch.mediaGallery !== undefined) {
+    if (patch.mediaGallery.length > 0) {
+      const gallery = sanitizeMediaGallery(patch.mediaGallery);
+      row.mediaGallery = row.isPremium ? gallery : gallery.slice(0, 10);
+    }
+  }
   if (patch.privacyStatus !== undefined) row.privacyStatus = patch.privacyStatus;
+  if (patch.familyTree !== undefined) {
+    if (!row.isPremium) throw new Error("Giminės medis pasiekiamas tik Premium narystei");
+    row.familyTree = patch.familyTree
+      .filter((n) => n.name?.trim())
+      .map((n) => ({
+        id: n.id || randomUUID(),
+        name: n.name.trim(),
+        relation: n.relation?.trim() || "giminaitis",
+        birthDate: n.birthDate ?? null,
+        deathDate: n.deathDate ?? null,
+        note: n.note?.trim() || null,
+      }))
+      .slice(0, 48);
+  }
+  if (patch.anniversaryRemindersEnabled !== undefined) {
+    if (!row.isPremium) throw new Error("Metinių priminimai pasiekiami tik Premium narystei");
+    row.anniversaryRemindersEnabled = !!patch.anniversaryRemindersEnabled;
+  }
+  row.updatedAt = new Date().toISOString();
+  map.set(slug, row);
+  await saveMemorials();
+  return row;
+}
+
+/** Atkuria mediją iš kito slug (pvz. dublikato po klaidingo išsaugojimo). */
+export async function restoreMemorialMediaFromSlug(
+  targetSlug: string,
+  sourceSlug: string
+): Promise<AeternaMemorial | null> {
+  const map = await loadMemorials();
+  const target = map.get(targetSlug);
+  const source = map.get(sourceSlug);
+  if (!target || !source) return null;
+
+  const gallery = sanitizeMediaGallery(
+    source.mediaGallery?.length ? source.mediaGallery : target.mediaGallery
+  );
+  const galleryLimited = target.isPremium ? gallery : gallery.slice(0, 10);
+  const portrait =
+    sanitizeMediaUrl(source.portraitUrl ?? "") ??
+    sanitizeMediaUrl(source.mediaGallery?.[0] ?? "") ??
+    target.portraitUrl;
+
+  target.portraitUrl = portrait;
+  target.mediaGallery = galleryLimited.length ? galleryLimited : target.mediaGallery;
+  if (!target.isPremium) {
+    target.videoUrl = null;
+  } else if (source.videoUrl && !target.videoUrl) {
+    target.videoUrl = sanitizeMediaUrl(source.videoUrl) ?? source.videoUrl;
+  }
+  target.profileUrl = profileUrl(targetSlug);
+  target.qrCodeUrl = qrPlaceholder(targetSlug);
+  target.updatedAt = new Date().toISOString();
+  map.set(targetSlug, target);
+  await saveMemorials();
+  return target;
+}
+
+export async function activateMemorialPremium(
+  slug: string,
+  userId: string,
+  plan: "monthly" | "yearly"
+): Promise<AeternaMemorial> {
+  const map = await loadMemorials();
+  const row = map.get(slug);
+  if (!row || row.userId !== userId) {
+    throw new Error("Profilis nerastas arba priklauso kitam vartotojui");
+  }
+  if (row.isPremium) return row;
+
+  const amountCents = plan === "yearly" ? PREMIUM_YEARLY_CENTS : PREMIUM_MONTHLY_CENTS;
+  await recordDonation(row.parishId, amountCents, "premium", slug, row.id);
+  row.isPremium = true;
   row.updatedAt = new Date().toISOString();
   map.set(slug, row);
   await saveMemorials();
@@ -452,7 +575,21 @@ export async function recordDonation(
   referenceId: string | null,
   memorialId: string | null
 ): Promise<DonationRow> {
-  const split = kind === "memorial" ? splitAmount(totalCents) : { parishCommissionCents: totalCents, serviceFeeCents: 0 };
+  // Narystė ir Premium — 100% platformai. Žvakutės/misės — parapijai + 0,50 € platformai.
+  const MASS_SERVICE_FEE_CENTS = CANDLE_SERVICE_FEE_CENTS;
+  const split =
+    kind === "memorial" || kind === "premium"
+      ? { parishCommissionCents: 0, serviceFeeCents: totalCents }
+      : kind === "candle"
+        ? {
+            serviceFeeCents: CANDLE_SERVICE_FEE_CENTS,
+            parishCommissionCents: Math.max(0, totalCents - CANDLE_SERVICE_FEE_CENTS),
+          }
+        : {
+            // kind === "mass"
+            serviceFeeCents: MASS_SERVICE_FEE_CENTS,
+            parishCommissionCents: Math.max(0, totalCents - MASS_SERVICE_FEE_CENTS),
+          };
   const order: DonationRow = {
     id: randomUUID(),
     kind,

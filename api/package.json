@@ -9,8 +9,12 @@
     "build": "tsc && node scripts/copy-static-data.mjs",
     "vercel-build": "npm run build",
     "import:parishes": "tsx scripts/import-katalikai-parishes.ts",
+    "import:parishes:jar": "tsx scripts/import-jar-parishes.ts",
+    "import:parishes:jar:fetch": "tsx scripts/import-jar-parishes.ts --fetch",
     "import:parish-profiles": "tsx scripts/import-parish-profiles.ts",
-    "restore:parish-profiles": "tsx scripts/restore-parish-profiles.ts"
+    "restore:parish-profiles": "tsx scripts/restore-parish-profiles.ts",
+    "restore:vladas": "tsx scripts/restore-vladas.ts",
+    "repair:memorial-parishes": "tsx scripts/repair-memorial-parish-ids.ts"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.1",

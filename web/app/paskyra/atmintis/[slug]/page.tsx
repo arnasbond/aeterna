@@ -3,9 +3,17 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { GraveLocationSet } from "@/components/GraveLocationSet";
+import { MemorialLocationShare } from "@/components/MemorialLocationShare";
+import { MemorialQrHub } from "@/components/memorial/MemorialQrHub";
+import { PremiumUpgradePanel } from "@/components/memorial/PremiumUpgradePanel";
+import { FamilyTreeEditor } from "@/components/memorial/FamilyTreeEditor";
+import type { FamilyTreeNode } from "@/lib/api";
+import { ParishSearchPicker } from "@/components/ParishSearchPicker";
 import {
   clearUserToken,
   fetchOwnerGuestbook,
+  fetchParish,
   fetchUserMemorial,
   getUserToken,
   moderateGuestbookEntry,
@@ -35,6 +43,11 @@ export default function EditMemorialPage() {
   const [err, setErr] = useState<string | null>(null);
   const [guestbook, setGuestbook] = useState<GuestbookEntry[]>([]);
   const [modBusy, setModBusy] = useState<string | null>(null);
+  const [parishId, setParishId] = useState("");
+  const [parishTitle, setParishTitle] = useState("");
+  const [geo, setGeo] = useState<{ lat: number; lng: number } | null>(null);
+  const [familyTree, setFamilyTree] = useState<FamilyTreeNode[]>([]);
+  const [anniversaryReminders, setAnniversaryReminders] = useState(false);
 
   useEffect(() => {
     if (!slug || !getUserToken()) {
@@ -53,6 +66,11 @@ export default function EditMemorialPage() {
         setVideoUrl(m.videoUrl ?? "");
         setPortraitUrl(m.portraitUrl ?? "");
         setGalleryUrls(m.mediaGallery ?? []);
+        if (m.geoLocation) setGeo(m.geoLocation);
+        setFamilyTree(m.familyTree ?? []);
+        setAnniversaryReminders(m.anniversaryRemindersEnabled ?? false);
+        setParishId(m.parishId);
+        void fetchParish(m.parishId).then((p) => setParishTitle(p?.title ?? m.parishId));
         return fetchOwnerGuestbook(slug);
       })
       .then((gb) => setGuestbook(gb))
@@ -81,11 +99,19 @@ export default function EditMemorialPage() {
 
   async function handleGalleryFiles(files: FileList | null) {
     if (!files?.length) return;
+    const isPremium = memorial?.isPremium ?? false;
+    const maxPhotos = isPremium ? Number.POSITIVE_INFINITY : 10;
+    const remaining = Math.max(0, maxPhotos - galleryUrls.length);
+    const filesArr = Array.from(files).slice(0, remaining);
+    if (filesArr.length === 0) {
+      setErr("Pagrindinė narystė leidžia iki 10 nuotraukų. Neribotai galerijai reikia Premium narystės.");
+      return;
+    }
     setMediaBusy(true);
     setErr(null);
     try {
       const uploaded: string[] = [];
-      for (const file of Array.from(files)) {
+      for (const file of filesArr) {
         uploaded.push(await uploadMemorialFile(file));
       }
       setGalleryUrls((prev) => [...prev, ...uploaded]);
@@ -99,6 +125,11 @@ export default function EditMemorialPage() {
 
   async function handleVideoFile(file: File | null) {
     if (!file) return;
+    const isPremium = memorial?.isPremium ?? false;
+    if (!isPremium) {
+      setErr("Premium narystė suteikia galimybę įkelti vaizdo įrašą.");
+      return;
+    }
     setMediaBusy(true);
     setErr(null);
     try {
@@ -117,17 +148,27 @@ export default function EditMemorialPage() {
     setErr(null);
     setMsg(null);
     try {
-      await updateUserMemorial(slug, {
+      const patch: Parameters<typeof updateUserMemorial>[1] = {
         fullName,
         birthDate: birthDate || null,
         deathDate: deathDate || null,
         biography,
         farewellMessage: farewellMessage || null,
         videoUrl: videoUrl || null,
-        portraitUrl: portraitUrl || null,
-        mediaGallery: galleryUrls,
-      });
-      setMsg("Pakeitimai išsaugoti.");
+      };
+      if (portraitUrl.trim()) patch.portraitUrl = portraitUrl.trim();
+      if (galleryUrls.length > 0) patch.mediaGallery = galleryUrls;
+      if (parishId.trim()) patch.parishId = parishId.trim();
+      if (memorial?.isPremium) {
+        patch.familyTree = familyTree;
+        patch.anniversaryRemindersEnabled = anniversaryReminders;
+      }
+      const updated = await updateUserMemorial(slug, patch);
+      if (updated) {
+        setMemorial(updated);
+      }
+      setMsg("Pakeitimai išsaugoti. QR kodas žemiau — kopijuokite nuorodą ar atsisiųskite paveikslą plokštelei.");
+      setTimeout(() => document.getElementById("memorial-qr-after-save")?.scrollIntoView({ behavior: "smooth" }), 200);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Nepavyko išsaugoti";
       setErr(
@@ -172,10 +213,39 @@ export default function EditMemorialPage() {
         <Link href="/paskyra">Mano paskyra</Link>
       </p>
 
+      {geo ? (
+        <MemorialLocationShare slug={slug} lat={geo.lat} lng={geo.lng} fullName={fullName} />
+      ) : (
+        <GraveLocationSet
+          slug={slug}
+          memorialName={fullName}
+          parishTitle={parishTitle}
+          defaultOpen
+          onSaved={(lat, lng) => setGeo({ lat, lng })}
+        />
+      )}
+
       <form onSubmit={save}>
         <div className="ae-field">
           <label>Vardas, pavardė *</label>
           <input value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+        </div>
+        <div className="ae-field ae-card" style={{ padding: "1rem" }}>
+          <label style={{ fontWeight: 600, marginBottom: "0.5rem", display: "block" }}>
+            Parapija
+          </label>
+          <p className="ae-hint" style={{ marginBottom: "0.75rem" }}>
+            Jei pasirinkta neteisinga parapija (pvz. po sistemos atnaujinimo), suraskite teisingą ir
+            išsaugokite pakeitimus.
+          </p>
+          <ParishSearchPicker
+            value={parishId}
+            selectedTitle={parishTitle}
+            onChange={(id, p) => {
+              setParishId(id);
+              if (p?.title) setParishTitle(p.title);
+            }}
+          />
         </div>
         <div className="ae-field">
           <label>Gimimo data</label>
@@ -231,14 +301,14 @@ export default function EditMemorialPage() {
           <textarea rows={6} value={biography} onChange={(e) => setBiography(e.target.value)} />
         </div>
         <div className="ae-field ae-wizard-upload">
-          <label>Vaizdo įrašas</label>
+          <label>Vaizdo įrašas {memorial?.isPremium ? "" : "(Premium)"}</label>
           <label className="ae-wizard-upload__btn">
             📁 Įkelti vaizdo įrašą
             <input
               type="file"
               accept="video/mp4,video/webm,video/quicktime,video/*,.mov"
               hidden
-              disabled={mediaBusy}
+              disabled={mediaBusy || !memorial?.isPremium}
               onChange={(e) => {
                 void handleVideoFile(e.target.files?.[0] ?? null);
                 e.target.value = "";
@@ -246,14 +316,70 @@ export default function EditMemorialPage() {
             />
           </label>
           {videoUrl && <p className="ae-wizard-upload__ok">✓ Vaizdo įrašas įkeltas</p>}
+          {!videoUrl && !memorial?.isPremium && (
+            <p className="ae-hint" style={{ marginTop: "0.5rem" }}>
+              Vaizdo įrašas pasiekiamas tik Premium narystės turintiems profiliams.
+            </p>
+          )}
         </div>
         {mediaBusy && <p className="ae-hint">Įkeliama…</p>}
         {err && <p className="ae-error">{err}</p>}
         {msg && <p className="ae-hint" style={{ color: "var(--ae-primary)" }}>{msg}</p>}
         <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide" disabled={busy || mediaBusy}>
-          {busy ? "Saugoma…" : "Išsaugoti pakeitimus"}
+          {busy ? "Saugoma…" : "Išsaugoti"}
         </button>
       </form>
+
+      {memorial && (
+        <PremiumUpgradePanel
+          slug={slug}
+          isPremium={memorial.isPremium}
+          onUpgraded={() => {
+            void fetchUserMemorial(slug).then((m) => {
+              if (m) setMemorial(m);
+            });
+          }}
+        />
+      )}
+
+      {memorial?.isPremium && (
+        <>
+          <div className="ae-card" style={{ marginTop: "1.5rem", padding: "1.25rem" }}>
+            <h2 style={{ margin: "0 0 0.75rem", fontSize: "1.05rem" }}>Giminės medis</h2>
+            <FamilyTreeEditor nodes={familyTree} onChange={setFamilyTree} />
+            <p className="ae-hint" style={{ marginTop: "0.75rem", marginBottom: 0 }}>
+              Išsaugokite formą apačioje, kad giminės medis atsirastų viešame puslapyje.
+            </p>
+          </div>
+          <div className="ae-card" style={{ marginTop: "1rem", padding: "1.25rem" }}>
+            <h2 style={{ margin: "0 0 0.5rem", fontSize: "1.05rem" }}>Metinių priminimai</h2>
+            <label style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                checked={anniversaryReminders}
+                onChange={(e) => setAnniversaryReminders(e.target.checked)}
+                style={{ marginTop: "0.2rem" }}
+              />
+              <span>
+                Siųsti priminimą el. paštu prieš mirties metines
+                {deathDate ? ` (${deathDate})` : " — nurodykite mirties datą aukščiau"}
+              </span>
+            </label>
+          </div>
+        </>
+      )}
+
+      {memorial && (
+        <div id="memorial-qr-after-save" className="ae-card" style={{ marginTop: "1.5rem", padding: "1rem" }}>
+          <MemorialQrHub
+            slug={slug}
+            fullName={fullName}
+            qrCodeUrl={memorial.qrCodeUrl}
+            profileUrl={memorial.profileUrl}
+            showPlateLink
+          />
+        </div>
+      )}
 
       {guestbook.some((g) => g.status === "pending") && (
         <div className="ae-card" style={{ marginTop: "2rem", padding: "1.25rem" }}>

@@ -13,9 +13,9 @@ export function AboutInitiative() {
             iš tų, kurie nori prisiminti ir padėti.
           </p>
           <ul className="vk-checklist vk-about-initiative__list">
-            <li>Memorialinis metraštis šeimai — nuotraukos, žodžiai ir vieta kapinėse</li>
-            <li>QR plokštelė ant paminklo — vienas nuskaitymas atveria visą atmintį</li>
-            <li>Virtuali žvakutė ir Šv. Mišios — pagerbimas, kuris remia vietinę parapiją</li>
+            <li>Skaitmeninė narystė — memorialinis metraštis nuo 39 €, be privalomų plokštelių</li>
+            <li>QR kodas ir PDF — spausdinkite patys arba užsisakykite plokštelę papildomai</li>
+            <li>Virtuali žvakutė ir Šv. Mišios — 100 % aukos pasirinktai parapijai</li>
             <li>Kiekvienas gestas stiprina bendruomenę, kurioje augome ir meldėmės</li>
           </ul>
           <div className="vk-about-initiative__actions">
