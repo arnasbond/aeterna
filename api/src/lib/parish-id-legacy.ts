@@ -1,5 +1,5 @@
 import katalikaiData from "../data/katalikai-parishes.json" with { type: "json" };
-import { LT_PARISHES } from "../data/lt-parishes.js";
+import { DEMO_PARISH_ID, LT_PARISHES } from "../data/lt-parishes.js";
 import type { Parish } from "../types/aeterna.js";
 
 function titleKey(title: string): string {
@@ -52,6 +52,13 @@ function buildLegacyMap(): Map<string, string> {
     if (newId && newId !== old.id) {
       map.set(old.id, newId);
     }
+  }
+  /** Pavadinimai nesutampa po RC JAR importo — kritiniai ID rankiniu būdu */
+  const manual: [string, string][] = [
+    ["parish-vilniaus-sv-stanislovo-ir-sv-vladislovo-arkikatedra-bazilika", DEMO_PARISH_ID],
+  ];
+  for (const [from, to] of manual) {
+    if (LT_PARISHES.some((p) => p.id === to)) map.set(from, to);
   }
   return map;
 }

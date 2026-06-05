@@ -8,9 +8,14 @@ import { webRedirectRoutes } from "./routes/web-redirects.js";
 import { mediaRoutes } from "./routes/media.js";
 import { publicWebUrl } from "./public-urls.js";
 import { jsonStoreBackend } from "./services/persistent-json-store.js";
+import { repairMemorialParishIds } from "./services/aeterna-store.js";
 
 export async function buildApp(): Promise<FastifyInstance> {
   await bootstrapDataDir();
+  const repaired = await repairMemorialParishIds();
+  if (repaired > 0) {
+    console.log(`[aeterna] Atnaujinta memorialų parishId: ${repaired}`);
+  }
 
   const app = Fastify({
     logger: process.env.NODE_ENV !== "production",
