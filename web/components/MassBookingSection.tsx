@@ -8,6 +8,7 @@ import {
 } from "@/components/DonationAmountPicker";
 import { RequestMassSlotsButton } from "@/components/mass/RequestMassSlotsButton";
 import { bookMass, fetchAvailableMasses, fetchParishes, type MassSlot, type Parish } from "@/lib/api";
+import { HOME_ACTION_PILL } from "@/lib/glass-card";
 
 const SERVICE_FEE_EUR = 0.5;
 
@@ -24,9 +25,10 @@ function formatSlot(dt: string) {
 type MassBookingProps = {
   initialParishId?: string;
   lockParish?: boolean;
+  presentation?: "full" | "sheet";
 };
 
-export function MassBookingSection({ initialParishId, lockParish }: MassBookingProps = {}) {
+export function MassBookingSection({ initialParishId, lockParish, presentation = "full" }: MassBookingProps = {}) {
   const [parishes, setParishes] = useState<Parish[]>([]);
   const [parishId, setParishId] = useState("");
   const [slots, setSlots] = useState<MassSlot[]>([]);
@@ -40,6 +42,24 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
   const [amountEur, setAmountEur] = useState(15);
   const [customMode, setCustomMode] = useState(false);
   const [customInput, setCustomInput] = useState("");
+  const [sheetOpen, setSheetOpen] = useState(false);
+
+  useEffect(() => {
+    if (!sheetOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setSheetOpen(false);
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [sheetOpen]);
+
+  useEffect(() => {
+    if (presentation !== "sheet" || typeof window === "undefined") return;
+    if (window.location.hash !== "#misios") return;
+    setSheetOpen(true);
+  }, [presentation]);
 
   useEffect(() => {
     fetchParishes().then((p) => {
@@ -102,15 +122,7 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
     }
   }
 
-  return (
-    <section id="misios" className="ae-section ae-section--gray">
-      <header className="ae-section-header">
-        <h2 className="ae-section-title">Šv. Mišių užsakymas nuotoliu</h2>
-        <p className="ae-section-lead">
-          Pasirinkite parapijos administratoriaus patvirtintą laisvą laiką liturgijai.
-        </p>
-      </header>
-      <div className="ae-mass-card">
+  const form = (
         <form onSubmit={submit}>
           <div className="ae-field">
             <label>Parapija</label>
@@ -208,7 +220,59 @@ export function MassBookingSection({ initialParishId, lockParish }: MassBookingP
                 : "Pasirinkite sumą"}
           </button>
         </form>
-      </div>
-    </section>
+  );
+
+  return (
+    <>
+      {presentation === "sheet" ? (
+        <div id="misios" className="vk-home-action p-1">
+          <button type="button" className={`vk-home-action__btn ${HOME_ACTION_PILL}`} onClick={() => setSheetOpen(true)}>
+            <span aria-hidden>⛪</span> Užsakyti Šv. Mišias
+          </button>
+        </div>
+      ) : (
+        <section id="misios" className="ae-section ae-section--gray">
+          <header className="ae-section-header">
+            <h2 className="ae-section-title">Šv. Mišių užsakymas nuotoliu</h2>
+            <p className="ae-section-lead">
+              Pasirinkite parapijos administratoriaus patvirtintą laisvą laiką liturgijai.
+            </p>
+          </header>
+          <div className="ae-mass-card">{form}</div>
+        </section>
+      )}
+
+      {sheetOpen && (
+        <div className="ae-modal-backdrop" role="presentation" onClick={() => setSheetOpen(false)}>
+          <div
+            className="ae-modal ae-modal--sheet"
+            role="dialog"
+            aria-modal
+            aria-labelledby="mass-sheet-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="ae-modal__close"
+              onClick={() => setSheetOpen(false)}
+              aria-label="Uždaryti"
+            >
+              ×
+            </button>
+            <header className="ae-section-header" style={{ textAlign: "left", marginBottom: "1rem" }}>
+              <h2 id="mass-sheet-title" className="ae-section-title">
+                Šv. Mišių užsakymas nuotoliu
+              </h2>
+              <p className="ae-section-lead">
+                Pasirinkite parapijos administratoriaus patvirtintą laisvą laiką liturgijai.
+              </p>
+            </header>
+            <div className="ae-mass-card" style={{ boxShadow: "none", padding: 0 }}>
+              {form}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

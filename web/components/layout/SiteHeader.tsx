@@ -30,43 +30,52 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="ch-header ch-header--compact">
-        <div className="ch-header__inner">
-          <Link href="/" className="ch-logo chronicle-serif" onClick={close}>
-            <strong>AETERNA</strong>
-          </Link>
-
-          <nav className="ch-nav" aria-label="Pagrindinis meniu">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={"highlight" in item && item.highlight ? "ch-nav__plates" : undefined}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="ch-header__actions">
-            <Link href={EXAMPLE} className="ch-header__example" onClick={close} title={EXAMPLE_LABEL}>
-              <span className="ch-header__example-long">{EXAMPLE_LABEL}</span>
-              <span className="ch-header__example-short">{EXAMPLE_LABEL_SHORT}</span>
-            </Link>
-            <Link href="/wizard" className="ch-header__cta">
-              Sukurti atminimo puslapį
-            </Link>
-            <button
-              type="button"
-              className="ch-menu-btn"
-              aria-expanded={open}
-              aria-label={open ? "Uždaryti meniu" : "Atidaryti meniu"}
-              onClick={() => setOpen((v) => !v)}
+      <header className="relative z-50 px-4 pt-2">
+        <div className="ch-header ch-header--compact ch-header--floating max-w-6xl mx-auto my-4 rounded-full bg-white/70 backdrop-blur-md border border-stone-200/50 px-4 sm:px-6 py-3 shadow-[0_8px_32px_0_rgba(212,175,55,0.05)]">
+          <div className="ch-header__inner !max-w-none !p-0 !grid-cols-[auto_1fr_auto]">
+            <Link
+              href="/"
+              className="ch-logo chronicle-serif font-serif shrink-0 text-[#0A1A10]"
+              onClick={close}
             >
-              <span />
-              <span />
-              <span />
-            </button>
+              <strong className="tracking-[0.28em]">AETERNA</strong>
+            </Link>
+
+            <nav className="ch-nav" aria-label="Pagrindinis meniu">
+              {NAV.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={"highlight" in item && item.highlight ? "ch-nav__plates" : undefined}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="ch-header__actions">
+              <Link href={EXAMPLE} className="ch-header__example" onClick={close} title={EXAMPLE_LABEL}>
+                <span className="ch-header__example-long">{EXAMPLE_LABEL}</span>
+                <span className="ch-header__example-short">{EXAMPLE_LABEL_SHORT}</span>
+              </Link>
+              <Link
+                href="/wizard"
+                className="ch-header__cta !rounded-full !bg-[#0F2519] !border-[#0F2519] hover:!bg-[#0A1A10]"
+              >
+                Sukurti atminimo puslapį
+              </Link>
+              <button
+                type="button"
+                className="ch-menu-btn !rounded-full"
+                aria-expanded={open}
+                aria-label={open ? "Uždaryti meniu" : "Atidaryti meniu"}
+                onClick={() => setOpen((v) => !v)}
+              >
+                <span />
+                <span />
+                <span />
+              </button>
+            </div>
           </div>
         </div>
       </header>

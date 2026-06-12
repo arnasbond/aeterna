@@ -53,9 +53,9 @@ export default function PaskyraPage() {
   }
 
   return (
-    <section className="ae-section">
-      <h1 className="ae-section-title">Mano paskyra</h1>
-      <p className="ae-auth__lead">
+    <section className="ae-section ae-paskyra-page">
+      <h1 className="ae-section-title chronicle-serif">Mano paskyra</h1>
+      <p className="ae-auth__lead text-[#0A1A10]/75">
         Sveiki, <strong>{user.fullName}</strong> ({user.email}). Čia valdote savo atminties
         profilius — iki {MAX_MEMORIALS} vienoje paskyroje.
       </p>
@@ -86,7 +86,7 @@ export default function PaskyraPage() {
 
       <div className="ae-divider" />
 
-      <h2 className="ae-section-title" style={{ fontSize: "1.25rem" }}>
+      <h2 className="ae-section-title chronicle-serif text-stone-900" style={{ fontSize: "1.25rem" }}>
         Mano atminties profiliai
       </h2>
 
@@ -100,7 +100,7 @@ export default function PaskyraPage() {
           {memorials.map((m) => (
             <li key={m.id} className="ae-card ae-paskyra-item">
               <div>
-                <h3>{m.fullName}</h3>
+                <h3 className="font-serif text-stone-900">{m.fullName}</h3>
                 <p className="ae-hint">
                   {m.birthDate ?? "—"} — {m.deathDate ?? "—"}
                 </p>

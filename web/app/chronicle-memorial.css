@@ -73,14 +73,14 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
 }
 
 .ch-memorial-arch {
-  width: 11rem;
-  height: 13rem;
+  width: auto;
+  height: auto;
   margin: 0 auto 1rem;
-  overflow: hidden;
-  border-radius: 50% 50% 0 0 / 18% 18% 0 0;
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  box-shadow: 0 8px 28px rgba(30, 58, 30, 0.08);
-  background: #fcfbf7;
+  overflow: visible;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
 }
 
 .ch-memorial-arch__img {
@@ -174,8 +174,8 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
 
 .ch-memorial-board {
   margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  padding-top: 0;
+  border-top: none;
 }
 
 .ch-memorial-board h2 {
@@ -214,8 +214,7 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
   cursor: pointer;
 }
 
-/* Seamless ivory — integrated layout, no white blocks */
-.chronicle-memorial-page .ch-parish-card,
+/* Seamless ivory — integrated layout; glass cards keep their own surface */
 .chronicle-memorial-page .ch-candle-glow,
 .chronicle-memorial-page .ch-sheet,
 .chronicle-memorial-page .ch-mass-book-form,
@@ -226,7 +225,6 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
   box-shadow: none;
 }
 
-.chronicle-memorial-page .ch-parish-card,
 .chronicle-memorial-page .ch-candle-glow,
 .chronicle-memorial-page .ch-mass-book-form,
 .chronicle-memorial-page .vk-memorial-guestbook .ae-candle-item,

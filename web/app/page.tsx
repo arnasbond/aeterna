@@ -1,21 +1,33 @@
 import { HomeLanding } from "@/components/home/HomeLanding";
+import { HomeFeaturedParishes } from "@/components/home/HomeFeaturedParishes";
 import { CandleSection } from "@/components/CandleSection";
 import { MassBookingSection } from "@/components/MassBookingSection";
 import Link from "next/link";
+import { GLASS_CARD } from "@/lib/glass-card";
 
 export default function HomePage() {
   return (
-    <>
+    <div className="vk-home vk-home--light relative">
       <HomeLanding />
 
-      <div className="vk-home-extra">
-        <MassBookingSection />
-        <CandleSection />
-      </div>
-
-      <section id="parama" className="vk-parish-band">
+      <section className="vk-home-actions">
         <div className="vk-container">
-          <div className="ae-home-parish__inner" style={{ display: "grid", gap: "2rem", alignItems: "center" }}>
+          <div className="vk-home-actions__grid">
+            <div className={`${GLASS_CARD} p-5 sm:p-6`}>
+              <MassBookingSection presentation="sheet" />
+            </div>
+            <div className={`${GLASS_CARD} p-5 sm:p-6`}>
+              <CandleSection presentation="sheet" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <HomeFeaturedParishes />
+
+      <section id="parama" className="vk-parish-band vk-section--airy">
+        <div className="vk-container">
+          <div className={`ae-home-parish__inner vk-parish-band__inner ${GLASS_CARD} !p-6 sm:!p-8 !bg-[#0F2519]/95 !border-[#D4AF37]/20 !text-white`}>
             <div className="ae-home-parish__chart" aria-hidden>
               <div className="ae-donate-ring">
                 <svg viewBox="0 0 120 120" className="ae-donate-ring__svg">
@@ -41,19 +53,14 @@ export default function HomePage() {
               </div>
             </div>
             <div>
-              <h2 className="ae-section-title" style={{ textAlign: "left" }}>
-                Virtuali žvakutė ir mišios remia parapiją
+              <h2 className="ae-section-title text-stone-100" style={{ textAlign: "left" }}>
+                Žvakutė ir mišios remia parapiją
               </h2>
-              <p style={{ color: "rgba(255,255,255,0.92)", lineHeight: 1.75, marginBottom: "1.25rem" }}>
-                Skaitmeninė narystė (39 €) finansuoja platformą. O kai uždegate žvakutę ar užsakote Šv. Mišias —
-                visa auka keliauja į pasirinktą parapiją (platformos aptarnavimas +0,50 €).
+              <p className="vk-parish-band__lead text-white/85">
+                Skaitmeninė narystė (39 €) finansuoja platformą. Uždegus žvakutę ar užsakius Šv. Mišias — visa auka
+                keliauja į parapiją.
               </p>
-              <ul className="ae-home-parish__list" style={{ color: "rgba(255,255,255,0.9)" }}>
-                <li>Skaidrus aukų ataskaitavimas parapijų skydelyje</li>
-                <li>Memorialas, mišios ir žvakutė vienoje platformoje</li>
-                <li>Parapijų žemėlapis ir profiliai</li>
-              </ul>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", marginTop: "1rem" }}>
+              <div className="vk-parish-band__links">
                 <Link href="/map" className="vk-btn vk-btn--white">
                   Parapijų žemėlapis
                 </Link>
@@ -65,6 +72,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

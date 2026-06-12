@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { MapsOpenLink } from "@/components/MapsOpenLink";
+import { googleMapsDirectionsUrl } from "@/lib/open-maps";
 import { getSiteOrigin } from "@/lib/site";
 
 type Props = {
@@ -13,7 +15,7 @@ type Props = {
 export function MemorialLocationShare({ slug, lat, lng, fullName }: Props) {
   const [copied, setCopied] = useState<"page" | "maps" | null>(null);
   const pageUrl = `${getSiteOrigin()}/m/${slug}`;
-  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  const mapsUrl = googleMapsDirectionsUrl(lat, lng);
 
   async function copy(text: string, kind: "page" | "maps") {
     try {
@@ -41,9 +43,9 @@ export function MemorialLocationShare({ slug, lat, lng, fullName }: Props) {
       </div>
       <div className="grave-loc-share__row">
         <span className="grave-loc-share__label">Tiesiai į Google Maps</span>
-        <a href={mapsUrl} className="ch-btn ch-btn--outline" target="_blank" rel="noopener noreferrer">
+        <MapsOpenLink href={mapsUrl} className="ch-btn ch-btn--outline">
           Atidaryti maršrutą
-        </a>
+        </MapsOpenLink>
         <button type="button" className="ch-btn ch-btn--outline" onClick={() => void copy(mapsUrl, "maps")}>
           {copied === "maps" ? "✓ Nukopijuota" : "Kopijuoti Maps nuorodą"}
         </button>

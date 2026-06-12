@@ -20,7 +20,9 @@ function AuthForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") || "/paskyra";
-  const [tab, setTab] = useState<Tab>("login");
+  const isWizardFlow = next.includes("/wizard");
+  const tabParam = searchParams.get("tab");
+  const [tab, setTab] = useState<Tab>(tabParam === "register" ? "register" : "login");
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -28,6 +30,11 @@ function AuthForm() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+
+  useEffect(() => {
+    if (tabParam === "register") setTab("register");
+    else if (tabParam === "login") setTab("login");
+  }, [tabParam]);
 
   useEffect(() => {
     if (!getUserToken()) return;
@@ -73,10 +80,21 @@ function AuthForm() {
 
   return (
     <section className="ae-section ae-auth">
-      <h1 className="ae-section-title chronicle-serif">Šeimos administratorius</h1>
+      <h1 className="ae-section-title chronicle-serif text-stone-900">
+        {isWizardFlow ? "1 žingsnis — jūsų paskyra" : "Šeimos administratorius"}
+      </h1>
       <p className="ae-auth__lead">
-        Prisijunkite el. paštu arba socialiniais tinklais — redaguokite biografiją, nuotraukas ir
-        moderuokite užuojautas savo artimojo memorialiniame puslapyje.
+        {isWizardFlow ? (
+          <>
+            Registruokitės arba prisijunkite <strong>savo</strong> vardu — tai jūsų, šeimos administratoriaus,
+            paskyra. Kitame vedlys žingsnyje įrašysite jau <strong>mirusiojo artimojo</strong> memorialo duomenis.
+          </>
+        ) : (
+          <>
+            Prisijunkite el. paštu arba socialiniais tinklais — redaguokite biografiją, nuotraukas ir moderuokite
+            užuojautas savo artimojo memorialiniame puslapyje.
+          </>
+        )}
       </p>
 
       <div className="ae-auth__social" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "1rem" }}>
@@ -201,12 +219,14 @@ function AuthForm() {
         ) : (
           <form onSubmit={onRegister}>
             <div className="ae-field">
-              <label htmlFor="reg-name">Vardas, pavardė</label>
+              <label htmlFor="reg-name">
+                {isWizardFlow ? "Jūsų vardas ir pavardė (šeimos administratorius)" : "Vardas, pavardė"}
+              </label>
               <input
                 id="reg-name"
                 type="text"
                 autoComplete="name"
-                placeholder="Vardas Pavardė"
+                placeholder={isWizardFlow ? "Pvz. Jonas Kazlauskas" : "Vardas Pavardė"}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
@@ -263,8 +283,6 @@ function AuthForm() {
       </div>
 
       <p className="ae-hint" style={{ textAlign: "center", marginTop: "1.5rem" }}>
-        <Link href="/wizard">Sukurti atmintį be paskyros</Link>
-        {" · "}
         <Link href="/">Grįžti į pradžią</Link>
       </p>
     </section>

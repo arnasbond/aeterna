@@ -14,8 +14,8 @@ export default function DownloadAppPage() {
   const site = getSiteOrigin();
 
   return (
-    <section className="ae-section ae-section--white ae-download-page">
-      <h1 className="ae-section-title">AETERNA programėlė</h1>
+    <section className="ae-section ae-download-page">
+      <h1 className="ae-section-title chronicle-serif text-stone-900">AETERNA programėlė</h1>
       <div className="ae-divider" />
       <p className="ae-download-page__lead">
         Android programėlė atidaro memorialus ir parapijų puslapius — veikia per mobilųjį internetą,

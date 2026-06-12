@@ -9,6 +9,7 @@ import {
   PREMIUM_YEARLY_CENTS,
   type PremiumPlan,
 } from "@/lib/premium";
+import { GLASS_CARD } from "@/lib/glass-card";
 
 type Props = {
   slug: string;
@@ -37,14 +38,16 @@ export function PremiumUpgradePanel({ slug, isPremium, onUpgraded }: Props) {
   }
 
   return (
-    <div id="premium" className="ae-card" style={{ marginTop: "1.5rem", padding: "1.25rem" }}>
-      <h2 style={{ margin: "0 0 0.5rem", fontSize: "1.1rem" }}>Premium narystė</h2>
+    <div id="premium" className={`ae-card ae-premium-panel ${GLASS_CARD}`} style={{ marginTop: "1.5rem", padding: "1.25rem" }}>
+      <h2 className="chronicle-serif text-stone-900" style={{ margin: "0 0 0.5rem", fontSize: "1.1rem" }}>
+        Premium narystė
+      </h2>
       {isPremium ? (
         <>
-          <p className="ae-hint" style={{ margin: 0 }}>
+          <p className="ae-hint text-[#0F2519]" style={{ margin: 0 }}>
             ✓ Aktyvuota — visi Premium privalumai pasiekiami šiam memorialui.
           </p>
-          <ul style={{ margin: "0.75rem 0 0", paddingLeft: "1.1rem", lineHeight: 1.65, color: "var(--ch-muted)" }}>
+          <ul style={{ margin: "0.75rem 0 0", paddingLeft: "1.1rem", lineHeight: 1.65, color: "var(--ae-muted)" }}>
             {PREMIUM_FEATURES.map((f) => (
               <li key={f}>{f}</li>
             ))}
@@ -55,7 +58,7 @@ export function PremiumUpgradePanel({ slug, isPremium, onUpgraded }: Props) {
           <p className="ae-hint" style={{ margin: "0 0 0.75rem" }}>
             Atrakinkite papildomas funkcijas šiam memorialui — vienkartinis mokėjimas (MVP simuliacija).
           </p>
-          <ul style={{ margin: "0 0 1rem", paddingLeft: "1.1rem", lineHeight: 1.65, color: "var(--ch-muted)" }}>
+          <ul style={{ margin: "0 0 1rem", paddingLeft: "1.1rem", lineHeight: 1.65, color: "var(--ae-muted)" }}>
             {PREMIUM_FEATURES.map((f) => (
               <li key={f}>{f}</li>
             ))}
@@ -82,7 +85,7 @@ export function PremiumUpgradePanel({ slug, isPremium, onUpgraded }: Props) {
       )}
       {err && <p className="ae-error" style={{ marginTop: "0.75rem" }}>{err}</p>}
       {msg && (
-        <p className="ae-hint" style={{ marginTop: "0.75rem", color: "var(--ae-primary)" }}>
+        <p className="ae-hint text-[#0F2519]" style={{ marginTop: "0.75rem" }}>
           {msg}
         </p>
       )}

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { fixMemorialLocation } from "@/lib/api";
 import { MemorialLocationShare } from "@/components/MemorialLocationShare";
 import { MapStep } from "@/components/wizard/MapStep";
+import { MEMORIAL_PILL_BTN } from "@/lib/glass-card";
 
 type Props = {
   slug: string;
@@ -13,7 +14,7 @@ type Props = {
   defaultOpen?: boolean;
 };
 
-export function GraveLocationSet({ slug, memorialName, onSaved, defaultOpen }: Props) {
+export function GraveLocationSet({ slug, memorialName, parishTitle, onSaved, defaultOpen }: Props) {
   const [open, setOpen] = useState(!!defaultOpen);
   const [saved, setSaved] = useState<{ lat: number; lng: number } | null>(null);
 
@@ -42,14 +43,17 @@ export function GraveLocationSet({ slug, memorialName, onSaved, defaultOpen }: P
       </p>
 
       {!open ? (
-        <button type="button" className="ch-btn ch-btn--primary ae-btn--wide" onClick={() => setOpen(true)}>
-          Pradėti — vietos nustatymas
+        <button type="button" className={`ch-btn ch-btn--primary ae-btn--wide ${MEMORIAL_PILL_BTN}`} onClick={() => setOpen(true)}>
+          Pradėti — Google Maps arba GPS
         </button>
       ) : (
         <MapStep
           defaultCoords={null}
           onSave={async ({ lat, lng }) => saveCoords(lat, lng)}
-          placeholder="Pvz. London, Chicago arba kapinių pavadinimas"
+          placeholder="Pvz. Rasų kapinės, Vilnius arba London cemetery"
+          mapsSearchHint={
+            parishTitle ? `${memorialName} kapinės ${parishTitle}` : `${memorialName} kapinės`
+          }
         />
       )}
     </div>

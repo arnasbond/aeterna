@@ -64,7 +64,7 @@ export default function ParishHubPage() {
         </div>
         <div className="ae-parish-hero__body">
           <span className="ae-badge">{parish.diocese}</span>
-          <h1>{parish.title}</h1>
+          <h1 className="chronicle-serif text-stone-900">{parish.title}</h1>
           <p className="ae-parish-hero__meta">
             {parish.city && <span>{parish.city} · </span>}
             {parish.deaneryName}
@@ -114,14 +114,14 @@ export default function ParishHubPage() {
         </div>
       </section>
 
-      <section className="ae-section ae-section--white" id="profilis">
-        <h2 className="ae-section-title">Parapijos informacija</h2>
+      <section className="ae-section" id="profilis">
+        <h2 className="ae-section-title chronicle-serif text-stone-900">Parapijos informacija</h2>
         <div className="ae-divider" />
         <ParishProfilePublic parish={parish} />
       </section>
 
-      <section className="ae-section ae-section--white">
-        <h2 className="ae-section-title">Parapijos paslaugos</h2>
+      <section className="ae-section">
+        <h2 className="ae-section-title chronicle-serif text-stone-900">Parapijos paslaugos</h2>
         <div className="ae-divider" />
         <div className="ae-parish-hub-grid">
           <Link href={`/wizard?parish=${encodeURIComponent(parish.id)}`} className="ae-card ae-parish-hub-card">
@@ -148,7 +148,7 @@ export default function ParishHubPage() {
       </section>
 
       <MassBookingSection initialParishId={parish.id} lockParish />
-      <CandleSection />
+      <CandleSection initialParishId={parish.id} lockParish />
     </>
   );
 }

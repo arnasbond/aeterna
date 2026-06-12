@@ -12,6 +12,9 @@ import { MemorialLocationShare } from "@/components/MemorialLocationShare";
 import { MemorialQrHub } from "@/components/memorial/MemorialQrHub";
 import { FamilyTreeDisplay } from "@/components/memorial/FamilyTreeDisplay";
 import { parishCardImage } from "@/lib/parish-image";
+import { MapsOpenLink } from "@/components/MapsOpenLink";
+import { googleMapsDirectionsUrl, googleMapsSearchUrl } from "@/lib/open-maps";
+import { GLASS_CARD, MEMORIAL_PILL_BTN } from "@/lib/glass-card";
 import type { MemorialPublic } from "@/lib/api";
 
 function formatYears(birth: string | null, death: string | null) {
@@ -34,6 +37,21 @@ function epitaphFromBio(biography: string): string | null {
   if (dot > 0 && dot <= 140) return first.slice(0, dot + 1);
   if (first.length <= 120) return first;
   return null;
+}
+
+function MemorialArchPortrait({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="ch-memorial-arch mx-auto mb-4 w-44 rounded-t-full bg-gradient-to-b from-[#D4AF37]/30 to-transparent p-[1px]">
+      <div className="h-[13rem] overflow-hidden rounded-t-full border border-white bg-[#FCFBF7] shadow-[0_8px_28px_rgba(15,37,25,0.08)]">
+        <img
+          src={src}
+          alt={alt}
+          className="ch-memorial-arch__img h-full w-full object-cover object-[center_15%]"
+          referrerPolicy="no-referrer"
+        />
+      </div>
+    </div>
+  );
 }
 
 type Props = {
@@ -100,33 +118,13 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
     setTimeout(() => document.getElementById("grave-location-help")?.scrollIntoView({ behavior: "smooth" }), 400);
   }
 
-  function mapsSearchUrl(): string {
-    const q = `${memorial.fullName} kapinės ${parishTitle}`;
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
-  }
-
-  function openGps() {
-    if (!location) {
-      window.open(mapsSearchUrl(), "_blank", "noopener,noreferrer");
-      return;
-    }
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${location.lat},${location.lng}`;
-    const bridge = (window as Window & { AeternaApp?: { openMaps?: (u: string) => void } }).AeternaApp;
-    if (bridge?.openMaps) {
-      bridge.openMaps(url);
-      return;
-    }
-    // WebView dažnai blokuoja window.open — tas pats skirtukas veikia patikimiau
-    window.location.assign(url);
-  }
+  const mapsSearchQuery = `${memorial.fullName} kapinės ${parishTitle}`;
 
   const compactCore = (
     <>
       <section className="ch-memorial-hero">
-        <div className="ch-memorial-arch">
-          <img src={portrait} alt={memorial.fullName} className="ch-memorial-arch__img" referrerPolicy="no-referrer" />
-        </div>
-        <h1 className="ch-memorial-name chronicle-serif">{memorial.fullName}</h1>
+        <MemorialArchPortrait src={portrait} alt={memorial.fullName} />
+        <h1 className="ch-memorial-name chronicle-serif text-stone-900">{memorial.fullName}</h1>
         <p className="ch-memorial-years">{formatYears(memorial.birthDate, memorial.deathDate)}</p>
         {!expanded && epitaph && <p className="ch-memorial-epitaph">{epitaph}</p>}
       </section>
@@ -199,10 +197,8 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       ) : (
         <>
       <section className="ch-memorial-hero">
-        <div className="ch-memorial-arch">
-          <img src={portrait} alt={memorial.fullName} className="ch-memorial-arch__img" referrerPolicy="no-referrer" />
-        </div>
-        <h1 className="ch-memorial-name chronicle-serif">{memorial.fullName}</h1>
+        <MemorialArchPortrait src={portrait} alt={memorial.fullName} />
+        <h1 className="ch-memorial-name chronicle-serif text-stone-900">{memorial.fullName}</h1>
         <p className="ch-memorial-years">{formatYears(memorial.birthDate, memorial.deathDate)}</p>
         {epitaph && <p className="ch-memorial-epitaph">{epitaph}</p>}
       </section>
@@ -214,36 +210,37 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       </p>
 
       <div className="ch-memorial-actions ch-btn-row">
-        <button type="button" className="ch-btn ch-btn--primary" onClick={() => setCandleOpen(true)}>
+        <button
+          type="button"
+          className={`ch-btn ch-btn--primary ${MEMORIAL_PILL_BTN} !bg-[#0F2519] !border-[#0F2519] hover:!bg-[#0A1A10]`}
+          onClick={() => setCandleOpen(true)}
+        >
           🕯️ Uždegti žvakutę
         </button>
         {location ? (
-          <a
-            href={`https://www.google.com/maps/dir/?api=1&destination=${location.lat},${location.lng}`}
-            className="ch-btn ch-btn--outline"
-            onClick={(e) => {
-              e.preventDefault();
-              openGps();
-            }}
+          <MapsOpenLink
+            href={googleMapsDirectionsUrl(location.lat, location.lng)}
+            className={`ch-btn ch-btn--outline ${MEMORIAL_PILL_BTN} !text-[#0A1A10] !border-[#D4AF37]/40`}
             title="Atidaryti GPS maršrutą"
           >
             📍 Rasti kapavietę
-          </a>
+          </MapsOpenLink>
         ) : canEdit ? (
-          <button type="button" className="ch-btn ch-btn--outline" onClick={scrollToLocationSet}>
+          <button
+            type="button"
+            className={`ch-btn ch-btn--outline ${MEMORIAL_PILL_BTN} !text-[#0A1A10] !border-[#D4AF37]/40`}
+            onClick={scrollToLocationSet}
+          >
             📍 Nurodyti kapavietę
           </button>
         ) : (
-          <button
-            type="button"
-            className="ch-btn ch-btn--outline"
-            onClick={() => {
-              window.open(mapsSearchUrl(), "_blank", "noopener,noreferrer");
-              scrollToLocationHelp();
-            }}
+          <MapsOpenLink
+            href={googleMapsSearchUrl(mapsSearchQuery)}
+            className={`ch-btn ch-btn--outline ${MEMORIAL_PILL_BTN} !text-[#0A1A10] !border-[#D4AF37]/40`}
+            onAfterClick={scrollToLocationHelp}
           >
             📍 Rasti kapavietę
-          </button>
+          </MapsOpenLink>
         )}
       </div>
 
@@ -311,14 +308,9 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
               nuoroda su maršrutu.
             </li>
           </ol>
-          <a
-            href={mapsSearchUrl()}
-            className="ch-btn ch-btn--outline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <MapsOpenLink href={googleMapsSearchUrl(mapsSearchQuery)} className="ch-btn ch-btn--outline">
             Atidaryti Maps paiešką
-          </a>
+          </MapsOpenLink>
         </div>
       )}
 
@@ -375,17 +367,21 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
         showPlateLink
       />
 
-      <section className="ch-parish-card">
+      <section className={`ch-parish-card ${GLASS_CARD} !p-5`}>
         <div className="ch-parish-card__row">
-          <img src={parishImg} alt="" className="ch-parish-card__img" referrerPolicy="no-referrer" />
+          <img src={parishImg} alt="" className="ch-parish-card__img rounded-xl" referrerPolicy="no-referrer" />
           <div>
-            <p style={{ margin: 0, lineHeight: 1.55 }}>
+            <p style={{ margin: 0, lineHeight: 1.55 }} className="text-[#0A1A10]">
               <strong>{firstName}</strong> priklausė <strong>{parishTitle}</strong> parapijai. Šv. Mišias už
               velionę galite užsakyti čia.
             </p>
           </div>
         </div>
-        <button type="button" className="ch-btn ch-btn--primary ch-btn--block" onClick={() => setMassOpen((v) => !v)}>
+        <button
+          type="button"
+          className={`ch-btn ch-btn--primary ch-btn--block ${MEMORIAL_PILL_BTN} !bg-[#0F2519] !border-[#0F2519] hover:!bg-[#0A1A10]`}
+          onClick={() => setMassOpen((v) => !v)}
+        >
           {massOpen ? "Slėpti kalendorių" : "Užsakyti Šv. Mišias"}
         </button>
         {massOpen && parishId && (
@@ -397,7 +393,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
         )}
       </section>
 
-      <section className="ch-memorial-board">
+      <section className={`ch-memorial-board ${GLASS_CARD} !p-5 !mt-8 !border-t-0`}>
         <h2 className="chronicle-serif">Uždegtos žvakutės</h2>
         <VirtualCandles slug={slug} parishTitle={parishTitle} />
 

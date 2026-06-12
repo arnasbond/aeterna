@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1E3A1E",
+  themeColor: "#0F2519",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -32,7 +32,12 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="lt" className={`${inter.variable} ${playfair.variable} ${dancing.variable}`}>
-      <body className="aeterna-root">
+      <body className="aeterna-root relative min-h-screen bg-[#FCFBF7] text-[#0A1A10] antialiased">
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
+          <div className="absolute -top-32 left-1/4 h-96 w-96 rounded-full bg-amber-500/5 blur-[120px]" />
+          <div className="absolute top-1/3 -right-24 h-[28rem] w-[28rem] rounded-full bg-amber-500/5 blur-[120px]" />
+          <div className="absolute bottom-0 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-amber-500/5 blur-[120px]" />
+        </div>
         <Navigation />
         <main>{children}</main>
         <DeployBadge />

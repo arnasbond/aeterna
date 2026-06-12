@@ -12,7 +12,7 @@ import {
 } from "@/lib/qr-plates";
 
 const DEMO_QR =
-  "https://api.qrserver.com/v1/create-qr-code/?size=120x120&margin=6&color=3d5636&bgcolor=ffffff&data=https%3A%2F%2Faeterna.lt";
+  "https://api.qrserver.com/v1/create-qr-code/?size=120x120&margin=6&color=0F2519&bgcolor=ffffff&data=https%3A%2F%2Faeterna.lt";
 
 type Props = {
   preselectedParish?: string;

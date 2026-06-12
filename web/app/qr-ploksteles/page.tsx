@@ -14,7 +14,7 @@ export default function QrPlokstelesPage() {
           <Link href="/" className="ae-qr-catalog-back">
             ← Atgal
           </Link>
-          <h1 className="ae-section-title">QR plokštelė ant paminklo</h1>
+          <h1 className="ae-section-title chronicle-serif text-stone-900">QR plokštelė ant paminklo</h1>
           <p className="ae-qr-catalog-hero__sub">
             Trys kokybės lygiai — vizualiai ir techniškai. Svečiai skenuoja kodą ir patenka į
             memorialinį puslapį su nuotraukomis, video ir palinkėjimu.

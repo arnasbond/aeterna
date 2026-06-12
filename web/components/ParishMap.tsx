@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MapContainer, TileLayer, GeoJSON, Marker, Popup, Tooltip } from "react-leaflet";
@@ -29,6 +29,20 @@ const churchIcon = L.divIcon({
   iconAnchor: [14, 14],
 });
 
+const DEANERY_STYLE_DEFAULT: PathOptions = {
+  fillColor: "#0f2519",
+  fillOpacity: 0.1,
+  color: "rgba(212, 175, 55, 0.35)",
+  weight: 1,
+};
+
+const DEANERY_STYLE_ACTIVE: PathOptions = {
+  fillColor: "#0f2519",
+  fillOpacity: 0.28,
+  color: "#d4af37",
+  weight: 2,
+};
+
 type Props = {
   data: MapData;
 };
@@ -38,6 +52,9 @@ export function ParishMap({ data }: Props) {
   const [hoveredDeanery, setHoveredDeanery] = useState<string | null>(null);
   const [selectedDeanery, setSelectedDeanery] = useState<string | null>(null);
   const [hoveredParish, setHoveredParish] = useState<string | null>(null);
+  const deaneryLayersRef = useRef<Map<string, L.Path>>(new Map());
+  const selectedDeaneryRef = useRef<string | null>(null);
+  selectedDeaneryRef.current = selectedDeanery;
 
   const activeDeaneryId = selectedDeanery ?? hoveredDeanery;
 
@@ -54,27 +71,42 @@ export function ParishMap({ data }: Props) {
 
   type DeaneryFeature = MapData["deaneries"]["features"][number];
 
-  const deaneryStyle = useCallback(
-    (feature?: { properties?: DeaneryFeatureProperties }): PathOptions => {
-      const id = feature?.properties?.id;
-      const active = id === hoveredDeanery || id === selectedDeanery;
-      return {
-        fillColor: active ? "#4a6741" : "#9bb392",
-        fillOpacity: active ? 0.42 : 0.18,
-        color: active ? "#2f4429" : "#6b7f66",
-        weight: active ? 2.5 : 1,
-      };
-    },
-    [hoveredDeanery, selectedDeanery]
-  );
+  /** Statinis stilius — hover keičiamas per layer.setStyle(), kad nebūtų mirgėjimo */
+  const deaneryStyle = useCallback(() => DEANERY_STYLE_DEFAULT, []);
+
+  const applyDeanerySelectionStyles = useCallback((selectedId: string | null) => {
+    deaneryLayersRef.current.forEach((layer, id) => {
+      layer.setStyle(id === selectedId ? DEANERY_STYLE_ACTIVE : DEANERY_STYLE_DEFAULT);
+    });
+  }, []);
+
+  useEffect(() => {
+    applyDeanerySelectionStyles(selectedDeanery);
+  }, [selectedDeanery, applyDeanerySelectionStyles]);
 
   const onEachDeanery = useCallback((feature: DeaneryFeature, layer: L.Layer) => {
     const props = feature.properties as DeaneryFeatureProperties;
-    layer.on({
-      mouseover: () => setHoveredDeanery(props.id),
-      mouseout: () => setHoveredDeanery((h) => (h === props.id ? null : h)),
+    const path = layer as L.Path;
+    deaneryLayersRef.current.set(props.id, path);
+
+    if (selectedDeaneryRef.current === props.id) {
+      path.setStyle(DEANERY_STYLE_ACTIVE);
+    }
+
+    path.on({
+      mouseover: () => {
+        path.setStyle(DEANERY_STYLE_ACTIVE);
+        path.bringToFront();
+        setHoveredDeanery(props.id);
+      },
+      mouseout: () => {
+        const keepActive = selectedDeaneryRef.current === props.id;
+        path.setStyle(keepActive ? DEANERY_STYLE_ACTIVE : DEANERY_STYLE_DEFAULT);
+        setHoveredDeanery((h) => (h === props.id ? null : h));
+      },
       click: () => setSelectedDeanery(props.id),
     });
+
     if ("bindTooltip" in layer && typeof layer.bindTooltip === "function") {
       layer.bindTooltip(props.name, { sticky: true, className: "ae-map-tooltip" });
     }
@@ -130,19 +162,17 @@ export function ParishMap({ data }: Props) {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <GeoJSON
-            key={`deaneries-${selectedDeanery ?? "all"}`}
-            data={data.deaneries}
-            style={deaneryStyle}
-            onEachFeature={onEachDeanery}
-          />
+          <GeoJSON data={data.deaneries} style={deaneryStyle} onEachFeature={onEachDeanery} />
           {data.parishes.map((p) => (
             <Marker
               key={p.id}
               position={[p.lat, p.lng]}
               icon={churchIcon}
               eventHandlers={{
-                mouseover: () => setHoveredParish(p.id),
+                mouseover: () => {
+                  setHoveredDeanery(null);
+                  setHoveredParish(p.id);
+                },
                 mouseout: () => setHoveredParish((h) => (h === p.id ? null : h)),
                 click: () => goToParish(p.id),
               }}

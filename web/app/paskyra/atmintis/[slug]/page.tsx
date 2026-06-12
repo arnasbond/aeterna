@@ -22,6 +22,7 @@ import {
   type GuestbookEntry,
   type OwnedMemorialDetail,
 } from "@/lib/api";
+import { GLASS_CARD } from "@/lib/glass-card";
 
 export default function EditMemorialPage() {
   const router = useRouter();
@@ -205,16 +206,18 @@ export default function EditMemorialPage() {
   }
 
   return (
-    <section className="ae-section ae-wizard">
-      <h1 className="ae-section-title">Redaguoti atmintį</h1>
-      <p className="ae-hint" style={{ textAlign: "center", marginBottom: "1.25rem" }}>
+    <section className="ae-section ae-wizard ae-edit-memorial-page">
+      <h1 className="ae-section-title chronicle-serif text-stone-900">Redaguoti atmintį</h1>
+      <p className="ae-hint text-center text-[#0A1A10]/70" style={{ marginBottom: "1.25rem" }}>
         <Link href={`/m/${slug}`}>Peržiūrėti viešą profilį →</Link>
         {" · "}
         <Link href="/paskyra">Mano paskyra</Link>
       </p>
 
       {geo ? (
-        <MemorialLocationShare slug={slug} lat={geo.lat} lng={geo.lng} fullName={fullName} />
+        <div className={`${GLASS_CARD} mb-4 p-4`}>
+          <MemorialLocationShare slug={slug} lat={geo.lat} lng={geo.lng} fullName={fullName} />
+        </div>
       ) : (
         <GraveLocationSet
           slug={slug}
@@ -230,8 +233,8 @@ export default function EditMemorialPage() {
           <label>Vardas, pavardė *</label>
           <input value={fullName} onChange={(e) => setFullName(e.target.value)} required />
         </div>
-        <div className="ae-field ae-card" style={{ padding: "1rem" }}>
-          <label style={{ fontWeight: 600, marginBottom: "0.5rem", display: "block" }}>
+        <div className={`ae-field ae-card ${GLASS_CARD}`} style={{ padding: "1rem" }}>
+          <label className="font-semibold text-stone-900" style={{ marginBottom: "0.5rem", display: "block" }}>
             Parapija
           </label>
           <p className="ae-hint" style={{ marginBottom: "0.75rem" }}>
@@ -324,7 +327,7 @@ export default function EditMemorialPage() {
         </div>
         {mediaBusy && <p className="ae-hint">Įkeliama…</p>}
         {err && <p className="ae-error">{err}</p>}
-        {msg && <p className="ae-hint" style={{ color: "var(--ae-primary)" }}>{msg}</p>}
+        {msg && <p className="ae-hint text-[#0F2519]">{msg}</p>}
         <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide" disabled={busy || mediaBusy}>
           {busy ? "Saugoma…" : "Išsaugoti"}
         </button>
@@ -344,15 +347,19 @@ export default function EditMemorialPage() {
 
       {memorial?.isPremium && (
         <>
-          <div className="ae-card" style={{ marginTop: "1.5rem", padding: "1.25rem" }}>
-            <h2 style={{ margin: "0 0 0.75rem", fontSize: "1.05rem" }}>Giminės medis</h2>
+          <div className={`ae-card ${GLASS_CARD}`} style={{ marginTop: "1.5rem", padding: "1.25rem" }}>
+            <h2 className="chronicle-serif text-stone-900" style={{ margin: "0 0 0.75rem", fontSize: "1.05rem" }}>
+              Giminės medis
+            </h2>
             <FamilyTreeEditor nodes={familyTree} onChange={setFamilyTree} />
             <p className="ae-hint" style={{ marginTop: "0.75rem", marginBottom: 0 }}>
               Išsaugokite formą apačioje, kad giminės medis atsirastų viešame puslapyje.
             </p>
           </div>
-          <div className="ae-card" style={{ marginTop: "1rem", padding: "1.25rem" }}>
-            <h2 style={{ margin: "0 0 0.5rem", fontSize: "1.05rem" }}>Metinių priminimai</h2>
+          <div className={`ae-card ${GLASS_CARD}`} style={{ marginTop: "1rem", padding: "1.25rem" }}>
+            <h2 className="chronicle-serif text-stone-900" style={{ margin: "0 0 0.5rem", fontSize: "1.05rem" }}>
+              Metinių priminimai
+            </h2>
             <label style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", cursor: "pointer" }}>
               <input
                 type="checkbox"
@@ -370,7 +377,7 @@ export default function EditMemorialPage() {
       )}
 
       {memorial && (
-        <div id="memorial-qr-after-save" className="ae-card" style={{ marginTop: "1.5rem", padding: "1rem" }}>
+        <div id="memorial-qr-after-save" className={`ae-card ${GLASS_CARD}`} style={{ marginTop: "1.5rem", padding: "1rem" }}>
           <MemorialQrHub
             slug={slug}
             fullName={fullName}
@@ -382,13 +389,18 @@ export default function EditMemorialPage() {
       )}
 
       {guestbook.some((g) => g.status === "pending") && (
-        <div className="ae-card" style={{ marginTop: "2rem", padding: "1.25rem" }}>
-          <h2 style={{ margin: "0 0 1rem", fontSize: "1.05rem" }}>Užuojautų moderavimas</h2>
+        <div className={`ae-card ${GLASS_CARD}`} style={{ marginTop: "2rem", padding: "1.25rem" }}>
+          <h2 className="chronicle-serif text-stone-900" style={{ margin: "0 0 1rem", fontSize: "1.05rem" }}>
+            Užuojautų moderavimas
+          </h2>
           <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
             {guestbook
               .filter((g) => g.status === "pending")
               .map((g) => (
-                <li key={g.id} style={{ borderTop: "1px solid #eee", padding: "0.75rem 0" }}>
+                <li
+                  key={g.id}
+                  style={{ borderTop: "1px solid rgba(212, 175, 55, 0.2)", padding: "0.75rem 0" }}
+                >
                   <strong>{g.authorName}</strong>
                   <p style={{ margin: "0.35rem 0", whiteSpace: "pre-wrap", fontSize: "0.92rem" }}>{g.message}</p>
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>

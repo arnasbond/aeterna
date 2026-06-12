@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   checkout,
-  createMemorial,
   createUserMemorial,
   fetchParishes,
   fetchUserMe,
@@ -14,28 +13,36 @@ import {
   type Parish,
 } from "@/lib/api";
 import { MemorialQrHub } from "@/components/memorial/MemorialQrHub";
+import { WizardAuthGate } from "@/components/wizard/WizardAuthGate";
 import { formatPrice } from "@/lib/qr-plates";
 import { downloadQrPdf } from "@/lib/qr-pdf";
+import { WizardPrivacyStep, isWizardPrivacyComplete } from "@/components/wizard/WizardPrivacyStep";
+import { clearCandleIntent, loadCandleIntent } from "@/lib/candle-intent";
+import { buildWizardReturnPath } from "@/lib/wizard-return-path";
 import { clearWizardDraft, loadWizardDraft, saveWizardDraft } from "@/lib/wizard-draft";
 
 const WIZARD_STEPS = [
-  { n: 1, label: "Duomenys" },
-  { n: 2, label: "Media" },
-  { n: 3, label: "Parapija" },
-  { n: 4, label: "Apmokėjimas" },
+  { n: 1, label: "Velionis" },
+  { n: 2, label: "Privatumas" },
+  { n: 3, label: "Media" },
+  { n: 4, label: "Parapija" },
+  { n: 5, label: "Apmokėjimas" },
 ] as const;
+
+const RESULT_STEP = 6;
 
 function WizardInner() {
   const params = useSearchParams();
   const preParish = params.get("parish") ?? "";
   const freshWizard = params.get("naujas") === "1";
+  const fromCandle = params.get("from") === "candle";
   const doneOrder = params.get("order");
 
   const [step, setStep] = useState(1);
   const [maxStep, setMaxStep] = useState(1);
 
   function goToStep(next: number) {
-    if (step === 5 || next < 1 || next > 4 || next > maxStep) return;
+    if (step === RESULT_STEP || next < 1 || next > 5 || next > maxStep) return;
     setStep(next);
     setErr(null);
   }
@@ -70,15 +77,32 @@ function WizardInner() {
   const totalCents = BASE_MEMBERSHIP_CENTS + (plateAddOn ? PLATE_ADDON_CENTS : 0);
   const MAX_GALLERY_PHOTOS = 10;
   const [loggedIn, setLoggedIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [userDisplayName, setUserDisplayName] = useState("");
   const [pdfBusy, setPdfBusy] = useState(false);
+  const [pendingCandle, setPendingCandle] = useState(false);
+  const [privacyStatus, setPrivacyStatus] = useState<"public" | "private" | "">("");
+  const [consentTerms, setConsentTerms] = useState(false);
+  const [consentPrivacy, setConsentPrivacy] = useState(false);
+  const [consentMapLocation, setConsentMapLocation] = useState(false);
+
+  const wizardReturnPath = buildWizardReturnPath(params);
 
   useEffect(() => {
     fetchParishes().then(setParishes).catch(() => {});
-    if (getUserToken()) {
-      fetchUserMe()
-        .then(() => setLoggedIn(true))
-        .catch(() => setLoggedIn(false));
+    if (!getUserToken()) {
+      setLoggedIn(false);
+      setUserDisplayName("");
+      setAuthChecked(true);
+      return;
     }
+    fetchUserMe()
+      .then((u) => {
+        setLoggedIn(true);
+        setUserDisplayName(u.fullName);
+      })
+      .catch(() => setLoggedIn(false))
+      .finally(() => setAuthChecked(true));
   }, []);
 
   useEffect(() => {
@@ -93,8 +117,12 @@ function WizardInner() {
         setGalleryUrls(draft.galleryUrls);
         setVideoUrl(draft.videoUrl);
         if (draft.parishId) setParishId(draft.parishId);
-        setStep(draft.step);
-        setMaxStep(draft.maxStep);
+        if (draft.privacyStatus) setPrivacyStatus(draft.privacyStatus);
+        setConsentTerms(draft.consentTerms ?? false);
+        setConsentPrivacy(draft.consentPrivacy ?? false);
+        setConsentMapLocation(draft.consentMapLocation ?? false);
+        setStep(draft.step > 5 ? RESULT_STEP : draft.step);
+        setMaxStep(Math.min(5, draft.maxStep));
       }
       return;
     }
@@ -114,10 +142,14 @@ function WizardInner() {
     setBusy(false);
     setPlateAddOn(false);
     setPdfBusy(false);
+    setPrivacyStatus("");
+    setConsentTerms(false);
+    setConsentPrivacy(false);
+    setConsentMapLocation(false);
   }, [freshWizard]);
 
   useEffect(() => {
-    if (result || step === 5) return;
+    if (result || step === RESULT_STEP) return;
     saveWizardDraft({
       fullName,
       birthDate,
@@ -127,14 +159,39 @@ function WizardInner() {
       galleryUrls,
       videoUrl,
       parishId,
+      privacyStatus,
+      consentTerms,
+      consentPrivacy,
+      consentMapLocation,
       step,
       maxStep,
     });
-  }, [fullName, birthDate, deathDate, biography, portraitUrl, galleryUrls, videoUrl, parishId, step, maxStep, result]);
+  }, [
+    fullName,
+    birthDate,
+    deathDate,
+    biography,
+    portraitUrl,
+    galleryUrls,
+    videoUrl,
+    parishId,
+    privacyStatus,
+    consentTerms,
+    consentPrivacy,
+    consentMapLocation,
+    step,
+    maxStep,
+    result,
+  ]);
 
   useEffect(() => {
     if (preParish) setParishId(preParish);
   }, [preParish]);
+
+  useEffect(() => {
+    if (!fromCandle) return;
+    setPendingCandle(!!loadCandleIntent());
+  }, [fromCandle]);
 
   if (doneOrder) {
     return (
@@ -216,15 +273,38 @@ function WizardInner() {
     portraitUrl: portraitUrl || undefined,
     mediaGallery: galleryUrls.length ? galleryUrls : undefined,
     videoUrl: videoUrl || undefined,
+    privacyStatus: privacyStatus === "private" ? "private" as const : "public" as const,
   });
 
+  const privacyValues = {
+    privacyStatus,
+    consentTerms,
+    consentPrivacy,
+    consentMapLocation,
+  };
+
+  function updatePrivacy(patch: Partial<typeof privacyValues>) {
+    if (patch.privacyStatus !== undefined) setPrivacyStatus(patch.privacyStatus);
+    if (patch.consentTerms !== undefined) setConsentTerms(patch.consentTerms);
+    if (patch.consentPrivacy !== undefined) setConsentPrivacy(patch.consentPrivacy);
+    if (patch.consentMapLocation !== undefined) setConsentMapLocation(patch.consentMapLocation);
+  }
+
   async function finish(skipCheckout = false) {
+    if (!loggedIn) {
+      setErr("Norėdami sukurti memorialą, pirmiausia užsiregistruokite arba prisijunkite.");
+      return;
+    }
+    if (!isWizardPrivacyComplete(privacyValues)) {
+      setErr("Privatumo žingsnyje pasirinkite matomumą ir patvirtinkite privalomus sutikimus.");
+      setStep(2);
+      setMaxStep((m) => Math.max(m, 2));
+      return;
+    }
     setBusy(true);
     setErr(null);
     try {
-      const memorial = loggedIn
-        ? await createUserMemorial(memorialPayload())
-        : await createMemorial(memorialPayload());
+      const memorial = await createUserMemorial(memorialPayload());
       const checkoutMsg = skipCheckout
         ? "Profilis išsaugotas (be apmokėjimo simuliacijos)."
         : (await checkout(parishId, totalCents, memorial.slug)).message;
@@ -235,7 +315,7 @@ function WizardInner() {
         qrCodeUrl: memorial.qrCodeUrl,
         checkout: { message: checkoutMsg },
       });
-      setStep(5);
+      setStep(RESULT_STEP);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Klaida";
       setErr(
@@ -249,19 +329,52 @@ function WizardInner() {
   }
 
   return (
-    <section className="ae-section">
-      <h1 className="ae-section-title" style={{ fontSize: "1.75rem" }}>
-        Kūrimo vedlys
+    <section className="ae-section ae-wizard-page">
+      <h1 className="ae-section-title chronicle-serif text-stone-900" style={{ fontSize: "1.75rem" }}>
+        Kūrimo vedlys — memorialas artimajam
       </h1>
-      <p className="ae-wizard-lead">
-        Paspauskite žingsnio juostą, jei norite grįžti ir pataisyti įvestus duomenis.
-      </p>
+      {!loggedIn && authChecked ? (
+        <p className="ae-wizard-lead">
+          Du žingsniai: pirmiausia jūsų paskyra, paskui mirusiojo asmens memorialas.
+        </p>
+      ) : (
+        <p className="ae-wizard-lead">
+          Įrašote <strong>velionio</strong> duomenis. Jūsų paskyra ({userDisplayName || "prisijungęs"}) valdo
+          memorialą — paspauskite žingsnio juostą, jei norite grįžti ir pataisyti.
+        </p>
+      )}
+      {fromCandle && loggedIn && step < RESULT_STEP && (
+        <p
+          className="ae-hint"
+          style={{
+            marginBottom: "1rem",
+            padding: "0.75rem 1rem",
+            background: "var(--ae-soft, #f4f0f8)",
+            borderRadius: 8,
+            lineHeight: 1.55,
+          }}
+        >
+          Norėdami uždegti žvakutę, užpildykite memorialą ir apmokėkite skaitmeninę narystę. Baigę kūrimą galėsite
+          tęsti žvakutės uždegimą.
+        </p>
+      )}
+      {!authChecked ? (
+        <p className="ae-hint">Tikrinama paskyra…</p>
+      ) : !loggedIn ? (
+        <WizardAuthGate returnPath={wizardReturnPath} fromCandle={fromCandle} />
+      ) : (
       <div className="ae-wizard">
+        {userDisplayName && (
+          <p className="ae-wizard-user-banner" role="status">
+            Prisijungęs kaip <strong>{userDisplayName}</strong> (šeimos administratorius). Toliau įrašykite{" "}
+            <strong>velionio</strong>, ne savo, duomenis.
+          </p>
+        )}
         <nav className="ae-wizard-steps" aria-label="Kūrimo žingsniai">
           {WIZARD_STEPS.map(({ n, label }) => {
-            const reachable = step !== 5 && n <= maxStep;
+            const reachable = step !== RESULT_STEP && n <= maxStep;
             const isCurrent = step === n;
-            const isDone = step !== 5 && n < step;
+            const isDone = step !== RESULT_STEP && n < step;
             return (
               <button
                 key={n}
@@ -289,22 +402,36 @@ function WizardInner() {
 
         {step === 1 && (
           <>
-            <h2 style={{ fontSize: "1.2rem" }}>1. Duomenys</h2>
+            <h2 style={{ fontSize: "1.2rem" }}>1. Velionio duomenys</h2>
+            <p className="ae-wizard-step-intro">
+              Šiame žingsnyje — tik mirusiojo asmens informacija. Jūsų vardas ir el. paštas jau susieti su paskyra (
+              {userDisplayName}).
+            </p>
             <div className="ae-field">
-              <label>Vardas, pavardė *</label>
-              <input value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+              <label>Velionio vardas ir pavardė *</label>
+              <input
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Pvz. Ona Kazlauskienė"
+                required
+              />
             </div>
             <div className="ae-field">
-              <label>Gimimo data</label>
+              <label>Velionio gimimo data</label>
               <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
             </div>
             <div className="ae-field">
-              <label>Mirties data</label>
+              <label>Velionio mirties data</label>
               <input type="date" value={deathDate} onChange={(e) => setDeathDate(e.target.value)} />
             </div>
             <div className="ae-field">
-              <label>Biografija</label>
-              <textarea rows={5} value={biography} onChange={(e) => setBiography(e.target.value)} />
+              <label>Velionio biografija</label>
+              <textarea
+                rows={5}
+                value={biography}
+                onChange={(e) => setBiography(e.target.value)}
+                placeholder="Gyvenimo istorija, prisiminimai…"
+              />
             </div>
             <button
               type="button"
@@ -320,9 +447,27 @@ function WizardInner() {
 
         {step === 2 && (
           <>
-            <h2 style={{ fontSize: "1.2rem" }}>2. Media</h2>
+            <WizardPrivacyStep values={privacyValues} onChange={updatePrivacy} />
+            <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(1)}>
+              Atgal
+            </button>
+            <button
+              type="button"
+              className="ae-btn ae-btn--primary"
+              style={{ width: "100%", marginTop: "0.5rem" }}
+              disabled={!isWizardPrivacyComplete(privacyValues)}
+              onClick={() => advance(3)}
+            >
+              Toliau
+            </button>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <h2 style={{ fontSize: "1.2rem" }}>3. Velionio nuotraukos</h2>
             <p style={{ fontSize: "0.9rem", color: "var(--ae-muted)", marginBottom: "1rem" }}>
-              Įkelkite nuotraukas ir vaizdo įrašą tiesiai iš telefono galerijos. Failai saugomi saugioje debesų
+              Įkelkite mirusiojo asmens nuotraukas ir (su Premium) vaizdo įrašą. Failai saugomi saugioje debesų
               saugykloje.
             </p>
 
@@ -394,7 +539,7 @@ function WizardInner() {
 
             {mediaBusy && <p className="ae-hint">Įkeliama…</p>}
 
-            <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(1)}>
+            <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(2)}>
               Atgal
             </button>
             <button
@@ -402,16 +547,16 @@ function WizardInner() {
               className="ae-btn ae-btn--primary"
               style={{ width: "100%", marginTop: "0.5rem" }}
               disabled={mediaBusy}
-              onClick={() => advance(3)}
+              onClick={() => advance(4)}
             >
               Toliau
             </button>
           </>
         )}
 
-        {step === 3 && (
+        {step === 4 && (
           <>
-            <h2 style={{ fontSize: "1.2rem" }}>3. Parapija</h2>
+            <h2 style={{ fontSize: "1.2rem" }}>4. Parapija</h2>
             <div className="ae-field">
               <label>Parapija *</label>
               <select value={parishId} onChange={(e) => setParishId(e.target.value)} required>
@@ -423,7 +568,7 @@ function WizardInner() {
                 ))}
               </select>
             </div>
-            <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(2)}>
+            <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(3)}>
               Atgal
             </button>
             <button
@@ -431,16 +576,16 @@ function WizardInner() {
               className="ae-btn ae-btn--primary"
               style={{ width: "100%", marginTop: "0.5rem" }}
               disabled={!parishId}
-              onClick={() => advance(4)}
+              onClick={() => advance(5)}
             >
               Toliau
             </button>
           </>
         )}
 
-        {step === 4 && (
+        {step === 5 && (
           <>
-            <h2 style={{ fontSize: "1.2rem" }}>4. Apmokėjimas</h2>
+            <h2 style={{ fontSize: "1.2rem" }}>5. Apmokėjimas</h2>
             <div className="ae-card" style={{ marginBottom: "1rem" }}>
               <p>
                 <strong>Vienkartinis skaitmeninis narystės mokestis:</strong> {formatPrice(BASE_MEMBERSHIP_CENTS)}
@@ -461,7 +606,7 @@ function WizardInner() {
                 Skaitmeninio memorialo išsaugojimas platformoje ir QR generation.
               </p>
             </div>
-            <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(3)}>
+            <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(4)}>
               Atgal
             </button>
             {loggedIn && (
@@ -482,18 +627,36 @@ function WizardInner() {
               disabled={busy}
               onClick={() => finish(false)}
             >
-              {busy ? "Kuriama…" : `Apmokėti ${formatPrice(totalCents)} ir sukurti`}
+              {busy ? "Kuriama…" : `Apmokėti ${formatPrice(totalCents)} ir sukurti memorialą`}
             </button>
           </>
         )}
 
-        {step === 5 && result && (
+        {step === RESULT_STEP && result && (
           <>
             <h2 style={{ fontSize: "1.2rem" }}>Paruošta — atmintis ir QR</h2>
+            {pendingCandle && (
+              <p className="ae-hint" style={{ marginBottom: "0.75rem", color: "var(--ch-emerald, #047857)" }}>
+                Memorialas sukurtas. Dabar galite uždegti žvakutę už <strong>{fullName}</strong>.
+              </p>
+            )}
             <p className="ae-hint" style={{ marginBottom: "0.75rem" }}>
               Išsaugota visa informacija. Viešame puslapyje lankytojai mato tekstą ir nuotraukas, po jų — QR (paspaudus
               atsidaro pilnas meniu).
             </p>
+            {pendingCandle && (
+              <Link
+                href={`/m/${result.slug}?candle=1`}
+                className="ae-btn ae-btn--gold"
+                style={{ width: "100%", marginBottom: "0.75rem" }}
+                onClick={() => {
+                  clearCandleIntent();
+                  setPendingCandle(false);
+                }}
+              >
+                Toliau — uždegti žvakutę
+              </Link>
+            )}
             <MemorialQrHub
               slug={result.slug}
               fullName={fullName}
@@ -548,6 +711,7 @@ function WizardInner() {
           </>
         )}
       </div>
+      )}
     </section>
   );
 }

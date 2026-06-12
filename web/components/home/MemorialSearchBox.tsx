@@ -119,18 +119,25 @@ export function MemorialSearchBox() {
   }
 
   return (
-    <div ref={wrapRef} id="atminties-paieska" className="ae-memorial-search">
-      <label htmlFor={`${listId}-input`} className="ae-memorial-search__label">
+    <div
+      ref={wrapRef}
+      id="atminties-paieska"
+      className="ae-memorial-search mx-auto max-w-2xl rounded-2xl bg-white/50 p-4 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(212,175,55,0.08)] transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D4AF37]/40 focus-within:shadow-[0_12px_40px_0_rgba(212,175,55,0.12)] sm:p-5"
+    >
+      <label
+        htmlFor={`${listId}-input`}
+        className="ae-memorial-search__label sr-only"
+      >
         Ieškoti atminties
       </label>
-      <div className="ae-memorial-search__field">
+      <div className="ae-memorial-search__field !border-0 !bg-transparent !shadow-none">
         <span className="ae-memorial-search__icon" aria-hidden>
           🔍
         </span>
         <input
           id={`${listId}-input`}
           type="search"
-          className="ae-memorial-search__input"
+          className="ae-memorial-search__input !border-0 !bg-transparent font-semibold text-[#0A1A10] placeholder:text-stone-400 focus:!ring-0"
           placeholder="Įveskite vardą — pvz. V → vardenis pavardenis"
           value={query}
           autoComplete="off"
@@ -154,7 +161,11 @@ export function MemorialSearchBox() {
       )}
 
       {open && hits.length > 0 && (
-        <ul id={`${listId}-list`} className="ae-memorial-search__list" role="listbox">
+        <ul
+          id={`${listId}-list`}
+          className="ae-memorial-search__list mt-3 overflow-hidden rounded-xl border border-white/60 bg-white/60 backdrop-blur-md shadow-[0_8px_32px_0_rgba(212,175,55,0.08)]"
+          role="listbox"
+        >
           {hits.map((hit, i) => (
             <li key={hit.slug} role="option" aria-selected={i === active}>
               <button
@@ -184,7 +195,7 @@ export function MemorialSearchBox() {
         <p className="ae-memorial-search__empty">Nerasta. Bandykite kitą raides arba vardą.</p>
       )}
 
-      <p className="ae-memorial-search__hint">
+      <p className="ae-memorial-search__hint mt-3 text-sm text-[#0A1A10]/65">
         {buildLabel && buildLabel !== "local" && buildLabel !== "vercel" && buildLabel !== "…" && (
           <>
             <span className="ae-memorial-search__build">v.{buildLabel}</span>

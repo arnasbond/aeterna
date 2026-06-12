@@ -3,14 +3,14 @@
 .aeterna-root,
 .chronicle-page {
   --ch-ivory: #fcfbf7;
-  --ch-emerald: #1e3a1e;
-  --ch-emerald-soft: #2d5230;
+  --ch-emerald: #0f2519;
+  --ch-emerald-soft: #0a1a10;
   --ch-gold: #d4af37;
   --ch-gold-soft: rgba(212, 175, 55, 0.5);
-  --ch-charcoal: #2c3338;
+  --ch-charcoal: #0a1a10;
   --ch-muted: #5a6569;
-  --ch-card: #fffef9;
-  --ch-line: rgba(212, 175, 55, 0.35);
+  --ch-card: rgba(255, 255, 255, 0.4);
+  --ch-line: rgba(212, 175, 55, 0.25);
 }
 
 .aeterna-root {
@@ -21,7 +21,6 @@
   --ae-text: var(--ch-charcoal);
   --ae-muted: var(--ch-muted);
   --ae-card: var(--ch-card);
-  background: var(--ch-ivory);
   color: var(--ch-charcoal);
   line-height: 1.65;
 }
@@ -31,18 +30,22 @@
 .aeterna-root h3,
 .chronicle-serif {
   font-family: var(--font-playfair), "Merriweather", Georgia, serif;
-  color: var(--ch-charcoal);
+  color: #1c1917;
   font-weight: 600;
 }
 
-/* —— Header (4 elements) —— */
+/* —— Header (floating pill) —— */
 .ch-header {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 100;
-  background: rgba(252, 251, 247, 0.94);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--ch-line);
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom: none;
+}
+
+.ch-header--floating {
+  position: relative;
+  top: auto;
 }
 
 .ch-header__inner {
@@ -311,18 +314,22 @@
   padding: 0.85rem 1.15rem;
   font-size: 0.88rem;
   font-weight: 700;
-  border-radius: 4px;
+  border-radius: 999px;
   border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
   font-family: inherit;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.2s ease;
 }
 
 .ch-btn--primary {
   background: var(--ch-emerald);
   color: #fff;
   border-color: var(--ch-emerald);
+}
+
+.ch-btn--primary:hover {
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.35);
 }
 
 .ch-btn--outline {
@@ -370,11 +377,12 @@
   max-width: 32rem;
   max-height: 90vh;
   overflow-y: auto;
-  background: #fcfbf7;
+  background: rgba(252, 251, 247, 0.94);
+  backdrop-filter: blur(16px);
   border-radius: 16px 16px 0 0;
   padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
   border-top: 2px solid rgba(212, 175, 55, 0.35);
-  box-shadow: 0 -8px 32px rgba(30, 58, 30, 0.08);
+  box-shadow: 0 -8px 32px rgba(212, 175, 55, 0.1);
 }
 
 .ch-sheet__handle {

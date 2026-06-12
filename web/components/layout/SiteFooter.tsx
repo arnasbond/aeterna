@@ -2,19 +2,21 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="vk-footer">
+    <footer className="vk-footer relative mt-8 border-t border-[#D4AF37]/15 bg-[#0A1A10]/95 text-white/85 backdrop-blur-md">
       <div className="vk-footer__grid">
         <div className="vk-footer__brand">
           <div className="vk-logo vk-logo--footer">
-            <span className="vk-logo__mark" aria-hidden>
+            <span className="vk-logo__mark !bg-gradient-to-br !from-[#D4AF37]/40 !to-[#0F2519]" aria-hidden>
               ✝
             </span>
-            <span className="vk-logo__text">
-              <strong>AETERNA</strong>
+            <span className="vk-logo__text font-serif">
+              <strong className="tracking-[0.2em]">AETERNA</strong>
               <small>Skaitmeninė atmintis šeimai</small>
             </span>
           </div>
-          <p>QR kodas ant paminklo — amžina atmintis ir parama Jūsų parapijai.</p>
+          <p className="text-white/70">
+            QR kodas ant paminklo — amžina atmintis ir parama Jūsų parapijai.
+          </p>
         </div>
 
         <div>
@@ -78,14 +80,14 @@ export function SiteFooter() {
               <Link href="/atsisiusti">Android programėlė</Link>
             </li>
             <li>
-              <Link href="/wizard">Sukurti atmintį</Link>
+              <Link href="/wizard">Sukurti memorialą</Link>
             </li>
           </ul>
         </div>
       </div>
 
       <div className="vk-footer__bottom">
-        <p>© {new Date().getFullYear()} AETERNA — skaitmeninis atminimas ir parama parapijai</p>
+        <p>© {new Date().getFullYear()} AETERNA · Parama parapijoms · Skaidrus aukų ataskaitavimas</p>
       </div>
     </footer>
   );
