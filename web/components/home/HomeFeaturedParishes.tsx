@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { fetchParishes, type Parish } from "@/lib/api";
-import { GLASS_CARD } from "@/lib/glass-card";
+import { HERCULES_FLOAT } from "@/lib/hercules-theme";
+import { parishCardImage } from "@/lib/parish-image";
 
 const DEMO_MEMORIALS = [
   { slug: "ona-demo", name: "Stasė", years: "1936 – 2024" },
@@ -26,19 +27,25 @@ export function HomeFeaturedParishes() {
           <>
             <div className="vk-section-head vk-section-head--center">
               <span className="vk-badge">Parapijos</span>
-              <h2 className="vk-title vk-title--center text-stone-900">Pasirinkite gimtąją parapiją</h2>
+              <h2 className="vk-title vk-title--center">Pasirinkite gimtąją parapiją</h2>
             </div>
             <div className="vk-hscroll" role="list">
               {parishes.map((p) => (
                 <Link
                   key={p.id}
                   href={`/parishes/${encodeURIComponent(p.id)}`}
-                  className={`vk-hscroll-card vk-hscroll-card--parish ${GLASS_CARD}`}
+                  className={`vk-hscroll-card vk-hscroll-card--parish ${HERCULES_FLOAT}`}
                   role="listitem"
                 >
-                  <img src={p.image} alt="" loading="lazy" referrerPolicy="no-referrer" className="rounded-xl" />
-                  <span className="vk-hscroll-card__badge text-[#0F2519]">{p.diocese}</span>
-                  <h3 className="text-stone-900">{p.title}</h3>
+                  <img
+                    src={parishCardImage(p.image, undefined, p.diocese)}
+                    alt=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    className="hercules-parish-card__img"
+                  />
+                  <span className="vk-hscroll-card__badge">{p.diocese}</span>
+                  <h3>{p.title}</h3>
                 </Link>
               ))}
             </div>
@@ -47,29 +54,29 @@ export function HomeFeaturedParishes() {
 
         <div className="vk-section-head vk-section-head--center" style={{ marginTop: parishes.length > 0 ? "3rem" : 0 }}>
           <span className="vk-badge">Metraščiai</span>
-          <h2 className="vk-title vk-title--center text-stone-900">Pavyzdiniai atminimo puslapiai</h2>
+          <h2 className="vk-title vk-title--center">Pavyzdiniai atminimo puslapiai</h2>
         </div>
         <div className="vk-hscroll" role="list">
           {DEMO_MEMORIALS.map((m) => (
             <Link
               key={m.slug}
               href={`/m/${m.slug}`}
-              className={`vk-hscroll-card vk-hscroll-card--memorial ${GLASS_CARD}`}
+              className={`vk-hscroll-card vk-hscroll-card--memorial ${HERCULES_FLOAT}`}
               role="listitem"
             >
-              <span className="vk-hscroll-card__icon text-[#D4AF37]" aria-hidden>
+              <span className="vk-hscroll-card__icon" aria-hidden>
                 ✦
               </span>
-              <h3 className="text-stone-900">{m.name}</h3>
-              <p className="text-[#0A1A10]/70">{m.years}</p>
+              <h3>{m.name}</h3>
+              <p>{m.years}</p>
             </Link>
           ))}
-          <Link href="/paieska" className={`vk-hscroll-card vk-hscroll-card--more ${GLASS_CARD}`} role="listitem">
-            <span className="vk-hscroll-card__icon text-[#D4AF37]" aria-hidden>
+          <Link href="/paieska" className={`vk-hscroll-card vk-hscroll-card--more ${HERCULES_FLOAT}`} role="listitem">
+            <span className="vk-hscroll-card__icon" aria-hidden>
               →
             </span>
-            <h3 className="text-stone-900">Ieškoti atminties</h3>
-            <p className="text-[#0A1A10]/70">Visi vieši metraščiai</p>
+            <h3>Ieškoti atminties</h3>
+            <p>Visi vieši metraščiai</p>
           </Link>
         </div>
       </div>

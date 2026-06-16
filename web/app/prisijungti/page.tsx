@@ -13,6 +13,7 @@ import {
   userRegister,
 } from "@/lib/api";
 import { requirePasswords } from "@/lib/auth-config";
+import { HerculesPageShell } from "@/components/layout/HerculesPageShell";
 
 type Tab = "login" | "register";
 
@@ -79,8 +80,9 @@ function AuthForm() {
   }
 
   return (
-    <section className="ae-section ae-auth">
-      <h1 className="ae-section-title chronicle-serif text-stone-900">
+    <HerculesPageShell narrow center>
+    <section className="ae-auth">
+      <h1 className="hercules-page__title chronicle-serif">
         {isWizardFlow ? "1 žingsnis — jūsų paskyra" : "Šeimos administratorius"}
       </h1>
       <p className="ae-auth__lead">
@@ -286,6 +288,7 @@ function AuthForm() {
         <Link href="/">Grįžti į pradžią</Link>
       </p>
     </section>
+    </HerculesPageShell>
   );
 }
 
@@ -293,11 +296,11 @@ export default function PrisijungtiPage() {
   return (
     <Suspense
       fallback={
-        <section className="ae-section">
+        <HerculesPageShell narrow center>
           <p className="ae-hint" style={{ textAlign: "center" }}>
             Kraunama…
           </p>
-        </section>
+        </HerculesPageShell>
       }
     >
       <AuthForm />

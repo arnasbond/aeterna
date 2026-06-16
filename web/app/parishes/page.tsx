@@ -1,61 +1,134 @@
 "use client";
 
+
+
 import { useEffect, useState } from "react";
+
 import Link from "next/link";
+
+import { HerculesPageShell } from "@/components/layout/HerculesPageShell";
+
 import { fetchParishes, type Parish } from "@/lib/api";
-import { GLASS_CARD } from "@/lib/glass-card";
+
+import { parishCardImage } from "@/lib/parish-image";
+
+
 
 export default function ParishesPage() {
+
   const [list, setList] = useState<Parish[]>([]);
+
   const [err, setErr] = useState<string | null>(null);
 
+
+
   useEffect(() => {
+
     fetchParishes()
+
       .then(setList)
+
       .catch((e) => setErr(e.message));
+
   }, []);
 
+
+
   return (
-    <section className="ae-section relative px-6 py-12">
-      <h1 className="ae-section-title font-serif text-stone-900">Parapijos</h1>
-      <div className="ae-divider" />
-      <p className="mx-auto mb-4 max-w-lg text-center text-[#0A1A10]/75">
-        Pasirinkite parapiją, kuriai skiriama parama nuo Jūsų atminimo puslapio užsakymo.
-      </p>
+
+    <HerculesPageShell
+
+      title="Parapijos"
+
+      lead="Pasirinkite parapiją, kuriai skiriama parama nuo Jūsų atminimo puslapio užsakymo."
+
+      center
+
+    >
+
       <p className="mb-8 text-center">
-        <Link href="/map" className="ae-btn ae-btn--outline !rounded-full !border-[#D4AF37]/40">
+
+        <Link href="/map" className="ae-btn ae-btn--outline">
+
           Atidaryti interaktyvų žemėlapį
+
         </Link>
+
       </p>
-      {err && <p style={{ color: "#b91c1c", textAlign: "center" }}>{err}</p>}
+
+      {err && <p className="ae-error" style={{ textAlign: "center" }}>{err}</p>}
+
       <div className="ae-parish-grid">
+
         {list.map((p) => (
-          <article key={p.id} className={`ae-card ae-parish-card ${GLASS_CARD}`}>
-            <img src={p.image} alt="" loading="lazy" referrerPolicy="no-referrer" className="rounded-xl" />
-            <span className="ae-badge text-[#0F2519]">{p.diocese}</span>
-            <h3 className="font-serif text-stone-900" style={{ margin: "0 0 0.5rem", fontSize: "1.1rem" }}>
+
+          <article key={p.id} className="ae-card ae-parish-card">
+
+            <img
+
+              src={parishCardImage(p.image, undefined, p.diocese)}
+
+              alt=""
+
+              loading="lazy"
+
+              referrerPolicy="no-referrer"
+
+              className="hercules-parish-card__img"
+
+            />
+
+            <span className="ae-badge">{p.diocese}</span>
+
+            <h3 className="chronicle-serif" style={{ margin: "0 0 0.5rem", fontSize: "1.1rem" }}>
+
               {p.title}
+
             </h3>
-            <p style={{ fontSize: "0.9rem", color: "var(--ae-muted)", margin: "0 0 1rem" }}>
+
+            <p className="ae-hint" style={{ margin: "0 0 1rem" }}>
+
               {p.supportGoal}
+
             </p>
+
             <Link
+
               href={`/parishes/${encodeURIComponent(p.id)}`}
-              className="ae-btn ae-btn--primary !rounded-full"
+
+              className="ae-btn ae-btn--primary"
+
               style={{ display: "block", width: "100%", marginBottom: "0.5rem" }}
+
             >
+
               Parapijos puslapis
+
             </Link>
+
             <Link
+
               href={`/wizard?parish=${encodeURIComponent(p.id)}`}
-              className="ae-btn ae-btn--outline !rounded-full !border-[#D4AF37]/40"
+
+              className="ae-btn ae-btn--outline"
+
               style={{ display: "block", width: "100%" }}
+
             >
+
               Sukurti atmintį
+
             </Link>
+
           </article>
+
         ))}
+
       </div>
-    </section>
+
+    </HerculesPageShell>
+
   );
+
 }
+

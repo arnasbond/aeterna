@@ -20,6 +20,15 @@ import { WizardPrivacyStep, isWizardPrivacyComplete } from "@/components/wizard/
 import { clearCandleIntent, loadCandleIntent } from "@/lib/candle-intent";
 import { buildWizardReturnPath } from "@/lib/wizard-return-path";
 import { clearWizardDraft, loadWizardDraft, saveWizardDraft } from "@/lib/wizard-draft";
+import { HerculesPageShell } from "@/components/layout/HerculesPageShell";
+import { prepareUploadFile } from "@/lib/compress-upload";
+
+/** Client-side resize/compress before Vercel Blob — keeps storage and mobile loads lean. */
+const WIZARD_IMAGE_COMPRESSION = { maxDimension: 1200, quality: 0.8 } as const;
+
+async function prepareWizardImage(file: File): Promise<File> {
+  return prepareUploadFile(file, WIZARD_IMAGE_COMPRESSION);
+}
 
 const WIZARD_STEPS = [
   { n: 1, label: "Velionis" },
@@ -195,13 +204,17 @@ function WizardInner() {
 
   if (doneOrder) {
     return (
-      <section className="ae-section ae-wizard">
-        <h2>Apmokėjimas gautas (MVP)</h2>
-        <p style={{ color: "var(--ae-muted)" }}>Užsakymo ID: {doneOrder}</p>
-        <Link href="/wizard" className="ae-btn ae-btn--primary" style={{ marginTop: "1rem" }}>
-          Naujas profilis
-        </Link>
-      </section>
+      <HerculesPageShell narrow center>
+        <div className="ae-wizard ae-card" style={{ padding: "1.5rem", textAlign: "center" }}>
+          <h2 className="hercules-page__title" style={{ fontSize: "1.25rem" }}>
+            Apmokėjimas gautas (MVP)
+          </h2>
+          <p className="ae-hint">Užsakymo ID: {doneOrder}</p>
+          <Link href="/wizard" className="ae-btn ae-btn--primary" style={{ marginTop: "1rem" }}>
+            Naujas profilis
+          </Link>
+        </div>
+      </HerculesPageShell>
     );
   }
 
@@ -210,7 +223,8 @@ function WizardInner() {
     setMediaBusy(true);
     setErr(null);
     try {
-      const url = await uploadMemorialFile(file);
+      const prepared = await prepareWizardImage(file);
+      const url = await uploadMemorialFile(prepared, { prepared: true });
       setPortraitUrl(url);
     } catch (e) {
       setErr(uploadErrorMessage(e, "Nepavyko įkelti portreto"));
@@ -240,7 +254,8 @@ function WizardInner() {
     try {
       const uploaded: string[] = [];
       for (const file of filesArr) {
-        uploaded.push(await uploadMemorialFile(file));
+        const prepared = await prepareWizardImage(file);
+        uploaded.push(await uploadMemorialFile(prepared, { prepared: true }));
       }
       setGalleryUrls((prev) => [...prev, ...uploaded]);
     } catch (e) {
@@ -329,8 +344,9 @@ function WizardInner() {
   }
 
   return (
-    <section className="ae-section ae-wizard-page">
-      <h1 className="ae-section-title chronicle-serif text-stone-900" style={{ fontSize: "1.75rem" }}>
+    <HerculesPageShell narrow>
+    <div className="ae-wizard-page">
+      <h1 className="hercules-page__title chronicle-serif" style={{ fontSize: "1.75rem" }}>
         Kūrimo vedlys — memorialas artimajam
       </h1>
       {!loggedIn && authChecked ? (
@@ -345,12 +361,10 @@ function WizardInner() {
       )}
       {fromCandle && loggedIn && step < RESULT_STEP && (
         <p
-          className="ae-hint"
+          className="ae-hint ae-card"
           style={{
             marginBottom: "1rem",
             padding: "0.75rem 1rem",
-            background: "var(--ae-soft, #f4f0f8)",
-            borderRadius: 8,
             lineHeight: 1.55,
           }}
         >
@@ -398,7 +412,7 @@ function WizardInner() {
             );
           })}
         </nav>
-        {err && <p style={{ color: "#b91c1c", marginBottom: "1rem" }}>{err}</p>}
+        {err && <p className="ae-error" style={{ marginBottom: "1rem" }}>{err}</p>}
 
         {step === 1 && (
           <>
@@ -712,13 +726,22 @@ function WizardInner() {
         )}
       </div>
       )}
-    </section>
+    </div>
+    </HerculesPageShell>
   );
 }
 
 export default function WizardPage() {
   return (
-    <Suspense fallback={<section className="ae-section">Kraunama…</section>}>
+    <Suspense
+      fallback={
+        <HerculesPageShell narrow center>
+          <p className="ae-hint" style={{ textAlign: "center" }}>
+            Kraunama…
+          </p>
+        </HerculesPageShell>
+      }
+    >
       <WizardInner />
     </Suspense>
   );

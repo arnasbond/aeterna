@@ -156,22 +156,22 @@ export function MemorialPageClient({ slug }: Props) {
 
   if (loading) {
     return (
-      <section className="ae-section" style={{ textAlign: "center" }}>
+      <p className="ae-hint ch-memorial" style={{ textAlign: "center", padding: "2rem 1rem" }}>
         Kraunama…
-      </section>
+      </p>
     );
   }
 
   if (error || !memorial) {
     return (
-      <section className="ae-section" style={{ textAlign: "center" }}>
-        <p style={{ color: "#b91c1c" }}>{error ?? "Atminimo puslapis nerastas"}</p>
+      <div className="ch-memorial" style={{ textAlign: "center", padding: "2rem 1rem" }}>
+        <p className="ae-error">{error ?? "Atminimo puslapis nerastas"}</p>
         {getUserToken() && (
           <p style={{ marginTop: "1rem" }}>
             <Link href="/paskyra">← Mano paskyra</Link>
           </p>
         )}
-      </section>
+      </div>
     );
   }
 
@@ -196,24 +196,19 @@ export function MemorialPageClient({ slug }: Props) {
   return (
     <>
       {ownerOnly && (
-        <section className="ae-section" style={{ paddingBottom: 0 }}>
-          <p className="ae-hint" style={{ textAlign: "center", color: "var(--ae-primary)" }}>
-            Peržiūrite savo profilį (anksčiau sukurti profiliai gali būti tik jums matomi, kol bus
-            patvirtinti).
-          </p>
-        </section>
+        <div className="hercules-memorial__banner ae-card ae-hint" style={{ textAlign: "center" }}>
+          Peržiūrite savo profilį (anksčiau sukurti profiliai gali būti tik jums matomi, kol bus patvirtinti).
+        </div>
       )}
       {!getUserToken() && memorial && !memorial.linkedToAccount && (
-        <section className="ae-section" style={{ paddingBottom: 0 }}>
-          <p className="ae-hint" style={{ textAlign: "center" }}>
-            Redaguoti gali tik profilio savininkas.{" "}
-            <Link href={`/prisijungti?next=${encodeURIComponent(`/m/${slug}`)}`}>Prisijungite</Link> ir
-            pririškite šį profilį prie savo paskyros.
-          </p>
-        </section>
+        <div className="hercules-memorial__banner ae-card ae-hint" style={{ textAlign: "center" }}>
+          Redaguoti gali tik profilio savininkas.{" "}
+          <Link href={`/prisijungti?next=${encodeURIComponent(`/m/${slug}`)}`}>Prisijungite</Link> ir pririškite
+          šį profilį prie savo paskyros.
+        </div>
       )}
       {canClaim && !canEdit && (
-        <section className="ae-section" style={{ paddingBottom: 0 }}>
+        <div className="hercules-memorial__banner ae-card">
           <p className="ae-hint" style={{ textAlign: "center", marginBottom: "0.75rem" }}>
             Šis profilis sukurtas be paskyros. Jei tai jūsų atmintis — pririškite prie savo paskyros.
           </p>
@@ -225,7 +220,7 @@ export function MemorialPageClient({ slug }: Props) {
           >
             {claimBusy ? "Pririšiama…" : "Pririšti prie mano paskyros"}
           </button>
-        </section>
+        </div>
       )}
       <MemorialProfile
         memorial={memorial}

@@ -1,11 +1,15 @@
-/** Hercules glassmorphism card — shared across landing layout cards */
+/** Hercules dark glass panel — shared across inner pages */
 export const GLASS_CARD =
-  "bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(212,175,55,0.05)] rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_0_rgba(212,175,55,0.1)]";
+  "bg-[rgba(28,28,28,0.72)] backdrop-blur-xl border border-white/16 shadow-[0_24px_64px_rgba(0,0,0,0.45)] rounded-sm transition-all duration-[450ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-1 hover:border-white/28 hover:shadow-[0_32px_72px_rgba(0,0,0,0.55)]";
+
+/** Ivory glass panel for memorial profile (readable on #fcfbf7 canvas) */
+export const MEMORIAL_IVORY_CARD =
+  "bg-[rgba(255,255,255,0.58)] backdrop-blur-md border border-[#D4AF37]/28 shadow-[0_8px_32px_rgba(30,40,30,0.06)] rounded-lg";
 
 /** Premium tactile pill for memorial actions (candle, mass sheets) */
 export const MEMORIAL_PILL_BTN =
-  "rounded-full transition-all duration-300 ease-in-out hover:shadow-[0_0_24px_rgba(245,158,11,0.35)] active:scale-[0.98]";
+  "rounded-full transition-all duration-300 ease-in-out hover:shadow-[0_4px_20px_rgba(61,52,40,0.15)] active:scale-[0.98]";
 
 /** Home action trigger pills (mass / candle on landing) */
 export const HOME_ACTION_PILL =
-  `${MEMORIAL_PILL_BTN} w-full border-2 border-[#0F2519]/20 bg-white/50 px-6 py-4 text-base font-bold text-[#0A1A10] backdrop-blur-sm hover:border-[#D4AF37]/50 hover:bg-[#0F2519] hover:text-white`;
+  `${MEMORIAL_PILL_BTN} w-full border border-white/20 bg-white/8 px-6 py-4 text-base font-bold text-white backdrop-blur-sm hover:border-white/40 hover:bg-white/14`;

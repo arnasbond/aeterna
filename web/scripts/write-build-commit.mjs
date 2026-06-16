@@ -10,13 +10,20 @@ function gitShortSha() {
   }
 }
 
+const LUXURY_BUILD = "hercules-v4";
+
 const sha = (process.env.VERCEL_GIT_COMMIT_SHA || process.env.GIT_COMMIT_SHA || "").trim();
 let label = gitShortSha() || "local";
 if (sha.length >= 7 && /^[0-9a-f]+$/i.test(sha)) {
   label = sha.slice(0, 7).toLowerCase();
 } else if (!label || label === "local") {
-  if (process.env.VERCEL === "1") label = gitShortSha() || "unknown";
+  if (process.env.VERCEL === "1") {
+    const dep = (process.env.VERCEL_DEPLOYMENT_ID || "").trim();
+    label = dep ? dep.slice(0, 8) : gitShortSha() || "vercel";
+  }
 }
+
+label = `${LUXURY_BUILD}-${label}`;
 
 const out = join(process.cwd(), "public", "commit-hash.txt");
 writeFileSync(out, label + "\n", "utf8");

@@ -3,20 +3,20 @@ import { HomeFeaturedParishes } from "@/components/home/HomeFeaturedParishes";
 import { CandleSection } from "@/components/CandleSection";
 import { MassBookingSection } from "@/components/MassBookingSection";
 import Link from "next/link";
-import { GLASS_CARD } from "@/lib/glass-card";
+import { HERCULES_FLOAT, HERCULES_REVEAL } from "@/lib/hercules-theme";
 
 export default function HomePage() {
   return (
-    <div className="vk-home vk-home--light relative">
+    <div className="vk-home hercules-home relative">
       <HomeLanding />
 
-      <section className="vk-home-actions">
+      <section className={`vk-home-actions ${HERCULES_REVEAL}`}>
         <div className="vk-container">
           <div className="vk-home-actions__grid">
-            <div className={`${GLASS_CARD} p-5 sm:p-6`}>
+            <div className={`${HERCULES_FLOAT} p-5 sm:p-6`}>
               <MassBookingSection presentation="sheet" />
             </div>
-            <div className={`${GLASS_CARD} p-5 sm:p-6`}>
+            <div className={`${HERCULES_FLOAT} p-5 sm:p-6`}>
               <CandleSection presentation="sheet" />
             </div>
           </div>
@@ -25,9 +25,9 @@ export default function HomePage() {
 
       <HomeFeaturedParishes />
 
-      <section id="parama" className="vk-parish-band vk-section--airy">
+      <section id="parama" className={`vk-parish-band vk-section--airy ${HERCULES_REVEAL}`}>
         <div className="vk-container">
-          <div className={`ae-home-parish__inner vk-parish-band__inner ${GLASS_CARD} !p-6 sm:!p-8 !bg-[#0F2519]/95 !border-[#D4AF37]/20 !text-white`}>
+          <div className={`ae-home-parish__inner vk-parish-band__inner ${HERCULES_FLOAT} hercules-float--static !p-6 sm:!p-8`}>
             <div className="ae-home-parish__chart" aria-hidden>
               <div className="ae-donate-ring">
                 <svg viewBox="0 0 120 120" className="ae-donate-ring__svg">
@@ -53,10 +53,10 @@ export default function HomePage() {
               </div>
             </div>
             <div>
-              <h2 className="ae-section-title text-stone-100" style={{ textAlign: "left" }}>
+              <h2 className="ae-section-title" style={{ textAlign: "left" }}>
                 Žvakutė ir mišios remia parapiją
               </h2>
-              <p className="vk-parish-band__lead text-white/85">
+              <p className="vk-parish-band__lead">
                 Skaitmeninė narystė (39 €) finansuoja platformą. Uždegus žvakutę ar užsakius Šv. Mišias — visa auka
                 keliauja į parapiją.
               </p>

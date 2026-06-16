@@ -4,8 +4,8 @@
   "description": "Skaitmeninis atminimas per QR kodą ant paminklo",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#faf8fc",
-  "theme_color": "#4a2f7a",
+  "background_color": "#141414",
+  "theme_color": "#141414",
   "lang": "lt",
   "orientation": "portrait"
 }

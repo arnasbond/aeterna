@@ -2,11 +2,11 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="vk-footer relative mt-8 border-t border-[#D4AF37]/15 bg-[#0A1A10]/95 text-white/85 backdrop-blur-md">
+    <footer className="vk-footer relative mt-8">
       <div className="vk-footer__grid">
         <div className="vk-footer__brand">
           <div className="vk-logo vk-logo--footer">
-            <span className="vk-logo__mark !bg-gradient-to-br !from-[#D4AF37]/40 !to-[#0F2519]" aria-hidden>
+            <span className="vk-logo__mark !bg-gradient-to-br !from-white/20 !to-[#242424]" aria-hidden>
               ✝
             </span>
             <span className="vk-logo__text font-serif">

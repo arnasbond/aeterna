@@ -9,6 +9,10 @@ export type WizardDraft = {
   galleryUrls: string[];
   videoUrl: string;
   parishId: string;
+  privacyStatus: "public" | "private" | "";
+  consentTerms: boolean;
+  consentPrivacy: boolean;
+  consentMapLocation: boolean;
   step: number;
   maxStep: number;
 };

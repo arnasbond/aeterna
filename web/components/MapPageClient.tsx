@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { fetchMapData, searchParishes, type MapData, type Parish } from "@/lib/api";
 import { ParishMap } from "@/components/ParishMap";
+import { HerculesPageShell } from "@/components/layout/HerculesPageShell";
 import Link from "next/link";
-import { GLASS_CARD } from "@/lib/glass-card";
 
 export function MapPageClient() {
   const [data, setData] = useState<MapData | null>(null);
@@ -32,20 +32,12 @@ export function MapPageClient() {
   }, [query]);
 
   return (
-    <section className="ae-section ae-section--map">
-      <div className={`ae-map-header ${GLASS_CARD} !mx-auto !mb-6 !max-w-6xl !p-6 sm:!p-8`}>
-        <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#0F2519]/75">
-            Parapijų tinklas
-          </p>
-          <h1 className="ae-section-title chronicle-serif text-left text-stone-900" style={{ marginBottom: "0.5rem" }}>
-            Parapijų žemėlapis
-          </h1>
-          <p className="m-0 max-w-xl text-[#0A1A10]/75">
-            Interaktyvus Lietuvos žemėlapis pagal seniūnijas. Užveskite — pamatysite parapijas; paspauskite —
-            pateksite į parapijos skydelį.
-          </p>
-        </div>
+    <HerculesPageShell eyebrow="Parapijų tinklas" title="Parapijų žemėlapis">
+      <div className="ae-map-header ae-card" style={{ marginBottom: "1.5rem", padding: "1.5rem 2rem" }}>
+        <p className="ae-hint" style={{ margin: "0 0 1rem", maxWidth: "36rem" }}>
+          Interaktyvus Lietuvos žemėlapis pagal seniūnijas. Užveskite — pamatysite parapijas; paspauskite —
+          pateksite į parapijos skydelį.
+        </p>
         <div className="ae-map-search">
           <input
             type="search"
@@ -53,7 +45,6 @@ export function MapPageClient() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Ieškoti parapijos"
-            className="focus:ring-2 focus:ring-[#D4AF37]/40"
           />
           {results.length > 0 && (
             <ul className="ae-map-search-results">
@@ -72,7 +63,7 @@ export function MapPageClient() {
       {err && <p className="ae-error" style={{ textAlign: "center" }}>{err}</p>}
       {!data && !err && <p className="ae-hint" style={{ textAlign: "center" }}>Kraunamas žemėlapis…</p>}
       {data && (
-        <div className={`ae-map-shell ${GLASS_CARD} !mx-auto !max-w-[72rem] overflow-hidden !rounded-2xl !p-0`}>
+        <div className="ae-map-shell ae-card" style={{ maxWidth: "72rem", margin: "0 auto", padding: 0, overflow: "hidden" }}>
           <ParishMap data={data} />
         </div>
       )}
@@ -83,6 +74,6 @@ export function MapPageClient() {
         </a>{" "}
         (parapijos su oficialiomis svetainėmis). Žemėlapio sritys — supaprastintos seniūnijos.
       </p>
-    </section>
+    </HerculesPageShell>
   );
 }

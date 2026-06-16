@@ -16,7 +16,7 @@ function formatYears(birth: string | null, death: string | null) {
   return `${y(birth)} – ${y(death)}`;
 }
 
-export function MemorialSearchBox() {
+export function MemorialSearchBox({ variant = "hercules" }: { variant?: "default" | "hero" | "hercules" }) {
   const listId = useId();
   const wrapRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
@@ -118,11 +118,99 @@ export function MemorialSearchBox() {
     }
   }
 
+  const isHero = variant === "hero";
+  const isHercules = variant === "hercules";
+
+  if (isHercules) {
+    return (
+      <div ref={wrapRef} id="atminties-paieska" className="hercules-search">
+        <div className="hercules-search__bar">
+          <div className="hercules-search__input-wrap">
+            <span className="hercules-search__icon" aria-hidden>
+              🔍
+            </span>
+            <input
+              id={`${listId}-input`}
+              type="search"
+              className="hercules-search__input"
+              placeholder="Ieškoti atminties..."
+              value={query}
+              autoComplete="off"
+              role="combobox"
+              aria-expanded={open}
+              aria-controls={`${listId}-list`}
+              aria-label="Ieškoti atminties"
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => {
+                if (hits.length > 0) setOpen(true);
+              }}
+              onKeyDown={onKeyDown}
+            />
+            {loading && <span className="ae-memorial-search__spinner" aria-hidden />}
+          </div>
+          <button
+            type="button"
+            className="hercules-search__submit"
+            onClick={() => void runSearch(query)}
+          >
+            Ieškoti <span aria-hidden>›</span>
+          </button>
+        </div>
+
+        {apiError && searched && (
+          <p className="hercules-search__hint" role="alert">
+            Paieškos serveris laikinai nepasiekiamas.
+          </p>
+        )}
+
+        {open && hits.length > 0 && (
+          <ul id={`${listId}-list`} className="hercules-search__list" role="listbox">
+            {hits.map((hit, i) => (
+              <li key={hit.slug} role="option" aria-selected={i === active}>
+                <button
+                  type="button"
+                  className={`hercules-search__item${i === active ? " hercules-search__item--active" : ""}`}
+                  onMouseEnter={() => setActive(i)}
+                  onClick={() => goTo(hit)}
+                >
+                  {hit.portraitUrl ? (
+                    <img src={hit.portraitUrl} alt="" className="ae-memorial-search__thumb" />
+                  ) : (
+                    <span className="ae-memorial-search__thumb ae-memorial-search__thumb--empty" aria-hidden>
+                      ✦
+                    </span>
+                  )}
+                  <span className="ae-memorial-search__meta">
+                    <strong>{hit.fullName}</strong>
+                    <small>{formatYears(hit.birthDate, hit.deathDate)}</small>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <p className="hercules-search__hint">
+          Pavyzdžiai:{" "}
+          <Link href="/m/ona-demo">Stasė (demo)</Link>
+          {" · "}
+          <Link href="/m/vardenis-pavardenis">Vardenis Pavardenis</Link>
+          {" · "}
+          <Link href="/m/vladas-krisikaitis">Vladas Krisikaitis</Link>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={wrapRef}
       id="atminties-paieska"
-      className="ae-memorial-search mx-auto max-w-2xl rounded-2xl bg-white/50 p-4 backdrop-blur-md border border-white/60 shadow-[0_8px_32px_0_rgba(212,175,55,0.08)] transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D4AF37]/40 focus-within:shadow-[0_12px_40px_0_rgba(212,175,55,0.12)] sm:p-5"
+      className={
+        isHero
+          ? "ae-memorial-search ae-memorial-search--hero mx-auto max-w-2xl rounded-2xl border-2 border-[#D4AF37]/50 bg-white/95 p-4 shadow-[0_16px_48px_rgba(0,0,0,0.35),0_0_0_1px_rgba(212,175,55,0.2)] backdrop-blur-md transition-all duration-300 focus-within:border-[#D4AF37] focus-within:shadow-[0_20px_56px_rgba(212,175,55,0.25)] sm:p-5"
+          : "ae-memorial-search mx-auto max-w-2xl rounded-2xl border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_0_rgba(212,175,55,0.08)] backdrop-blur-md transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D4AF37]/40 focus-within:shadow-[0_12px_40px_0_rgba(212,175,55,0.12)] sm:p-5"
+      }
     >
       <label
         htmlFor={`${listId}-input`}
@@ -209,6 +297,10 @@ export function MemorialSearchBox() {
         {" · "}
         <Link href="/m/vardenis-pavardenis" className="ae-memorial-search__example">
           vardenis pavardenis
+        </Link>
+        {" · "}
+        <Link href="/m/vladas-krisikaitis" className="ae-memorial-search__example">
+          Vladas Krisikaitis
         </Link>
       </p>
     </div>

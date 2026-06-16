@@ -19,6 +19,8 @@ type Props = {
   expandable?: boolean;
   /** Savininko / vedlio skiltis su plokštelėmis */
   showPlateLink?: boolean;
+  /** Kompaktiniame profilyje vardas jau rodomas viršuje */
+  showName?: boolean;
 };
 
 export function MemorialQrHub({
@@ -29,6 +31,7 @@ export function MemorialQrHub({
   onExpand,
   expandable = false,
   showPlateLink = true,
+  showName = true,
 }: Props) {
   const [copyMsg, setCopyMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -88,7 +91,7 @@ export function MemorialQrHub({
         ) : (
           <img src={qrDisplay} alt="" width={220} height={220} className="ch-memorial-qr-hub__qr" />
         )}
-        <p className="ch-memorial-qr-hub__name chronicle-serif">{fullName}</p>
+        {showName ? <p className="ch-memorial-qr-hub__name chronicle-serif">{fullName}</p> : null}
       </div>
 
       <div className="ch-memorial-qr-hub__actions ch-btn-row">

@@ -6,6 +6,8 @@ declare global {
       sharePage: (title: string, text: string) => void;
       downloadApp: () => void;
       goHome: () => void;
+      openMaps?: (url: string) => void;
+      openSettings?: () => void;
     };
   }
 }

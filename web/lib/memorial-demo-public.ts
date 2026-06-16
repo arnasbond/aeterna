@@ -5,7 +5,7 @@ const DEMO_PARISH = {
   title: "Vilniaus Šv. Stanislovo ir šv. Vladislapo arkikatedra bazilika",
   diocese: "Vilniaus arkivyskupija",
   supportGoal: "Parama parapijos veiklai ir socialinei pagalbai",
-  image: "https://images.unsplash.com/photo-1477617722074-45613a51bf6d?auto=format&fit=crop&q=80&w=800",
+  image: "https://images.unsplash.com/photo-1438032005730-c779502df39b?auto=format&fit=crop&w=800&q=80",
 };
 
 const MEDIA_BASE = "https://aeterna-mauve.vercel.app/demo/stase";

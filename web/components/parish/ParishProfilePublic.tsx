@@ -4,6 +4,7 @@ import {
   isDisplayableParishImage,
   PARISH_FALLBACK_IMAGE,
   parishCardImage,
+  parishGalleryUrls,
 } from "@/lib/parish-image";
 
 type Props = {
@@ -36,7 +37,7 @@ export function parishHeroImage(parish: ParishDetail): string {
 }
 
 export function parishGalleryImages(parish: ParishDetail): string[] {
-  const fromProfile = parish.profile.galleryUrls.filter(isDisplayableParishImage);
+  const fromProfile = parishGalleryUrls(parish.profile.galleryUrls);
   if (fromProfile.length > 0) return fromProfile;
   if (parish.image && isDisplayableParishImage(parish.image)) return [parish.image];
   return [PARISH_FALLBACK_IMAGE];

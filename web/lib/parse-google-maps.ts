@@ -48,9 +48,8 @@ function validLatLng(lat: number, lng: number): boolean {
   return Number.isFinite(lat) && Number.isFinite(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
 }
 
+import { googleMapsSearchUrl } from "./open-maps";
+
 export function googleMapsPickUrl(query?: string): string {
-  if (query?.trim()) {
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query.trim())}`;
-  }
-  return "https://www.google.com/maps";
+  return query?.trim() ? googleMapsSearchUrl(query) : "https://maps.google.com/";
 }

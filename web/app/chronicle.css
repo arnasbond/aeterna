@@ -38,14 +38,62 @@
 .ch-header {
   position: relative;
   z-index: 100;
+  border-bottom: none;
+}
+
+.ch-header:not(.ch-header--floating) {
   background: transparent;
   backdrop-filter: none;
-  border-bottom: none;
 }
 
 .ch-header--floating {
   position: relative;
   top: auto;
+  background: rgba(15, 37, 25, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(212, 175, 55, 0.08);
+}
+
+.ch-header--floating .ch-logo strong {
+  color: #f5e6a8;
+  letter-spacing: 0.28em;
+}
+
+.ch-header--floating .ch-nav a {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.ch-header--floating .ch-nav a:hover,
+.ch-header--floating .ch-nav__plates {
+  color: #d4af37;
+}
+
+.ch-header--floating .ch-header__example {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.ch-header--floating .ch-header__example:hover {
+  color: #d4af37;
+}
+
+.ch-header--floating .ch-header__cta {
+  background: linear-gradient(135deg, #d4af37 0%, #f5e6a8 100%);
+  color: #0a1a10;
+  border-color: #d4af37;
+  font-weight: 800;
+}
+
+.ch-header--floating .ch-header__cta:hover {
+  background: linear-gradient(135deg, #f5e6a8 0%, #d4af37 100%);
+  color: #0a1a10;
+}
+
+.ch-header--floating .ch-menu-btn span {
+  background: #f5e6a8;
 }
 
 .ch-header__inner {

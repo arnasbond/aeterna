@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { DownloadAppButton } from "@/components/DownloadAppButton";
 import { ShareBar } from "@/components/ShareBar";
+import { HerculesPageShell } from "@/components/layout/HerculesPageShell";
 import { getApkDownloadUrl, getSiteOrigin } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -14,14 +15,12 @@ export default function DownloadAppPage() {
   const site = getSiteOrigin();
 
   return (
-    <section className="ae-section ae-download-page">
-      <h1 className="ae-section-title chronicle-serif text-stone-900">AETERNA programėlė</h1>
-      <div className="ae-divider" />
-      <p className="ae-download-page__lead">
-        Android programėlė atidaro memorialus ir parapijų puslapius — veikia per mobilųjį internetą,
-        be namų Wi‑Fi.
-      </p>
-
+    <HerculesPageShell
+      narrow
+      center
+      title="AETERNA programėlė"
+      lead="Android programėlė atidaro memorialus ir parapijų puslapius — veikia per mobilųjį internetą, be namų Wi‑Fi."
+    >
       <a
         href={apkUrl}
         download="aeterna.apk"
@@ -48,7 +47,9 @@ export default function DownloadAppPage() {
       </ol>
 
       <div className="ae-download-page__share">
-        <h2 className="ae-memorial-section-title">Pasidalinkite su artimaisiais</h2>
+        <h2 className="hercules-page__title" style={{ fontSize: "1.15rem" }}>
+          Pasidalinkite su artimaisiais
+        </h2>
         <ShareBar
           title="AETERNA — skaitmeninis atminimas"
           text="Atsisiųskite AETERNA programėlę arba atidarykite memorialą naršyklėje."
@@ -61,6 +62,6 @@ export default function DownloadAppPage() {
           Kaip atrodo skaitmeninis atminimas
         </Link>
       </p>
-    </section>
+    </HerculesPageShell>
   );
 }

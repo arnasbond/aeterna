@@ -3,11 +3,15 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { HerculesPageShell } from "@/components/layout/HerculesPageShell";
 import {
+  approveGuestbookEntry,
   clearUserToken,
+  fetchOwnerGuestbook,
   fetchUserMe,
   fetchUserMemorials,
   getUserToken,
+  type GuestbookEntry,
   type OwnedMemorial,
   type UserAccount,
 } from "@/lib/api";
@@ -19,6 +23,8 @@ export default function PaskyraPage() {
   const [user, setUser] = useState<UserAccount | null>(null);
   const [memorials, setMemorials] = useState<OwnedMemorial[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  const [guestbookQueues, setGuestbookQueues] = useState<Record<string, GuestbookEntry[]>>({});
+  const [approveBusy, setApproveBusy] = useState<string | null>(null);
 
   useEffect(() => {
     if (!getUserToken()) {
@@ -26,9 +32,20 @@ export default function PaskyraPage() {
       return;
     }
     Promise.all([fetchUserMe(), fetchUserMemorials()])
-      .then(([u, list]) => {
+      .then(async ([u, list]) => {
         setUser(u);
         setMemorials(list);
+        const pending = list.filter((m) => (m.pendingGuestbookCount ?? 0) > 0);
+        const queues = await Promise.all(
+          pending.map(async (m) => {
+            const rows = await fetchOwnerGuestbook(m.slug);
+            return [
+              m.slug,
+              rows.filter((g) => !g.isApproved && g.status !== "rejected"),
+            ] as const;
+          })
+        );
+        setGuestbookQueues(Object.fromEntries(queues.filter(([, rows]) => rows.length > 0)));
       })
       .catch((e) => {
         clearUserToken();
@@ -44,20 +61,19 @@ export default function PaskyraPage() {
 
   if (!user) {
     return (
-      <section className="ae-section">
+      <HerculesPageShell narrow center>
         <p className="ae-hint" style={{ textAlign: "center" }}>
           Kraunama…
         </p>
-      </section>
+      </HerculesPageShell>
     );
   }
 
   return (
-    <section className="ae-section ae-paskyra-page">
-      <h1 className="ae-section-title chronicle-serif">Mano paskyra</h1>
-      <p className="ae-auth__lead text-[#0A1A10]/75">
-        Sveiki, <strong>{user.fullName}</strong> ({user.email}). Čia valdote savo atminties
-        profilius — iki {MAX_MEMORIALS} vienoje paskyroje.
+    <HerculesPageShell narrow title="Mano paskyra">
+      <p className="ae-auth__lead">
+        Sveiki, <strong>{user.fullName}</strong> ({user.email}). Čia valdote savo atminties profilius — iki{" "}
+        {MAX_MEMORIALS} vienoje paskyroje.
       </p>
 
       {err && <p className="ae-error">{err}</p>}
@@ -86,7 +102,89 @@ export default function PaskyraPage() {
 
       <div className="ae-divider" />
 
-      <h2 className="ae-section-title chronicle-serif text-stone-900" style={{ fontSize: "1.25rem" }}>
+      {Object.keys(guestbookQueues).length > 0 && (
+        <section className="ae-card" style={{ marginBottom: "1.5rem", padding: "1.25rem" }}>
+          <h2 className="hercules-page__title chronicle-serif" style={{ fontSize: "1.15rem", margin: "0 0 0.5rem" }}>
+            Laukiančios užuojautos
+          </h2>
+          <p className="ae-hint" style={{ margin: "0 0 1rem" }}>
+            Patvirtinkite žinutes vienu paspaudimu — tik patvirtintos rodomos viešame memorialiniame puslapyje.
+          </p>
+          {Object.entries(guestbookQueues).map(([slug, rows]) => {
+            const memorial = memorials.find((m) => m.slug === slug);
+            return (
+              <div key={slug} style={{ marginBottom: "1rem" }}>
+                <p style={{ margin: "0 0 0.5rem", fontWeight: 600 }}>{memorial?.fullName ?? slug}</p>
+                <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                  {rows.map((g) => (
+                    <li
+                      key={g.id}
+                      style={{
+                        display: "flex",
+                        gap: "0.75rem",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        flexWrap: "wrap",
+                        padding: "0.65rem 0",
+                        borderTop: "1px solid rgba(212, 175, 55, 0.15)",
+                      }}
+                    >
+                      <div style={{ flex: "1 1 10rem", minWidth: 0 }}>
+                        <strong style={{ fontSize: "0.92rem" }}>{g.authorName}</strong>
+                        <p
+                          style={{
+                            margin: "0.25rem 0 0",
+                            fontSize: "0.88rem",
+                            whiteSpace: "pre-wrap",
+                            opacity: 0.9,
+                          }}
+                        >
+                          {g.message.length > 120 ? `${g.message.slice(0, 120)}…` : g.message}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className="ae-btn ae-btn--primary"
+                        disabled={approveBusy === g.id}
+                        onClick={async () => {
+                          setApproveBusy(g.id);
+                          try {
+                            await approveGuestbookEntry(slug, g.id);
+                            const fresh = await fetchOwnerGuestbook(slug);
+                            const stillPending = fresh.filter((e) => !e.isApproved && e.status !== "rejected");
+                            setGuestbookQueues((prev) => {
+                              const next = { ...prev };
+                              if (stillPending.length === 0) delete next[slug];
+                              else next[slug] = stillPending;
+                              return next;
+                            });
+                            setMemorials((prev) =>
+                              prev.map((m) =>
+                                m.slug === slug
+                                  ? { ...m, pendingGuestbookCount: stillPending.length }
+                                  : m
+                              )
+                            );
+                          } finally {
+                            setApproveBusy(null);
+                          }
+                        }}
+                      >
+                        {approveBusy === g.id ? "…" : "✓ Rodyti viešai"}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <Link href={`/paskyra/atmintis/${slug}`} className="ae-hint" style={{ fontSize: "0.85rem" }}>
+                  Visos užuojautos →
+                </Link>
+              </div>
+            );
+          })}
+        </section>
+      )}
+
+      <h2 className="hercules-page__title chronicle-serif" style={{ fontSize: "1.25rem" }}>
         Mano atminties profiliai
       </h2>
 
@@ -100,7 +198,22 @@ export default function PaskyraPage() {
           {memorials.map((m) => (
             <li key={m.id} className="ae-card ae-paskyra-item">
               <div>
-                <h3 className="font-serif text-stone-900">{m.fullName}</h3>
+                <h3 className="chronicle-serif">
+                  {m.fullName}
+                  {(m.pendingGuestbookCount ?? 0) > 0 && (
+                    <span
+                      className="ae-hint"
+                      style={{
+                        marginLeft: "0.5rem",
+                        fontSize: "0.75rem",
+                        fontWeight: 600,
+                        color: "#c4a574",
+                      }}
+                    >
+                      · {m.pendingGuestbookCount} laukia patvirtinimo
+                    </span>
+                  )}
+                </h3>
                 <p className="ae-hint">
                   {m.birthDate ?? "—"} — {m.deathDate ?? "—"}
                 </p>
@@ -117,6 +230,6 @@ export default function PaskyraPage() {
           ))}
         </ul>
       )}
-    </section>
+    </HerculesPageShell>
   );
 }

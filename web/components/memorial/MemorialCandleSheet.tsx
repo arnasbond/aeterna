@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { lightCandle } from "@/lib/api";
 
 const PRESET_AMOUNTS = [5, 10, 20] as const;
@@ -87,7 +88,7 @@ export function MemorialCandleSheet({ slug, parishTitle, isPremium, open, onClos
     }
   }
 
-  return (
+  return createPortal(
     <div className="ch-sheet-backdrop" role="presentation" onClick={onClose}>
       <div className="ch-sheet" role="dialog" aria-modal aria-labelledby="candle-sheet-title" onClick={(e) => e.stopPropagation()}>
         <div className="ch-sheet__handle" aria-hidden />
@@ -194,6 +195,7 @@ export function MemorialCandleSheet({ slug, parishTitle, isPremium, open, onClos
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

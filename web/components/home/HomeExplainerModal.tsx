@@ -58,7 +58,7 @@ export function HomeExplainerModal() {
                 controls
                 playsInline
                 preload="metadata"
-                poster="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=800&q=80"
+                poster="https://images.unsplash.com/photo-1548013146-724f63864393?auto=format&fit=crop&w=800&q=80"
               />
             </div>
             <div className="ae-modal__actions">

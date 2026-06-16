@@ -1,5 +1,7 @@
 import { getApiProxyTarget } from "./api-proxy-target";
 import { DEFAULT_API } from "./production-api-default";
+import { parishCardImage } from "./parish-image";
+import type { CompressUploadOptions } from "./compress-upload";
 
 export type Parish = {
   id: string;
@@ -171,9 +173,19 @@ async function parse<T>(r: Response): Promise<T> {
   return j.data as T;
 }
 
+function withResolvedParishImage<
+  T extends { image: string; diocese?: string; profile?: { galleryUrls?: string[] } },
+>(parish: T): T {
+  return {
+    ...parish,
+    image: parishCardImage(parish.image, parish.profile?.galleryUrls, parish.diocese),
+  };
+}
+
 export async function fetchParishes(): Promise<Parish[]> {
   const r = await fetch(`${base()}/api/v1/parishes`, { cache: "no-store" });
-  return parse<Parish[]>(r);
+  const list = await parse<Parish[]>(r);
+  return list.map((p) => withResolvedParishImage(p));
 }
 
 export async function fetchParish(id: string): Promise<ParishDetail | null> {
@@ -181,7 +193,8 @@ export async function fetchParish(id: string): Promise<ParishDetail | null> {
     cache: "no-store",
   });
   if (r.status === 404) return null;
-  return parse<ParishDetail>(r);
+  const detail = await parse<ParishDetail>(r);
+  return withResolvedParishImage(detail);
 }
 
 export async function fetchMapData(): Promise<MapData> {
@@ -192,7 +205,8 @@ export async function fetchMapData(): Promise<MapData> {
 export async function searchParishes(query: string): Promise<Parish[]> {
   const q = encodeURIComponent(query);
   const r = await fetch(`${base()}/api/v1/parishes/search?q=${q}`, { cache: "no-store" });
-  return parse<Parish[]>(r);
+  const list = await parse<Parish[]>(r);
+  return list.map((p) => withResolvedParishImage(p));
 }
 
 export type MemorialSearchHit = {
@@ -254,9 +268,18 @@ function isDataUrl(url: string): boolean {
   return url.trim().toLowerCase().startsWith("data:");
 }
 
-export async function uploadMemorialFile(file: File): Promise<string> {
+export type UploadMemorialFileOptions = CompressUploadOptions & {
+  /** File already passed through prepareUploadFile — skip second compression. */
+  prepared?: boolean;
+};
+
+export async function uploadMemorialFile(
+  file: File,
+  options?: UploadMemorialFileOptions
+): Promise<string> {
+  const { prepared: alreadyPrepared, ...compressOpts } = options ?? {};
   const { prepareUploadFile, guessFileMime } = await import("./compress-upload");
-  const prepared = await prepareUploadFile(file);
+  const prepared = alreadyPrepared ? file : await prepareUploadFile(file, compressOpts);
   const contentType = guessFileMime(prepared);
 
   const base64 = await new Promise<string>((resolve, reject) => {
@@ -436,6 +459,7 @@ export type OwnedMemorial = {
   qrCodeUrl: string | null;
   privacyStatus: string;
   updatedAt: string;
+  pendingGuestbookCount?: number;
 };
 
 export type OwnedMemorialDetail = {
@@ -696,13 +720,23 @@ export async function acknowledgePriestMassSlotRequest(id: string) {
   return parse<MassSlotRequest>(r);
 }
 
-export async function findMemorialForCandle(fullName: string, birthDate: string, deathDate: string) {
+export type FindMemorialForCandleResult =
+  | { status: "found"; slug: string; profileUrl: string }
+  | { status: "not_found" };
+
+export async function findMemorialForCandle(
+  fullName: string,
+  birthDate: string,
+  deathDate: string
+): Promise<FindMemorialForCandleResult> {
   const r = await fetch(`${base()}/api/v1/candles/find`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ fullName, birthDate, deathDate }),
   });
-  return parse<{ slug: string; profileUrl: string }>(r);
+  if (r.status === 404) return { status: "not_found" };
+  const data = await parse<{ slug: string; profileUrl: string }>(r);
+  return { status: "found", ...data };
 }
 
 export async function lightCandle(payload: {
@@ -730,6 +764,7 @@ export type GuestbookEntry = {
   memorialSlug: string;
   authorName: string;
   message: string;
+  isApproved: boolean;
   status: "pending" | "approved" | "rejected";
   createdAt: string;
   reviewedAt: string | null;
@@ -748,7 +783,7 @@ export async function postMemorialGuestbook(slug: string, payload: { authorName:
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  return parse<{ id: string; message: string }>(r);
+  return parse<{ id: string; isApproved: boolean; message: string }>(r);
 }
 
 export async function fetchOwnerGuestbook(slug: string) {
@@ -759,17 +794,31 @@ export async function fetchOwnerGuestbook(slug: string) {
   return parse<GuestbookEntry[]>(r);
 }
 
-export async function moderateGuestbookEntry(
-  slug: string,
-  entryId: string,
-  status: "approved" | "rejected"
-) {
+export async function approveGuestbookEntry(slug: string, entryId: string) {
   const r = await fetch(
     `${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}/guestbook/${encodeURIComponent(entryId)}`,
     {
       method: "PATCH",
       headers: { ...userHeaders(), "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ isApproved: true }),
+    }
+  );
+  return parse<GuestbookEntry>(r);
+}
+
+export async function moderateGuestbookEntry(
+  slug: string,
+  entryId: string,
+  status: "approved" | "rejected"
+) {
+  const body =
+    status === "approved" ? { isApproved: true } : { isApproved: false, status: "rejected" };
+  const r = await fetch(
+    `${base()}/api/v1/user/memorials/${encodeURIComponent(slug)}/guestbook/${encodeURIComponent(entryId)}`,
+    {
+      method: "PATCH",
+      headers: { ...userHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify(body),
     }
   );
   return parse<GuestbookEntry>(r);

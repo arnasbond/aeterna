@@ -27,8 +27,8 @@ export async function DeployBadge() {
   const commit = (await fetchCommitFromSite()) ?? "…";
 
   return (
-    <p className="ae-deploy-badge" id="aeterna-deploy-badge">
-      Svetainės versija:{" "}
+    <p className="ae-deploy-badge ae-deploy-badge--luxury" id="aeterna-deploy-badge">
+      ✦ Hercules dizainas ·{" "}
       <strong id="aeterna-build-label">{commit}</strong>
       {" "}
       · <span className="ae-deploy-badge__host">{host}</span>

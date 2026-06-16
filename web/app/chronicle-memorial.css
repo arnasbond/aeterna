@@ -77,10 +77,6 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
   height: auto;
   margin: 0 auto 1rem;
   overflow: visible;
-  border-radius: 0;
-  border: none;
-  box-shadow: none;
-  background: transparent;
 }
 
 .ch-memorial-arch__img {
@@ -269,8 +265,31 @@ body:has(.chronicle-memorial-page) footer.ae-footer {
 .chronicle-memorial-page .vk-memorial-candle-form .ch-btn,
 .chronicle-memorial-page .vk-memorial-candle-form .ae-btn {
   background: transparent;
-  color: var(--ch-emerald, #1e3a1e);
+  color: #3d3428;
   border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+/* Warm cocoa buttons — no legacy emerald */
+.chronicle-memorial-page .ch-btn--primary {
+  background: #3d3428;
+  color: #fcfbf7;
+  border-color: #3d3428;
+}
+
+.chronicle-memorial-page .ch-btn--primary:hover {
+  background: #4a4034;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+.chronicle-memorial-page .ch-btn--outline {
+  color: #3d3428;
+  border-color: rgba(212, 175, 55, 0.45);
+}
+
+.chronicle-memorial-page .ch-amount-pill--active {
+  background: #3d3428;
+  color: #fcfbf7;
+  border-color: #d4af37;
 }
 
 .ch-fee-disclaimer {

@@ -16,6 +16,14 @@ export const MEMORIAL_SEARCH_DEMOS: MemorialSearchHit[] = [
     deathDate: "2020-06-01",
     portraitUrl: null,
   },
+  {
+    slug: "vladas-krisikaitis",
+    fullName: "Vladas Krisikaitis",
+    birthDate: "1923-07-05",
+    deathDate: "2013-06-04",
+    portraitUrl:
+      "https://lnzwfenuzgcbifw5.public.blob.vercel-storage.com/memorial-media/eb5da3d9-9e75-4c17-ab73-3b9008aa640b.jpg",
+  },
 ];
 
 function norm(s: string): string {

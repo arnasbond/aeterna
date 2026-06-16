@@ -1,30 +1,46 @@
 import Link from "next/link";
-import { GLASS_CARD } from "@/lib/glass-card";
+import { HERCULES_CHURCH_IMAGE, HERCULES_FLOAT, HERCULES_REVEAL } from "@/lib/hercules-theme";
 
 export function AboutInitiative() {
   return (
-    <section className="vk-section vk-section--airy vk-about-initiative" id="apie">
-      <div className="vk-container vk-about-initiative__inner vk-about-initiative__inner--compact">
-        <div className={`vk-about-initiative__copy ${GLASS_CARD} !p-6 sm:!p-8`}>
-          <span className="vk-badge">Apie iniciatyvą</span>
-          <h2 className="vk-title text-stone-900">Dvasinis tiltas tarp parapijų ir pasaulio lietuvių</h2>
-          <p className="vk-subtitle vk-about-initiative__lead text-[#0A1A10]/75">
-            Šeimos išsaugo artimųjų istorijas skaitmeniniame metraštyje — parapijos sulaukia skaidrios paramos iš
-            viso pasaulio.
-          </p>
-          <div className="vk-about-initiative__actions">
-            <Link href="/wizard" className="vk-btn vk-btn--primary !bg-[#0F2519] hover:!bg-[#0A1A10]">
-              Pradėti memorialą
-            </Link>
-            <Link href="/qr-ploksteles" className="vk-btn vk-btn--outline !border-[#D4AF37]/40 !text-[#0A1A10]">
-              Atminimo plokštelės
-            </Link>
+    <>
+      <section className="hercules-quote-band hercules-reveal" aria-label="Citata">
+        <blockquote>
+          „Kiekvienas žmogus palieka šviesą — mes padedame ją matyti kitoms kartoms.“
+        </blockquote>
+      </section>
+
+      <section className="hercules-about" id="apie">
+        <div className="hercules-about__grid">
+          <div className={`hercules-about__copy hercules-float--static ${HERCULES_FLOAT} ${HERCULES_REVEAL} hercules-reveal-delay-1`}>
+            <span className="hercules-eyebrow">Apie iniciatyvą</span>
+            <h2 className="hercules-section-title">
+              Dvasinis tiltas tarp
+              <br />
+              parapijų ir pasaulio lietuvių
+            </h2>
+            <p className="hercules-section-lead">
+              Šeimos išsaugo artimųjų istorijas skaitmeniniame metraštyje — parapijos sulaukia skaidrios paramos iš
+              viso pasaulio.
+            </p>
+            <div className="hercules-about__actions">
+              <Link href="/wizard" className="hercules-btn-white">
+                Pradėti memorialą <span aria-hidden>→</span>
+              </Link>
+              <Link href="/qr-ploksteles" className="hercules-btn-ghost">
+                Atminimo plokštelės
+              </Link>
+            </div>
+          </div>
+          <div className={`hercules-about__visual ${HERCULES_FLOAT} hercules-float--static ${HERCULES_REVEAL} hercules-reveal-delay-2`}>
+            <img src={HERCULES_CHURCH_IMAGE} alt="" loading="lazy" decoding="async" />
+            <div className="hercules-stat-box">
+              <div className="hercules-stat-box__value">100%</div>
+              <div className="hercules-stat-box__label">aukų keliauja į parapiją</div>
+            </div>
           </div>
         </div>
-        <blockquote className={`vk-about-initiative__quote chronicle-serif ${GLASS_CARD} !p-6 sm:!p-8`}>
-          <p className="text-[#0A1A10]">„Kiekvienas žmogus palieka šviesą — mes padedame ją matyti kitoms kartoms.“</p>
-        </blockquote>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

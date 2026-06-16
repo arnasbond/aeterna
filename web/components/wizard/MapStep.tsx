@@ -5,6 +5,7 @@ import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-lea
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapsOpenLink } from "@/components/MapsOpenLink";
+import { isInLithuania, LT_MAP_DEFAULT, LT_MAP_DEFAULT_ZOOM } from "@/lib/lithuania-map";
 import { googleMapsPickUrl, parseGoogleMapsCoords } from "@/lib/parse-google-maps";
 
 type GeoLocation = { lat: number; lng: number };
@@ -53,9 +54,9 @@ function MapRecenter({ center, zoom }: { center: [number, number]; zoom: number 
 }
 
 export function MapStep({ defaultCoords = null, onSave, placeholder, mapsSearchHint }: Props) {
-  const LT_CENTER: GeoLocation = { lat: 54.687155, lng: 25.279651 };
   const [tab, setTab] = useState<Tab>("google");
   const [coords, setCoords] = useState<GeoLocation | null>(defaultCoords);
+  const [viewCenter, setViewCenter] = useState<GeoLocation>(LT_MAP_DEFAULT);
 
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -64,12 +65,51 @@ export function MapStep({ defaultCoords = null, onSave, placeholder, mapsSearchH
   const [q, setQ] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [searchBusy, setSearchBusy] = useState(false);
-  const [mapZoom, setMapZoom] = useState(4);
+  const [mapZoom, setMapZoom] = useState(LT_MAP_DEFAULT_ZOOM);
+
+  useEffect(() => {
+    if (defaultCoords) {
+      setViewCenter(defaultCoords);
+      setMapZoom(14);
+      return;
+    }
+
+    let cancelled = false;
+    void fetch("/api/geo/approx", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data: { lat?: number; lng?: number; inLithuania?: boolean }) => {
+        if (cancelled) return;
+        const lat = Number(data.lat);
+        const lng = Number(data.lng);
+        if (data.inLithuania && Number.isFinite(lat) && Number.isFinite(lng) && isInLithuania(lat, lng)) {
+          setViewCenter({ lat, lng });
+          setMapZoom(8);
+        } else {
+          setViewCenter(LT_MAP_DEFAULT);
+          setMapZoom(LT_MAP_DEFAULT_ZOOM);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setViewCenter(LT_MAP_DEFAULT);
+          setMapZoom(LT_MAP_DEFAULT_ZOOM);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [defaultCoords]);
 
   const center = useMemo<[number, number]>(() => {
     if (coords) return [coords.lat, coords.lng];
-    return [LT_CENTER.lat, LT_CENTER.lng];
-  }, [coords]);
+    return [viewCenter.lat, viewCenter.lng];
+  }, [coords, viewCenter]);
+
+  function recenterToLithuania() {
+    setViewCenter(LT_MAP_DEFAULT);
+    setMapZoom(LT_MAP_DEFAULT_ZOOM);
+  }
 
   function applyGoogleInput(raw?: string) {
     const text = (raw ?? googleInput).trim();
@@ -93,17 +133,23 @@ export function MapStep({ defaultCoords = null, onSave, placeholder, mapsSearchH
     setBusy(true);
     try {
       if (!navigator.geolocation) {
-        setMsg("Jūsų įrenginys nepalaiko GPS.");
+        recenterToLithuania();
+        setMsg("Jūsų įrenginys nepalaiko GPS. Žemėlapis nukreiptas į Lietuvą — naudokite Google Maps arba paiešką.");
         return;
       }
       const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 20000 });
       });
-      setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      const next = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      setCoords(next);
+      setViewCenter(next);
       setMapZoom(16);
       setMsg("GPS atpažinta. Galite patvirtinti mygtuku „Išsaugoti“.");
     } catch {
-      setMsg("GPS leidimas atmestas arba nepavyko gauti vietos. Naudokite Google Maps arba OpenStreetMap paiešką.");
+      recenterToLithuania();
+      setMsg(
+        "GPS leidimas atmestas arba nepavyko gauti vietos. Žemėlapis nukreiptas į Lietuvą — naudokite Google Maps arba OpenStreetMap paiešką."
+      );
     } finally {
       setBusy(false);
     }

@@ -4,6 +4,15 @@ const IMAGE_EXT = new Set(["jpg", "jpeg", "png", "webp", "gif", "heic", "heif"])
 const VIDEO_EXT = new Set(["mp4", "webm", "mov", "quicktime"]);
 const MAX_IMAGE_BYTES = 2_800_000;
 const MAX_VIDEO_BYTES = 8 * 1024 * 1024;
+const DEFAULT_MAX_DIMENSION = 1200;
+const DEFAULT_JPEG_QUALITY = 0.8;
+
+export type CompressUploadOptions = {
+  /** Longest side in pixels (width or height). */
+  maxDimension?: number;
+  /** JPEG quality 0–1 (e.g. 0.8 = 80%). */
+  quality?: number;
+};
 
 const EXT_MIME: Record<string, string> = {
   jpg: "image/jpeg",
@@ -64,18 +73,26 @@ async function heicToJpeg(file: File): Promise<File> {
   }
 }
 
-async function compressImage(file: File): Promise<File> {
-  if (file.size <= MAX_IMAGE_BYTES && guessFileMime(file) === "image/jpeg") {
+async function compressImage(file: File, options?: CompressUploadOptions): Promise<File> {
+  const maxSide = options?.maxDimension ?? DEFAULT_MAX_DIMENSION;
+  const targetQuality = options?.quality ?? DEFAULT_JPEG_QUALITY;
+
+  const bitmap = await createImageBitmap(file);
+  const origW = bitmap.width;
+  const origH = bitmap.height;
+  const needsResize = origW > maxSide || origH > maxSide;
+
+  if (!needsResize && file.size <= MAX_IMAGE_BYTES && guessFileMime(file) === "image/jpeg") {
+    bitmap.close();
     return file;
   }
 
-  const bitmap = await createImageBitmap(file);
-  const maxSide = 2048;
-  let { width, height } = bitmap;
-  if (width > maxSide || height > maxSide) {
-    const scale = maxSide / Math.max(width, height);
-    width = Math.round(width * scale);
-    height = Math.round(height * scale);
+  let width = origW;
+  let height = origH;
+  if (needsResize) {
+    const scale = maxSide / Math.max(origW, origH);
+    width = Math.round(origW * scale);
+    height = Math.round(origH * scale);
   }
 
   const canvas = document.createElement("canvas");
@@ -86,7 +103,7 @@ async function compressImage(file: File): Promise<File> {
   ctx.drawImage(bitmap, 0, 0, width, height);
   bitmap.close();
 
-  let quality = 0.88;
+  let quality = targetQuality;
   let blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
   while (blob && blob.size > MAX_IMAGE_BYTES && quality > 0.45) {
     quality -= 0.08;
@@ -98,7 +115,7 @@ async function compressImage(file: File): Promise<File> {
   return new File([blob], name, { type: "image/jpeg" });
 }
 
-export async function prepareUploadFile(file: File): Promise<File> {
+export async function prepareUploadFile(file: File, options?: CompressUploadOptions): Promise<File> {
   if (isVideoFile(file)) {
     if (file.size > MAX_VIDEO_BYTES) {
       throw new Error("Vaizdo įrašas per didelis (maks. 8 MB). Sutrumpinkite arba naudokite YouTube nuorodą.");
@@ -122,7 +139,7 @@ export async function prepareUploadFile(file: File): Promise<File> {
     }
   }
   try {
-    return await compressImage(prepared);
+    return await compressImage(prepared, options);
   } catch (e) {
     if (isMobileDevice() && prepared.size <= MAX_IMAGE_BYTES) {
       return prepared;

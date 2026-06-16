@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { adminLogin, getAdminToken, setAdminToken } from "@/lib/api";
 import { requirePasswords } from "@/lib/auth-config";
+import { HerculesPageShell } from "@/components/layout/HerculesPageShell";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -28,8 +29,8 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <section className="ae-section">
-      <div className="ae-admin-login-card">
+    <HerculesPageShell narrow center>
+      <div className="ae-admin-login-card hercules-float">
         <span className="ae-badge">Tik svetainės valdytojui</span>
         <h1 className="ae-section-title">Administratoriaus prisijungimas</h1>
         <p className="ae-admin-login-lead">
@@ -66,6 +67,6 @@ export default function AdminLoginPage() {
         {" · "}
         <Link href="/">Pradžia</Link>
       </p>
-    </section>
+    </HerculesPageShell>
   );
 }

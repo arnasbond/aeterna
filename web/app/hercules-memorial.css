@@ -1,0 +1,463 @@
+/* Memorial profile — Hercules dark (matches site-wide luxury theme) */
+
+.hercules-memorial-page {
+  background: var(--h-bg, #12100e);
+  min-height: 100vh;
+  animation: hercules-fade-up 0.65s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.hercules-main:has(.hercules-memorial-page) {
+  padding: 0;
+}
+
+.hercules-memorial-page .hercules-header-spacer {
+  height: 4rem;
+}
+
+.hercules-memorial__back {
+  margin: 0 0 0.75rem;
+  text-align: center;
+}
+
+.hercules-memorial__back a {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--h-fg-muted, rgba(250, 250, 250, 0.78));
+  text-decoration: none;
+}
+
+.hercules-memorial__back a:hover {
+  color: var(--h-fg-strong, #fff);
+}
+
+.hercules-memorial__banner {
+  max-width: 28rem;
+  margin: 0 auto 1rem;
+  padding: 0.85rem 1rem;
+}
+
+.ch-memorial {
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+  color: var(--h-fg-body, rgba(250, 250, 250, 0.92));
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.ch-memorial--compact {
+  padding-top: 0.25rem;
+}
+
+/* Hero + veiksmai — viena stiklo kortelė */
+.ch-memorial-hero-card {
+  margin: 0 0 1.25rem;
+  padding: 1.25rem 1rem 1rem;
+  background: var(--h-glass, rgba(32, 28, 24, 0.78));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--h-border, rgba(255, 255, 255, 0.16));
+  border-radius: 4px;
+  box-shadow: var(--h-shadow-float, 0 24px 64px rgba(0, 0, 0, 0.45));
+}
+
+.ch-memorial-panel {
+  margin: 0 0 1rem;
+  padding: 1.15rem 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 4px;
+}
+
+.ch-memorial-edit-link {
+  text-align: center;
+  margin: 0 0 1rem;
+}
+
+.ch-memorial-hero {
+  text-align: center;
+  padding: 0.25rem 0 0.5rem;
+}
+
+.ch-memorial-name {
+  margin: 0;
+  font-size: clamp(1.75rem, 6vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: var(--h-fg-strong, #fff);
+}
+
+.ch-memorial-years {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+  color: var(--h-fg-muted, rgba(250, 250, 250, 0.78));
+  letter-spacing: 0.12em;
+}
+
+.ch-memorial-epitaph {
+  margin: 1rem auto 0;
+  max-width: 22rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--h-fg-muted);
+  font-style: italic;
+}
+
+.ch-memorial-bio {
+  margin: 0;
+}
+
+.ch-memorial-bio h2,
+.ch-memorial-gallery h2,
+.ch-memorial-board h2,
+.ch-memorial-video__title {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+  color: var(--h-fg-strong);
+  text-align: center;
+}
+
+.ch-memorial-bio p {
+  margin: 0 0 1rem;
+  line-height: 1.75;
+  font-size: 0.95rem;
+  color: var(--h-fg-body);
+}
+
+.ch-memorial-quote {
+  margin: 0 0 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-left: 3px solid #d4af37;
+  background: rgba(255, 255, 255, 0.04);
+  font-style: italic;
+  color: var(--h-fg-muted);
+}
+
+.ch-memorial-quote p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.ch-memorial-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.ch-memorial-gallery__item {
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 0;
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border-radius: 2px;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+
+.ch-memorial-gallery__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ch-memorial-board {
+  margin-top: 2rem;
+}
+
+.hercules-memorial-page .ch-parish-card {
+  margin: 1.5rem 0;
+}
+
+.hercules-memorial-page .ch-parish-card__row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.hercules-memorial-page .ch-parish-card__img {
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.hercules-memorial-page .ch-parish-card__row p {
+  margin: 0;
+  line-height: 1.55;
+  font-size: 0.92rem;
+  color: var(--h-fg-muted);
+}
+
+.hercules-memorial-page .ch-parish-card__row strong {
+  color: var(--h-fg-strong);
+}
+
+.ch-memorial-actions--trio {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+  margin: 1rem 0 0.55rem;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .ch-memorial-actions--trio {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+.ch-memorial-actions--trio .ch-btn {
+  width: 100%;
+  min-height: 2.75rem;
+  font-size: 0.8rem;
+  padding: 0.65rem 0.5rem;
+  line-height: 1.3;
+  white-space: normal;
+  text-align: center;
+}
+
+.ch-memorial-actions--solo {
+  margin: 0;
+  padding: 0;
+}
+
+.ch-memorial-actions--solo .ch-btn {
+  width: 100%;
+}
+
+.ch-memorial-qr-hub {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1.25rem 1rem 1.5rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+}
+
+.ch-memorial--compact .ch-memorial-qr-hub {
+  margin-top: 0.5rem;
+}
+
+.ch-memorial-qr-hub__qr-btn {
+  border: none;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ch-memorial-qr-hub__qr-btn:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.ch-memorial-qr-hub__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  color: var(--h-fg-strong, #fff);
+}
+
+.ch-memorial-qr-hub__lead {
+  margin: 0 auto 1rem;
+  max-width: 20rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--h-fg-muted, rgba(250, 250, 250, 0.78));
+}
+
+.ch-memorial-qr-hub__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ch-memorial-qr-hub__qr {
+  display: block;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+.ch-memorial-qr-hub__tap {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--h-warm-muted, #c9b896);
+}
+
+.ch-memorial-qr-hub__name {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--h-fg-strong, #fff);
+}
+
+.ch-memorial-qr-hub__actions {
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.ch-memorial-qr-hub__flash {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: var(--h-warm-muted, #c9b896);
+  font-weight: 600;
+}
+
+.ch-memorial-qr-hub__url {
+  margin: 0.75rem 0 1rem;
+  font-size: 0.72rem;
+  word-break: break-all;
+  line-height: 1.4;
+  color: var(--h-fg-muted, rgba(250, 250, 250, 0.78));
+}
+
+.ch-memorial-qr-hub__url a {
+  color: var(--h-fg-muted, rgba(250, 250, 250, 0.78));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ch-memorial-qr-hub__url a:hover {
+  color: var(--h-fg-strong, #fff);
+}
+
+/* Candle sheet — dark glass */
+.hercules-memorial-page .ch-sheet {
+  background: rgba(28, 25, 22, 0.96) !important;
+  backdrop-filter: blur(20px);
+  border-top: 2px solid rgba(212, 175, 55, 0.35);
+  color: var(--h-fg-body);
+  box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.5);
+}
+
+.hercules-memorial-page .ch-sheet h3,
+.hercules-memorial-page .ch-sheet__label,
+.hercules-memorial-page .ch-fee-note {
+  color: var(--h-fg-strong);
+}
+
+.hercules-memorial-page .ch-sheet__lead,
+.hercules-memorial-page .ch-fee-disclaimer {
+  color: var(--h-fg-muted);
+}
+
+.hercules-memorial-page .ch-amount-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(212, 175, 55, 0.25);
+  color: var(--h-fg-strong);
+}
+
+.hercules-memorial-page .ch-amount-pill--active {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: #d4af37;
+  color: var(--h-fg-strong);
+}
+
+.hercules-memorial-page .ch-candle-glow {
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 2px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hercules-memorial-page .vk-memorial-candle-form {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.hercules-memorial-page .vk-memorial-guestbook .ae-candle-item {
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  padding: 0.85rem 0;
+}
+
+/* Vaizdo įrašas */
+.ch-memorial-video {
+  margin: 0;
+}
+
+.ch-memorial-video__wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: #0a0a0a;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+.ch-memorial-video__iframe,
+.ch-memorial-video__native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.ch-memorial-video__native {
+  object-fit: contain;
+}
+
+.ch-memorial-video__hint {
+  margin: 0.65rem 0 0;
+  text-align: center;
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--h-fg-soft, rgba(250, 250, 250, 0.62));
+  line-height: 1.5;
+}
+
+/* Svečių knyga — tamsus fonas */
+.hercules-memorial-page .vk-memorial-empty {
+  color: var(--h-fg-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0 0 0.5rem;
+}
+
+.hercules-memorial-page .vk-memorial-candle-form h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: var(--h-fg-strong);
+}
+
+.hercules-memorial-page .vk-memorial-candle-form > p {
+  margin: 0 0 0.85rem;
+  font-size: 0.85rem;
+  color: var(--h-fg-muted);
+}
+
+.hercules-memorial-page .vk-memorial-candle-form .ae-field label {
+  color: var(--h-fg-muted);
+}
+
+.hercules-memorial-page .vk-memorial-candle-form .ae-field input,
+.hercules-memorial-page .vk-memorial-candle-form .ae-field textarea {
+  background: rgba(0, 0, 0, 0.25);
+  border-color: rgba(212, 175, 55, 0.25);
+  color: var(--h-fg-strong);
+}
+
+.hercules-memorial-page .ae-candle-item {
+  color: var(--h-fg-body);
+}
+
+.hercules-memorial-page .ae-candle-item__meta {
+  color: var(--h-fg-soft);
+  font-size: 0.78rem;
+}

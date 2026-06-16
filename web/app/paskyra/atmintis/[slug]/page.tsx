@@ -16,13 +16,14 @@ import {
   fetchParish,
   fetchUserMemorial,
   getUserToken,
+  approveGuestbookEntry,
   moderateGuestbookEntry,
   updateUserMemorial,
   uploadMemorialFile,
   type GuestbookEntry,
   type OwnedMemorialDetail,
 } from "@/lib/api";
-import { GLASS_CARD } from "@/lib/glass-card";
+import { HerculesPageShell } from "@/components/layout/HerculesPageShell";
 
 export default function EditMemorialPage() {
   const router = useRouter();
@@ -184,38 +185,39 @@ export default function EditMemorialPage() {
 
   if (!memorial && !err) {
     return (
-      <section className="ae-section">
+      <HerculesPageShell narrow center>
         <p className="ae-hint" style={{ textAlign: "center" }}>
           Kraunama…
         </p>
-      </section>
+      </HerculesPageShell>
     );
   }
 
   if (err && !memorial) {
     return (
-      <section className="ae-section">
+      <HerculesPageShell narrow center>
         <p className="ae-error" style={{ textAlign: "center" }}>
           {err}
         </p>
         <p style={{ textAlign: "center" }}>
           <Link href="/paskyra">← Mano paskyra</Link>
         </p>
-      </section>
+      </HerculesPageShell>
     );
   }
 
   return (
-    <section className="ae-section ae-wizard ae-edit-memorial-page">
-      <h1 className="ae-section-title chronicle-serif text-stone-900">Redaguoti atmintį</h1>
-      <p className="ae-hint text-center text-[#0A1A10]/70" style={{ marginBottom: "1.25rem" }}>
+    <HerculesPageShell narrow>
+      <section className="ae-wizard ae-edit-memorial-page">
+      <h1 className="hercules-page__title chronicle-serif">Redaguoti atmintį</h1>
+      <p className="ae-hint text-center" style={{ marginBottom: "1.25rem" }}>
         <Link href={`/m/${slug}`}>Peržiūrėti viešą profilį →</Link>
         {" · "}
         <Link href="/paskyra">Mano paskyra</Link>
       </p>
 
       {geo ? (
-        <div className={`${GLASS_CARD} mb-4 p-4`}>
+        <div className="ae-card mb-4 p-4">
           <MemorialLocationShare slug={slug} lat={geo.lat} lng={geo.lng} fullName={fullName} />
         </div>
       ) : (
@@ -233,8 +235,8 @@ export default function EditMemorialPage() {
           <label>Vardas, pavardė *</label>
           <input value={fullName} onChange={(e) => setFullName(e.target.value)} required />
         </div>
-        <div className={`ae-field ae-card ${GLASS_CARD}`} style={{ padding: "1rem" }}>
-          <label className="font-semibold text-stone-900" style={{ marginBottom: "0.5rem", display: "block" }}>
+        <div className="ae-field ae-card" style={{ padding: "1rem" }}>
+          <label className="font-semibold" style={{ marginBottom: "0.5rem", display: "block" }}>
             Parapija
           </label>
           <p className="ae-hint" style={{ marginBottom: "0.75rem" }}>
@@ -327,7 +329,7 @@ export default function EditMemorialPage() {
         </div>
         {mediaBusy && <p className="ae-hint">Įkeliama…</p>}
         {err && <p className="ae-error">{err}</p>}
-        {msg && <p className="ae-hint text-[#0F2519]">{msg}</p>}
+        {msg && <p className="ae-hint">{msg}</p>}
         <button type="submit" className="ae-btn ae-btn--primary ae-btn--wide" disabled={busy || mediaBusy}>
           {busy ? "Saugoma…" : "Išsaugoti"}
         </button>
@@ -347,8 +349,8 @@ export default function EditMemorialPage() {
 
       {memorial?.isPremium && (
         <>
-          <div className={`ae-card ${GLASS_CARD}`} style={{ marginTop: "1.5rem", padding: "1.25rem" }}>
-            <h2 className="chronicle-serif text-stone-900" style={{ margin: "0 0 0.75rem", fontSize: "1.05rem" }}>
+          <div className="ae-card" style={{ marginTop: "1.5rem", padding: "1.25rem" }}>
+            <h2 className="chronicle-serif" style={{ margin: "0 0 0.75rem", fontSize: "1.05rem" }}>
               Giminės medis
             </h2>
             <FamilyTreeEditor nodes={familyTree} onChange={setFamilyTree} />
@@ -356,8 +358,8 @@ export default function EditMemorialPage() {
               Išsaugokite formą apačioje, kad giminės medis atsirastų viešame puslapyje.
             </p>
           </div>
-          <div className={`ae-card ${GLASS_CARD}`} style={{ marginTop: "1rem", padding: "1.25rem" }}>
-            <h2 className="chronicle-serif text-stone-900" style={{ margin: "0 0 0.5rem", fontSize: "1.05rem" }}>
+          <div className="ae-card" style={{ marginTop: "1rem", padding: "1.25rem" }}>
+            <h2 className="chronicle-serif" style={{ margin: "0 0 0.5rem", fontSize: "1.05rem" }}>
               Metinių priminimai
             </h2>
             <label style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start", cursor: "pointer" }}>
@@ -377,7 +379,7 @@ export default function EditMemorialPage() {
       )}
 
       {memorial && (
-        <div id="memorial-qr-after-save" className={`ae-card ${GLASS_CARD}`} style={{ marginTop: "1.5rem", padding: "1rem" }}>
+        <div id="memorial-qr-after-save" className="ae-card" style={{ marginTop: "1.5rem", padding: "1rem" }}>
           <MemorialQrHub
             slug={slug}
             fullName={fullName}
@@ -388,54 +390,66 @@ export default function EditMemorialPage() {
         </div>
       )}
 
-      {guestbook.some((g) => g.status === "pending") && (
-        <div className={`ae-card ${GLASS_CARD}`} style={{ marginTop: "2rem", padding: "1.25rem" }}>
-          <h2 className="chronicle-serif text-stone-900" style={{ margin: "0 0 1rem", fontSize: "1.05rem" }}>
+      {guestbook.some((g) => !g.isApproved && g.status !== "rejected") && (
+        <div className="ae-card" style={{ marginTop: "2rem", padding: "1.25rem" }}>
+          <h2 className="chronicle-serif" style={{ margin: "0 0 0.35rem", fontSize: "1.05rem" }}>
             Užuojautų moderavimas
           </h2>
+          <p className="ae-hint" style={{ margin: "0 0 1rem" }}>
+            Naujos žinutės laukia patvirtinimo — spauskite „Rodyti viešai“, kad jos pasirodytų memorialiniame
+            puslapyje.
+          </p>
           <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
             {guestbook
-              .filter((g) => g.status === "pending")
+              .filter((g) => !g.isApproved && g.status !== "rejected")
               .map((g) => (
                 <li
                   key={g.id}
                   style={{ borderTop: "1px solid rgba(212, 175, 55, 0.2)", padding: "0.75rem 0" }}
                 >
-                  <strong>{g.authorName}</strong>
-                  <p style={{ margin: "0.35rem 0", whiteSpace: "pre-wrap", fontSize: "0.92rem" }}>{g.message}</p>
-                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                    <button
-                      type="button"
-                      className="ae-btn ae-btn--primary"
-                      disabled={modBusy === g.id}
-                      onClick={async () => {
-                        setModBusy(g.id);
-                        try {
-                          await moderateGuestbookEntry(slug, g.id, "approved");
-                          setGuestbook(await fetchOwnerGuestbook(slug));
-                        } finally {
-                          setModBusy(null);
-                        }
-                      }}
-                    >
-                      Patvirtinti
-                    </button>
-                    <button
-                      type="button"
-                      className="ae-btn ae-btn--outline"
-                      disabled={modBusy === g.id}
-                      onClick={async () => {
-                        setModBusy(g.id);
-                        try {
-                          await moderateGuestbookEntry(slug, g.id, "rejected");
-                          setGuestbook(await fetchOwnerGuestbook(slug));
-                        } finally {
-                          setModBusy(null);
-                        }
-                      }}
-                    >
-                      Atmesti
-                    </button>
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap" }}>
+                    <div style={{ flex: "1 1 12rem", minWidth: 0 }}>
+                      <strong>{g.authorName}</strong>
+                      <p style={{ margin: "0.35rem 0", whiteSpace: "pre-wrap", fontSize: "0.92rem" }}>{g.message}</p>
+                      <span className="ae-hint" style={{ fontSize: "0.8rem" }}>
+                        {new Date(g.createdAt).toLocaleString("lt-LT")}
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "flex-start" }}>
+                      <button
+                        type="button"
+                        className="ae-btn ae-btn--primary"
+                        disabled={modBusy === g.id}
+                        title="Patvirtinti ir rodyti viešai memorialiniame puslapyje"
+                        onClick={async () => {
+                          setModBusy(g.id);
+                          try {
+                            await approveGuestbookEntry(slug, g.id);
+                            setGuestbook(await fetchOwnerGuestbook(slug));
+                          } finally {
+                            setModBusy(null);
+                          }
+                        }}
+                      >
+                        {modBusy === g.id ? "…" : "✓ Rodyti viešai"}
+                      </button>
+                      <button
+                        type="button"
+                        className="ae-btn ae-btn--outline"
+                        disabled={modBusy === g.id}
+                        onClick={async () => {
+                          setModBusy(g.id);
+                          try {
+                            await moderateGuestbookEntry(slug, g.id, "rejected");
+                            setGuestbook(await fetchOwnerGuestbook(slug));
+                          } finally {
+                            setModBusy(null);
+                          }
+                        }}
+                      >
+                        Atmesti
+                      </button>
+                    </div>
                   </div>
                 </li>
               ))}
@@ -456,5 +470,6 @@ export default function EditMemorialPage() {
         </button>
       </p>
     </section>
+    </HerculesPageShell>
   );
 }

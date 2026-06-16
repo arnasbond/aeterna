@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { GLASS_CARD } from "@/lib/glass-card";
+import { HERCULES_FLOAT } from "@/lib/hercules-theme";
 
 const STEPS = [
   {
@@ -67,7 +67,7 @@ export function HomeHowItWorksInteractive() {
           <button
             key={s.id}
             type="button"
-            className={`ae-how-step ${GLASS_CARD}${active === i ? " ae-how-step--active !border-[#D4AF37]/50 !shadow-[0_12px_40px_0_rgba(212,175,55,0.15)]" : ""}`}
+            className={`ae-how-step ${HERCULES_FLOAT}${active === i ? " ae-how-step--active" : ""}`}
             onClick={() => setActive(i)}
             aria-pressed={active === i}
           >
@@ -78,7 +78,7 @@ export function HomeHowItWorksInteractive() {
         ))}
       </div>
 
-      <div className={`ae-how-interactive__phone-wrap ${GLASS_CARD} !p-6`} aria-live="polite">
+      <div className={`ae-how-interactive__phone-wrap ${HERCULES_FLOAT} hercules-float--static !p-6`} aria-live="polite">
         <div className="ae-how-phone">
           <div className="ae-how-phone__shell">
             <PhonePreview screen={step.screen} />

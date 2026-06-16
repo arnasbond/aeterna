@@ -3172,10 +3172,27 @@
   color: var(--ae-primary-dark);
 }
 
-.ae-deploy-badge__host {
-  font-family: ui-monospace, monospace;
-  font-size: 0.68rem;
-  opacity: 0.85;
+.ae-deploy-badge--luxury {
+  background: linear-gradient(90deg, #0f2519 0%, #1a3d2e 50%, #0f2519 100%);
+  color: #f5e6a8;
+  padding: 0.65rem 1rem 0.85rem;
+  font-size: 0.78rem;
+  border-top: 2px solid #d4af37;
+}
+
+.ae-deploy-badge--luxury strong {
+  color: #fff;
+  font-weight: 800;
+}
+
+.ae-deploy-badge--luxury .ae-deploy-badge__host {
+  color: rgba(245, 230, 168, 0.85);
+  opacity: 1;
+}
+
+.ae-hero-luxury {
+  margin-top: -5.5rem;
+  padding-top: 6.5rem;
 }
 
 .ae-memorial-search__build {
