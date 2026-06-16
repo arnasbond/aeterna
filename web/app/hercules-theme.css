@@ -253,15 +253,58 @@ html.aeterna-native-app .hercules-header {
     max-width: 100%;
   }
 
+  .hercules-header__swipe-wrap::before,
   .hercules-header__swipe-wrap::after {
     content: "";
     position: absolute;
     top: 0;
-    right: 0;
     bottom: 0;
-    width: 2.5rem;
+    width: 1.75rem;
     pointer-events: none;
-    background: linear-gradient(to right, transparent, rgba(15, 15, 15, 0.88));
+    z-index: 1;
+  }
+
+  .hercules-header__swipe-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(15, 15, 15, 0.92), transparent);
+  }
+
+  .hercules-header__swipe-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(15, 15, 15, 0.92), transparent);
+  }
+
+  .hercules-header__dots {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-width: 0;
+    padding: 0 0.35rem;
+  }
+
+  .hercules-header__dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.32);
+    cursor: pointer;
+    transition:
+      width 0.25s var(--h-ease),
+      background 0.25s var(--h-ease),
+      transform 0.2s var(--h-ease);
+  }
+
+  .hercules-header__dot--active {
+    width: 1.15rem;
+    background: var(--h-gold);
+  }
+
+  .hercules-header__dot:active {
+    transform: scale(0.92);
   }
 
   .hercules-header__swipe {

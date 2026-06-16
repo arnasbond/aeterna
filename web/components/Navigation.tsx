@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const EXAMPLE = "/m/ona-demo";
 
@@ -52,7 +52,57 @@ function useNavActive() {
     [hash, mounted, pathname]
   );
 
-  return { isActive, mounted };
+  return { isActive, mounted, pathname, hash };
+}
+
+function useMobileHorizontalNav(mounted: boolean, isActive: (href: string) => boolean) {
+  const scrollRef = useRef<HTMLElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const scrollToIndex = useCallback((index: number, smooth = true) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const pill = el.children[index] as HTMLElement | undefined;
+    if (!pill) return;
+    const left = pill.offsetLeft - (el.clientWidth - pill.offsetWidth) / 2;
+    el.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "auto" });
+    setActiveIndex(index);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || !mounted) return;
+
+    const syncFromScroll = () => {
+      const center = el.scrollLeft + el.clientWidth / 2;
+      let closest = 0;
+      let minDist = Infinity;
+      Array.from(el.children).forEach((child, i) => {
+        const pill = child as HTMLElement;
+        const pillCenter = pill.offsetLeft + pill.offsetWidth / 2;
+        const dist = Math.abs(center - pillCenter);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = i;
+        }
+      });
+      setActiveIndex(closest);
+    };
+
+    el.addEventListener("scroll", syncFromScroll, { passive: true });
+    syncFromScroll();
+    return () => el.removeEventListener("scroll", syncFromScroll);
+  }, [mounted]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const routeIndex = SWIPE_NAV.findIndex((item) => isActive(item.href));
+    if (routeIndex >= 0) {
+      requestAnimationFrame(() => scrollToIndex(routeIndex, false));
+    }
+  }, [mounted, isActive, scrollToIndex]);
+
+  return { scrollRef, activeIndex, scrollToIndex };
 }
 
 function ProfileIconLink() {
@@ -76,12 +126,13 @@ function ProfileIconLink() {
 }
 
 export function Navigation() {
-  const { isActive } = useNavActive();
+  const { isActive, mounted } = useNavActive();
+  const { scrollRef, activeIndex, scrollToIndex } = useMobileHorizontalNav(mounted, isActive);
 
   return (
     <>
       <header className="hercules-header hercules-header--stacked">
-        <div className="flex w-full items-center justify-between px-4 py-3 md:min-w-0 md:flex-1 md:px-0 md:py-0">
+        <div className="flex w-full items-center justify-between gap-2 px-4 py-3 md:min-w-0 md:flex-1 md:gap-0 md:px-0 md:py-0">
           <Link href="/" className="hercules-header__logo shrink-0">
             AETERNA
           </Link>
@@ -104,6 +155,24 @@ export function Navigation() {
             </Link>
           </nav>
 
+          <div
+            className="hercules-header__dots md:hidden"
+            role="tablist"
+            aria-label="Horizontalus meniu"
+          >
+            {SWIPE_NAV.map((item, index) => (
+              <button
+                key={item.href}
+                type="button"
+                role="tab"
+                aria-selected={index === activeIndex}
+                aria-label={item.label}
+                className={`hercules-header__dot${index === activeIndex ? " hercules-header__dot--active" : ""}`}
+                onClick={() => scrollToIndex(index)}
+              />
+            ))}
+          </div>
+
           <div className="hercules-header__actions shrink-0">
             <ProfileIconLink />
           </div>
@@ -111,6 +180,7 @@ export function Navigation() {
 
         <div className="hercules-header__swipe-wrap md:hidden">
           <nav
+            ref={scrollRef}
             className="hercules-header__swipe flex w-full min-w-0 max-w-full flex-nowrap overflow-x-auto snap-x snap-mandatory gap-3 px-4 py-2 scrollbar-hide [-webkit-overflow-scrolling:touch]"
             aria-label="Greita navigacija"
           >
