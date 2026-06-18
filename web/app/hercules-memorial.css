@@ -380,6 +380,20 @@
   border-color: rgba(212, 175, 55, 0.25);
 }
 
+@media (max-width: 1023px) {
+  .ch-memorial--viz .ch-memorial-sanctuary {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    width: calc(100% + 2rem);
+  }
+
+  .ch-memorial--viz .ch-memorial-chronicle--cream {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    width: calc(100% + 2rem);
+  }
+}
+
 .ch-memorial-layout {
   margin-top: 0.5rem;
 }
