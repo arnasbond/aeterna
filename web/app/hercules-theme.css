@@ -1589,6 +1589,19 @@ html.aeterna-native-app .hercules-header {
   background: #fff;
 }
 
+.hercules-root .ae-wizard-step--reachable:hover .ae-wizard-step__label {
+  color: var(--h-fg-strong);
+}
+
+.hercules-root .ae-wizard-step--reachable:hover .ae-wizard-step__bar {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.hercules-root .ae-wizard-step--current:hover .ae-wizard-step__bar,
+.hercules-root .ae-wizard-step--done:hover .ae-wizard-step__bar {
+  background: #fff;
+}
+
 /* Admin */
 .hercules-root .ae-priest-header {
   display: flex;

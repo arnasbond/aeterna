@@ -888,8 +888,13 @@
   opacity: 0.85;
 }
 
+.ae-wizard-step--reachable:hover .ae-wizard-step__label {
+  color: var(--ae-primary-dark, var(--ae-primary));
+}
+
 .ae-wizard-step:disabled {
   cursor: default;
+  opacity: 0.55;
 }
 
 .ae-wizard-step__bar {

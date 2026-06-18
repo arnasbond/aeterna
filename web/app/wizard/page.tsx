@@ -51,15 +51,15 @@ function WizardInner() {
   const [maxStep, setMaxStep] = useState(1);
 
   function goToStep(next: number) {
-    if (step === RESULT_STEP || next < 1 || next > 5 || next > maxStep) return;
-    setStep(next);
-    setErr(null);
-  }
-
-  function advance(next: number) {
+    if (step === RESULT_STEP || next < 1 || next > 5) return;
     setStep(next);
     setMaxStep((m) => Math.max(m, next));
     setErr(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function advance(next: number) {
+    goToStep(next);
   }
   const [parishes, setParishes] = useState<Parish[]>([]);
   const [busy, setBusy] = useState(false);
@@ -310,10 +310,19 @@ function WizardInner() {
       setErr("Norėdami sukurti memorialą, pirmiausia užsiregistruokite arba prisijunkite.");
       return;
     }
+    if (!fullName.trim()) {
+      setErr("Įrašykite velionio vardą ir pavardę.");
+      goToStep(1);
+      return;
+    }
     if (!isWizardPrivacyComplete(privacyValues)) {
       setErr("Privatumo žingsnyje pasirinkite matomumą ir patvirtinkite privalomus sutikimus.");
-      setStep(2);
-      setMaxStep((m) => Math.max(m, 2));
+      goToStep(2);
+      return;
+    }
+    if (!parishId) {
+      setErr("Pasirinkite parapiją, kuriai skiriama parama.");
+      goToStep(4);
       return;
     }
     setBusy(true);
@@ -356,7 +365,7 @@ function WizardInner() {
       ) : (
         <p className="ae-wizard-lead">
           Įrašote <strong>velionio</strong> duomenis. Jūsų paskyra ({userDisplayName || "prisijungęs"}) valdo
-          memorialą — paspauskite žingsnio juostą, jei norite grįžti ir pataisyti.
+          memorialą — paspauskite bet kurį žingsnį juostoje, kad grįžtumėte arba redaguotumėte.
         </p>
       )}
       {fromCandle && loggedIn && step < RESULT_STEP && (
@@ -386,9 +395,9 @@ function WizardInner() {
         )}
         <nav className="ae-wizard-steps" aria-label="Kūrimo žingsniai">
           {WIZARD_STEPS.map(({ n, label }) => {
-            const reachable = step !== RESULT_STEP && n <= maxStep;
+            const isWizardActive = step !== RESULT_STEP;
             const isCurrent = step === n;
-            const isDone = step !== RESULT_STEP && n < step;
+            const isVisited = maxStep >= n && !isCurrent;
             return (
               <button
                 key={n}
@@ -396,14 +405,15 @@ function WizardInner() {
                 className={[
                   "ae-wizard-step",
                   isCurrent ? "ae-wizard-step--current" : "",
-                  isDone ? "ae-wizard-step--done" : "",
-                  reachable ? "ae-wizard-step--reachable" : "",
+                  isVisited ? "ae-wizard-step--done" : "",
+                  isWizardActive ? "ae-wizard-step--reachable" : "",
                 ]
                   .filter(Boolean)
                   .join(" ")}
-                disabled={!reachable}
+                disabled={!isWizardActive}
                 aria-current={isCurrent ? "step" : undefined}
-                aria-label={`${n} žingsnis: ${label}${reachable ? "" : " (dar nepasiekta)"}`}
+                aria-label={`${n} žingsnis: ${label}${isCurrent ? " (dabartinis)" : isVisited ? " (redaguoti)" : ""}`}
+                title={`${n}. ${label}`}
                 onClick={() => goToStep(n)}
               >
                 <span className="ae-wizard-step__bar" aria-hidden />
