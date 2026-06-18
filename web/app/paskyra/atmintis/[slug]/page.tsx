@@ -220,6 +220,9 @@ export default function EditMemorialPage() {
         <PremiumUpgradePanel
           slug={slug}
           isPremium={memorial.isPremium}
+          videoUrl={memorial.videoUrl}
+          familyTree={memorial.familyTree}
+          mediaGallery={memorial.mediaGallery}
           onUpgraded={() => {
             void fetchUserMemorial(slug).then((m) => {
               if (m) setMemorial(m);
@@ -376,6 +379,32 @@ export default function EditMemorialPage() {
             </label>
           </div>
         </>
+      )}
+
+      {!memorial?.isPremium && (familyTree.length > 0 || videoUrl) && (
+        <div className="ae-card ae-membership-inactive" style={{ marginTop: "1.5rem", padding: "1.25rem" }}>
+          <h2 className="chronicle-serif" style={{ margin: "0 0 0.5rem", fontSize: "1.05rem" }}>
+            Išsaugotas Premium turinys (neaktyvus)
+          </h2>
+          <p className="ae-hint" style={{ margin: "0 0 0.75rem" }}>
+            Šie duomenys saugomi ir vėl pasirodys viešame puslapyje, kai atnaujinsite Premium prenumeratą.
+          </p>
+          {familyTree.length > 0 && (
+            <p className="ae-hint" style={{ margin: 0 }}>
+              · Giminės medis — {familyTree.length} asm.
+            </p>
+          )}
+          {videoUrl && (
+            <p className="ae-hint" style={{ margin: familyTree.length > 0 ? "0.35rem 0 0" : 0 }}>
+              · Vaizdo įrašas įkeltas
+            </p>
+          )}
+          {(memorial?.mediaGallery?.length ?? 0) > 10 && (
+            <p className="ae-hint" style={{ margin: "0.35rem 0 0" }}>
+              · Papildomos nuotraukos — {memorial!.mediaGallery!.length} iš jų
+            </p>
+          )}
+        </div>
       )}
 
       {memorial && (

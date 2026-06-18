@@ -5,40 +5,57 @@ import { upgradeMemorialPremium } from "@/lib/api";
 import {
   formatPremiumPrice,
   getMembershipPlan,
+  hasStoredPremiumContent,
   PREMIUM_FEATURES,
   PREMIUM_MONTHLY_CENTS,
-  PREMIUM_YEARLY_CENTS,
+  PREMIUM_RETENTION_NOTE,
+  PREMIUM_SUBSCRIPTION_LABEL,
   STANDARD_FEATURES,
-  type PremiumPlan,
 } from "@/lib/premium";
 
 type Props = {
   slug: string;
   isPremium: boolean;
+  videoUrl?: string | null;
+  familyTree?: unknown[] | null;
+  mediaGallery?: string[] | null;
   onUpgraded?: () => void;
 };
 
-export function PremiumUpgradePanel({ slug, isPremium, onUpgraded }: Props) {
-  const [busy, setBusy] = useState<PremiumPlan | null>(null);
+export function PremiumUpgradePanel({
+  slug,
+  isPremium,
+  videoUrl,
+  familyTree,
+  mediaGallery,
+  onUpgraded,
+}: Props) {
+  const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
-  async function upgrade(plan: PremiumPlan) {
-    setBusy(plan);
+  const storedPremium = hasStoredPremiumContent({
+    isPremium,
+    videoUrl,
+    familyTree,
+    mediaGallery,
+  });
+  const premiumPlan = getMembershipPlan("premium");
+
+  async function upgrade() {
+    setBusy(true);
     setErr(null);
     setMsg(null);
     try {
-      const res = await upgradeMemorialPremium(slug, plan);
+      const res = await upgradeMemorialPremium(slug, "monthly");
       setMsg(res.message);
       onUpgraded?.();
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Nepavyko aktyvuoti Premium");
     } finally {
-      setBusy(null);
+      setBusy(false);
     }
   }
-
-  const premiumPlan = getMembershipPlan("premium");
 
   return (
     <div id="premium" className="ae-card ae-premium-panel ae-membership-admin">
@@ -46,7 +63,7 @@ export function PremiumUpgradePanel({ slug, isPremium, onUpgraded }: Props) {
         <div>
           <p className="ae-membership-admin__eyebrow">Narystės planas</p>
           <h2 className="chronicle-serif ae-membership-admin__title">
-            {isPremium ? "Premium aktyvuota" : "Pereikite į Premium"}
+            {isPremium ? "Premium aktyvuota" : storedPremium ? "Premium neaktyvu — duomenys saugomi" : "Pereikite į Premium"}
           </h2>
         </div>
         <span className={`ae-membership-admin__badge${isPremium ? " ae-membership-admin__badge--premium" : ""}`}>
@@ -57,8 +74,7 @@ export function PremiumUpgradePanel({ slug, isPremium, onUpgraded }: Props) {
       {isPremium ? (
         <>
           <p className="ae-hint" style={{ margin: "0 0 0.75rem" }}>
-            Visi Premium privalumai pasiekiami šiam memorialui — galerija, vaizdo įrašas, giminės medis ir metinių
-            priminimai.
+            Aktyvi Premium prenumerata ({PREMIUM_SUBSCRIPTION_LABEL}) — visos papildomos funkcijos veikia.
           </p>
           <ul className="ae-membership-plan__features ae-membership-plan__features--plain">
             {PREMIUM_FEATURES.map((f) => (
@@ -68,10 +84,16 @@ export function PremiumUpgradePanel({ slug, isPremium, onUpgraded }: Props) {
         </>
       ) : (
         <>
-          <p className="ae-hint" style={{ margin: "0 0 1rem" }}>
-            Dabar turite <strong>Pagrindinį</strong> planą. Atnaujinkite bet kada — atrakinkite giminės medį, vaizdo
-            įrašą ir neribotą galeriją.
-          </p>
+          {storedPremium ? (
+            <p className="ae-membership-plans__retention ae-membership-plans__retention--highlight">
+              Jūsų Premium turinys (galerija, vaizdo įrašas, giminės medis) <strong>išsaugotas</strong>, bet
+              viešai neaktyvus. Atnaujinkite prenumeratą — viskas vėl atsivers be papildomo įvedimo.
+            </p>
+          ) : (
+            <p className="ae-hint" style={{ margin: "0 0 1rem" }}>
+              Dabar turite <strong>Pagrindinį</strong> planą. Premium — tik {PREMIUM_SUBSCRIPTION_LABEL}.
+            </p>
+          )}
 
           <div className="ae-membership-compare">
             <div className="ae-membership-compare__col">
@@ -92,22 +114,15 @@ export function PremiumUpgradePanel({ slug, isPremium, onUpgraded }: Props) {
             </div>
           </div>
 
+          <p className="ae-membership-plans__retention">{PREMIUM_RETENTION_NOTE}</p>
+
           <div className="ae-membership-admin__actions">
-            <button
-              type="button"
-              className="ae-btn ae-btn--gold"
-              disabled={!!busy}
-              onClick={() => void upgrade("yearly")}
-            >
-              {busy === "yearly" ? "Apdorojama…" : `Premium ${formatPremiumPrice(PREMIUM_YEARLY_CENTS)}/metus`}
-            </button>
-            <button
-              type="button"
-              className="ae-btn ae-btn--outline"
-              disabled={!!busy}
-              onClick={() => void upgrade("monthly")}
-            >
-              {busy === "monthly" ? "Apdorojama…" : `Premium ${formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.`}
+            <button type="button" className="ae-btn ae-btn--gold" disabled={busy} onClick={() => void upgrade()}>
+              {busy
+                ? "Apdorojama…"
+                : storedPremium
+                  ? `Atnaujinti Premium — ${formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.`
+                  : `Aktyvuoti Premium — ${formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.`}
             </button>
           </div>
         </>

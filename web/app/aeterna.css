@@ -1065,6 +1065,34 @@
   color: var(--ae-muted);
 }
 
+.ae-membership-plans__retention {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--ae-muted);
+  border-left: 3px solid rgba(212, 175, 55, 0.45);
+  background: rgba(212, 175, 55, 0.06);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.ae-membership-plans__retention--highlight {
+  color: var(--ae-text, #f0f0f0);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.ae-membership-plan__price-sub {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ae-muted);
+}
+
+.ae-membership-inactive {
+  border: 1px dashed rgba(212, 175, 55, 0.35);
+}
+
 .ae-membership-admin {
   margin-bottom: 1.25rem;
 }

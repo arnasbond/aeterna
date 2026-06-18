@@ -216,6 +216,20 @@ export async function getMemorialBySlug(slug: string): Promise<AeternaMemorial |
   return map.get(slug) ?? null;
 }
 
+/** Memorial visible for QR PDF download (public or owner). */
+export async function getMemorialForPdfDownload(
+  slug: string,
+  userId?: string | null
+): Promise<AeternaMemorial | null> {
+  const row = await getMemorialBySlug(slug);
+  if (!row) return null;
+  const mod = row.moderationStatus ?? "approved";
+  if (mod === "rejected") return null;
+  if (row.privacyStatus === "public" && mod !== "pending") return row;
+  if (userId && row.userId === userId) return row;
+  return null;
+}
+
 export async function findMemorialByPerson(
   fullName: string,
   birthDate: string,
@@ -306,9 +320,14 @@ export async function getMemorialPublic(slug: string): Promise<AeternaMemorialPu
   const parish = getParish(row.parishId);
   if (!parish) return null;
   const { userId, ...rest } = row;
+  const isPremium = row.isPremium ?? false;
   return {
     ...rest,
-    isPremium: row.isPremium ?? false,
+    isPremium,
+    mediaGallery: isPremium ? rest.mediaGallery : rest.mediaGallery.slice(0, 10),
+    videoUrl: isPremium ? rest.videoUrl : null,
+    familyTree: isPremium ? (rest.familyTree ?? []) : [],
+    anniversaryRemindersEnabled: isPremium ? rest.anniversaryRemindersEnabled : false,
     linkedToAccount: !!userId,
     parish: {
       id: parish.id,
@@ -450,14 +469,13 @@ export async function updateMemorialByOwner(
   if (patch.biography !== undefined) row.biography = patch.biography;
   if (patch.farewellMessage !== undefined) row.farewellMessage = patch.farewellMessage;
   if (patch.videoUrl !== undefined) {
-    if (!row.isPremium) {
-      row.videoUrl = null;
-    } else {
+    if (row.isPremium) {
       row.videoUrl =
         patch.videoUrl && patch.videoUrl.trim()
           ? sanitizeMediaUrl(patch.videoUrl) ?? patch.videoUrl.trim()
           : null;
     }
+    /** Be Premium — vaizdo įrašas saugomas, bet nekeičiamas ir nerodomas viešai */
   }
   if (patch.portraitUrl !== undefined) {
     if (patch.portraitUrl) {
@@ -467,28 +485,28 @@ export async function updateMemorialByOwner(
   }
   if (patch.mediaGallery !== undefined) {
     if (patch.mediaGallery.length > 0) {
-      const gallery = sanitizeMediaGallery(patch.mediaGallery);
-      row.mediaGallery = row.isPremium ? gallery : gallery.slice(0, 10);
+      row.mediaGallery = sanitizeMediaGallery(patch.mediaGallery);
     }
   }
   if (patch.privacyStatus !== undefined) row.privacyStatus = patch.privacyStatus;
   if (patch.familyTree !== undefined) {
-    if (!row.isPremium) throw new Error("Giminės medis pasiekiamas tik Premium narystei");
-    row.familyTree = patch.familyTree
-      .filter((n) => n.name?.trim())
-      .map((n) => ({
-        id: n.id || randomUUID(),
-        name: n.name.trim(),
-        relation: n.relation?.trim() || "giminaitis",
-        birthDate: n.birthDate ?? null,
-        deathDate: n.deathDate ?? null,
-        note: n.note?.trim() || null,
-      }))
-      .slice(0, 48);
+    if (row.isPremium) {
+      row.familyTree = patch.familyTree
+        .filter((n) => n.name?.trim())
+        .map((n) => ({
+          id: n.id || randomUUID(),
+          name: n.name.trim(),
+          relation: n.relation?.trim() || "giminaitis",
+          birthDate: n.birthDate ?? null,
+          deathDate: n.deathDate ?? null,
+          note: n.note?.trim() || null,
+        }))
+        .slice(0, 48);
+    }
+    /** Be Premium — giminės medis saugomas, redaguoti galima tik su aktyvia prenumerata */
   }
   if (patch.anniversaryRemindersEnabled !== undefined) {
-    if (!row.isPremium) throw new Error("Metinių priminimai pasiekiami tik Premium narystei");
-    row.anniversaryRemindersEnabled = !!patch.anniversaryRemindersEnabled;
+    row.anniversaryRemindersEnabled = row.isPremium ? !!patch.anniversaryRemindersEnabled : false;
   }
   row.updatedAt = new Date().toISOString();
   map.set(slug, row);
@@ -533,20 +551,48 @@ export async function restoreMemorialMediaFromSlug(
 export async function activateMemorialPremium(
   slug: string,
   userId: string,
-  plan: "monthly" | "yearly"
+  plan: "monthly" | "yearly",
+  stripeIds?: { subscriptionId?: string | null; customerId?: string | null }
 ): Promise<AeternaMemorial> {
   const map = await loadMemorials();
   const row = map.get(slug);
   if (!row || row.userId !== userId) {
     throw new Error("Profilis nerastas arba priklauso kitam vartotojui");
   }
-  if (row.isPremium) return row;
+  if (row.isPremium && !stripeIds?.subscriptionId) return row;
 
   const amountCents = plan === "yearly" ? PREMIUM_YEARLY_CENTS : PREMIUM_MONTHLY_CENTS;
   await recordDonation(row.parishId, amountCents, "premium", slug, row.id);
   row.isPremium = true;
+  if (stripeIds?.subscriptionId) row.stripeSubscriptionId = stripeIds.subscriptionId;
+  if (stripeIds?.customerId) row.stripeCustomerId = stripeIds.customerId;
   row.updatedAt = new Date().toISOString();
   map.set(slug, row);
+  await saveMemorials();
+  return row;
+}
+
+/** Revoke Premium after Stripe subscription cancellation or failed payment. */
+export async function deactivateMemorialPremiumFromStripe(
+  stripeSubscriptionId: string,
+  memorialSlug?: string
+): Promise<AeternaMemorial | null> {
+  const map = await loadMemorials();
+  let row =
+    [...map.values()].find((m) => m.stripeSubscriptionId === stripeSubscriptionId) ?? null;
+
+  if (!row && memorialSlug) {
+    row = map.get(memorialSlug) ?? null;
+  }
+  if (!row) return null;
+
+  if (!row.isPremium) return row;
+
+  row.isPremium = false;
+  row.anniversaryRemindersEnabled = false;
+  /** videoUrl, familyTree, mediaGallery — paliekami saugomi, tik neaktyvūs viešai */
+  row.updatedAt = new Date().toISOString();
+  map.set(row.slug, row);
   await saveMemorials();
   return row;
 }

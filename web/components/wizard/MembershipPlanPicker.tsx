@@ -7,39 +7,32 @@ import {
   MEMBERSHIP_PLANS,
   membershipTotalCents,
   PREMIUM_MONTHLY_CENTS,
-  PREMIUM_YEARLY_CENTS,
+  PREMIUM_RETENTION_NOTE,
   premiumAddonLabel,
   type MembershipPlanId,
-  type PremiumPlan,
 } from "@/lib/premium";
 import { formatPrice } from "@/lib/qr-plates";
 
 type Props = {
   planId: MembershipPlanId;
-  premiumBilling: PremiumPlan;
   plateAddOnCents?: number;
   onPlanChange: (planId: MembershipPlanId) => void;
-  onPremiumBillingChange: (billing: PremiumPlan) => void;
 };
 
-export function MembershipPlanPicker({
-  planId,
-  premiumBilling,
-  plateAddOnCents = 0,
-  onPlanChange,
-  onPremiumBillingChange,
-}: Props) {
-  const totalCents = membershipTotalCents(planId, premiumBilling, plateAddOnCents);
+export function MembershipPlanPicker({ planId, plateAddOnCents = 0, onPlanChange }: Props) {
+  const totalCents = membershipTotalCents(planId, plateAddOnCents);
 
   return (
     <div className="ae-membership-plans">
-      <p className="ae-membership-plans__lead">Pasirinkite narystės planą šiam memorialui:</p>
+      <p className="ae-membership-plans__lead">
+        Pasirinkite planą. Premium — tik <strong>{premiumAddonLabel()}</strong> prenumerata (papildomos galimybės).
+      </p>
       <div className="ae-membership-plans__grid" role="radiogroup" aria-label="Narystės planai">
         {MEMBERSHIP_PLANS.map((plan) => {
           const selected = planId === plan.id;
           const planTotal =
             plan.id === "premium"
-              ? membershipTotalCents("premium", premiumBilling, 0)
+              ? membershipTotalCents("premium", 0)
               : BASE_MEMBERSHIP_CENTS;
 
           return (
@@ -60,9 +53,14 @@ export function MembershipPlanPicker({
               </div>
               <p className="ae-membership-plan__tagline">{plan.tagline}</p>
               <p className="ae-membership-plan__price">
-                {plan.id === "premium"
-                  ? `${formatPrice(BASE_MEMBERSHIP_CENTS)} + ${premiumAddonLabel(premiumBilling)}`
-                  : formatPrice(BASE_MEMBERSHIP_CENTS)}
+                {plan.id === "premium" ? (
+                  <>
+                    {formatPrice(BASE_MEMBERSHIP_CENTS)} + {premiumAddonLabel()}
+                    <span className="ae-membership-plan__price-sub"> (pirmas mėnuo dabar)</span>
+                  </>
+                ) : (
+                  formatPrice(BASE_MEMBERSHIP_CENTS)
+                )}
               </p>
               <ul className="ae-membership-plan__features">
                 {plan.features.map((feature) => (
@@ -70,44 +68,26 @@ export function MembershipPlanPicker({
                 ))}
               </ul>
               <p className="ae-membership-plan__total">
-                Iš viso dabar: <strong>{formatPrice(planTotal)}</strong>
+                Mokate dabar: <strong>{formatPrice(planTotal)}</strong>
+                {plan.id === "premium" ? (
+                  <span className="ae-membership-plan__price-sub">
+                    {" "}
+                    · vėliau {formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.
+                  </span>
+                ) : null}
               </p>
             </label>
           );
         })}
       </div>
 
-      {planId === "premium" && (
-        <fieldset className="ae-membership-billing">
-          <legend>Premium atsiskaitymas</legend>
-          <label className="ae-membership-billing__option">
-            <input
-              type="radio"
-              name="premium-billing"
-              checked={premiumBilling === "yearly"}
-              onChange={() => onPremiumBillingChange("yearly")}
-            />
-            <span>
-              Metinis — {formatPremiumPrice(PREMIUM_YEARLY_CENTS)}/metus{" "}
-              <span className="ae-hint">(naudingiausia)</span>
-            </span>
-          </label>
-          <label className="ae-membership-billing__option">
-            <input
-              type="radio"
-              name="premium-billing"
-              checked={premiumBilling === "monthly"}
-              onChange={() => onPremiumBillingChange("monthly")}
-            />
-            <span>Mėnesinis — {formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.</span>
-          </label>
-        </fieldset>
-      )}
+      <p className="ae-membership-plans__retention">{PREMIUM_RETENTION_NOTE}</p>
 
       <p className="ae-membership-plans__summary">
         Pasirinktas planas: <strong>{getMembershipPlan(planId).name}</strong>
         {plateAddOnCents > 0 ? ` · plokštelė ${formatPrice(plateAddOnCents)}` : ""} ·{" "}
         <strong>{formatPrice(totalCents)}</strong>
+        {planId === "premium" ? ` + ${premiumAddonLabel()} toliau` : ""}
       </p>
     </div>
   );

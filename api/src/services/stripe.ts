@@ -1,4 +1,7 @@
-/** MVP mokėjimų sluoksnis — production pakeisti Stripe Checkout / Connect */
+/** Stripe Premium subscriptions + webhook handling */
+
+import Stripe from "stripe";
+import { config } from "../config.js";
 
 export {
   CANDLE_SERVICE_FEE_CENTS,
@@ -7,7 +10,7 @@ export {
 } from "./stripe-connect-mock.js";
 
 export const BASE_MEMBERSHIP_CENTS = 3900;
-export const PREMIUM_MONTHLY_CENTS = 299;
+export const PREMIUM_MONTHLY_CENTS = 199;
 export const PREMIUM_YEARLY_CENTS = 2500;
 
 export type MembershipPaymentResult = {
@@ -63,6 +66,29 @@ export function processPremiumSubscription(input: {
     message:
       input.plan === "yearly"
         ? "Mock Stripe: Premium narystė 25 €/metus — funkcijos atrakintos."
-        : "Mock Stripe: Premium narystė 2,99 €/mėn. — funkcijos atrakintos.",
+        : "Mock Stripe: Premium narystė 1,99 €/mėn. — funkcijos atrakintos.",
   };
+}
+
+let stripeClient: Stripe | null = null;
+
+export function getStripeClient(): Stripe | null {
+  if (!config.stripeSecretKey) return null;
+  if (!stripeClient) {
+    stripeClient = new Stripe(config.stripeSecretKey);
+  }
+  return stripeClient;
+}
+
+/** Verify Stripe-Signature and parse webhook payload (requires raw request body). */
+export function constructVerifiedStripeEvent(rawBody: Buffer, signature: string): Stripe.Event {
+  const secret = config.stripeWebhookSecret;
+  if (!secret) {
+    throw new Error("STRIPE_WEBHOOK_SECRET is not configured");
+  }
+  const stripe = getStripeClient();
+  if (!stripe) {
+    throw new Error("STRIPE_SECRET_KEY is not configured");
+  }
+  return stripe.webhooks.constructEvent(rawBody, signature, secret);
 }

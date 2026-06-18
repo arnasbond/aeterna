@@ -74,7 +74,10 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
     memorial.portraitUrl ??
     memorial.mediaGallery?.[0] ??
     parishCardImage(memorial.parish?.image ?? "", memorial.mediaGallery ?? []);
-  const gallery = memorial.mediaGallery ?? [];
+  const gallery = memorial.isPremium
+    ? (memorial.mediaGallery ?? [])
+    : (memorial.mediaGallery ?? []).slice(0, 10);
+  const showVideo = memorial.isPremium && !!memorial.videoUrl;
   const firstName = memorial.fullName.split(" ")[0];
   const epitaph = epitaphFromBio(memorial.biography ?? "");
   const bioParagraphs = memorial.biography
@@ -224,9 +227,9 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
         </blockquote>
       )}
 
-      {memorial.videoUrl && (
+      {showVideo && (
         <div className="ch-memorial-panel">
-          <MemorialVideoPlayer videoUrl={memorial.videoUrl} fullName={memorial.fullName} />
+          <MemorialVideoPlayer videoUrl={memorial.videoUrl!} fullName={memorial.fullName} />
         </div>
       )}
 
@@ -377,8 +380,8 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
         </blockquote>
       )}
 
-      {memorial.videoUrl && (
-        <MemorialVideoPlayer videoUrl={memorial.videoUrl} fullName={memorial.fullName} />
+      {showVideo && (
+          <MemorialVideoPlayer videoUrl={memorial.videoUrl!} fullName={memorial.fullName} />
       )}
 
       {gallery.length > 0 && (
