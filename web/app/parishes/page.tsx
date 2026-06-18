@@ -40,7 +40,7 @@ export default function ParishesPage() {
 
       title="Parapijos"
 
-      lead="Pasirinkite parapiją, kuriai skiriama parama nuo Jūsų atminimo puslapio užsakymo."
+      lead="Pasirinkite parapiją, kuriai skiriama 20 % nuo kiekvienos apmokamos sumos (narystė, Premium, žvakutė, mišios)."
 
       center
 

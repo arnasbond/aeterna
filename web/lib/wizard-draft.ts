@@ -14,6 +14,7 @@ export type WizardDraft = {
   consentPrivacy: boolean;
   consentMapLocation: boolean;
   membershipPlanId?: "standard" | "premium";
+  premiumBilling?: "monthly" | "yearly";
   plateAddOn?: boolean;
   step: number;
   maxStep: number;

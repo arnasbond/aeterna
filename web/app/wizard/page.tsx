@@ -23,9 +23,12 @@ import { clearWizardDraft, loadWizardDraft, saveWizardDraft } from "@/lib/wizard
 import { HerculesPageShell } from "@/components/layout/HerculesPageShell";
 import { MembershipPlanPicker } from "@/components/wizard/MembershipPlanPicker";
 import { prepareUploadFile } from "@/lib/compress-upload";
+import { parishDonationNoteWithAmount } from "@/lib/parish-donation";
 import {
   membershipTotalCents,
+  premiumRenewalLabel,
   type MembershipPlanId,
+  type PremiumPlan,
 } from "@/lib/premium";
 
 /** Client-side resize/compress before Vercel Blob — keeps storage and mobile loads lean. */
@@ -87,9 +90,11 @@ function WizardInner() {
   const [parishId, setParishId] = useState(preParish);
   const [plateAddOn, setPlateAddOn] = useState(false);
   const [membershipPlanId, setMembershipPlanId] = useState<MembershipPlanId>("standard");
+  const [premiumBilling, setPremiumBilling] = useState<PremiumPlan>("yearly");
   const PLATE_ADDON_CENTS = 2500; // +25 €
   const plateAddOnCents = plateAddOn ? PLATE_ADDON_CENTS : 0;
-  const totalCents = membershipTotalCents(membershipPlanId, plateAddOnCents);
+  const totalCents = membershipTotalCents(membershipPlanId, plateAddOnCents, premiumBilling);
+  const selectedParishTitle = parishes.find((p) => p.id === parishId)?.title;
   const MAX_GALLERY_PHOTOS = 10;
   const [loggedIn, setLoggedIn] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
@@ -133,6 +138,7 @@ function WizardInner() {
         setVideoUrl(draft.videoUrl);
         if (draft.parishId) setParishId(draft.parishId);
         if (draft.membershipPlanId) setMembershipPlanId(draft.membershipPlanId);
+        if (draft.premiumBilling) setPremiumBilling(draft.premiumBilling);
         if (draft.plateAddOn !== undefined) setPlateAddOn(draft.plateAddOn);
         if (draft.privacyStatus) setPrivacyStatus(draft.privacyStatus);
         setConsentTerms(draft.consentTerms ?? false);
@@ -159,6 +165,7 @@ function WizardInner() {
     setBusy(false);
     setPlateAddOn(false);
     setMembershipPlanId("standard");
+    setPremiumBilling("yearly");
     setPdfBusy(false);
     setPrivacyStatus("");
     setConsentTerms(false);
@@ -182,6 +189,7 @@ function WizardInner() {
       consentPrivacy,
       consentMapLocation,
       membershipPlanId,
+      premiumBilling,
       plateAddOn,
       step,
       maxStep,
@@ -200,6 +208,7 @@ function WizardInner() {
     consentPrivacy,
     consentMapLocation,
     membershipPlanId,
+    premiumBilling,
     plateAddOn,
     step,
     maxStep,
@@ -632,8 +641,11 @@ function WizardInner() {
             <h2 style={{ fontSize: "1.2rem" }}>5. Apmokėjimas</h2>
             <MembershipPlanPicker
               planId={membershipPlanId}
+              premiumBilling={premiumBilling}
               plateAddOnCents={plateAddOnCents}
+              parishTitle={selectedParishTitle}
               onPlanChange={setMembershipPlanId}
+              onBillingChange={setPremiumBilling}
             />
 
             <div className="ae-card" style={{ marginBottom: "1rem" }}>
@@ -648,10 +660,13 @@ function WizardInner() {
                 <strong>Iš viso:</strong> {formatPrice(totalCents)}
               </p>
 
-              <p style={{ fontSize: "0.85rem", color: "var(--ae-muted)", marginBottom: 0 }}>
+              <p style={{ fontSize: "0.85rem", color: "var(--ae-muted)", marginBottom: "0.5rem" }}>
                 {membershipPlanId === "premium"
-                  ? `Pagrindinis memorialas (39 €) + pirmas Premium mėnuo (1,99 €). Toliau — tik 1,99 €/mėn.`
+                  ? `Pagrindinis memorialas (39 €) + pirmas Premium laikotarpis (${premiumRenewalLabel(premiumBilling)}). Toliau — ${premiumRenewalLabel(premiumBilling)}.`
                   : "Vienkartinis Pagrindinio plano mokestis — memorialas ir QR lieka visada."}
+              </p>
+              <p className="ae-membership-plans__parish-donation" style={{ marginBottom: 0 }}>
+                {parishDonationNoteWithAmount(totalCents, selectedParishTitle)}
               </p>
             </div>
             <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(4)}>

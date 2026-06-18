@@ -220,6 +220,7 @@ export default function EditMemorialPage() {
         <PremiumUpgradePanel
           slug={slug}
           isPremium={memorial.isPremium}
+          parishTitle={parishTitle}
           videoUrl={memorial.videoUrl}
           familyTree={memorial.familyTree}
           mediaGallery={memorial.mediaGallery}
@@ -387,7 +388,7 @@ export default function EditMemorialPage() {
             Išsaugotas Premium turinys (neaktyvus)
           </h2>
           <p className="ae-hint" style={{ margin: "0 0 0.75rem" }}>
-            Šie duomenys saugomi ir vėl pasirodys viešame puslapyje, kai atnaujinsite Premium prenumeratą.
+            Šie duomenys saugomi 3 mėn. ir vėl pasirodys viešame puslapyje, kai atnaujinsite Premium prenumeratą.
           </p>
           {familyTree.length > 0 && (
             <p className="ae-hint" style={{ margin: 0 }}>

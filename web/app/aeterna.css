@@ -1065,6 +1065,31 @@
   color: var(--ae-muted);
 }
 
+.ae-membership-billing__badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1c1916;
+  background: linear-gradient(135deg, #d4af37, #f0d78c);
+  border-radius: 999px;
+  vertical-align: middle;
+}
+
+.ae-membership-plans__parish-donation {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--ae-text, #f0f0f0);
+  border-left: 3px solid rgba(4, 120, 87, 0.55);
+  background: rgba(4, 120, 87, 0.08);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
 .ae-membership-plans__retention {
   margin: 0 0 1rem;
   padding: 0.75rem 0.85rem;

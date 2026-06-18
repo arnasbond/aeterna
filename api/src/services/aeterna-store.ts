@@ -621,11 +621,11 @@ export async function recordDonation(
   referenceId: string | null,
   memorialId: string | null
 ): Promise<DonationRow> {
-  // Narystė ir Premium — 100% platformai. Žvakutės/misės — parapijai + 0,50 € platformai.
+  // Narystė ir Premium — 20 % parapijai (splitAmount). Žvakutės/misės — parapijai + 0,50 € platformai.
   const MASS_SERVICE_FEE_CENTS = CANDLE_SERVICE_FEE_CENTS;
   const split =
     kind === "memorial" || kind === "premium"
-      ? { parishCommissionCents: 0, serviceFeeCents: totalCents }
+      ? splitAmount(totalCents)
       : kind === "candle"
         ? {
             serviceFeeCents: CANDLE_SERVICE_FEE_CENTS,

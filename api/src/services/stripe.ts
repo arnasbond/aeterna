@@ -28,15 +28,16 @@ export function processMembershipPayment(input: {
   amountCents: number;
 }): MembershipPaymentResult {
   const totalChargedCents = Math.max(0, Math.round(input.amountCents));
+  const parishAmountCents = Math.round((totalChargedCents * 20) / 100);
+  const platformAmountCents = totalChargedCents - parishAmountCents;
   return {
     paymentId: `pi_mem_${Date.now().toString(36)}`,
     currency: "EUR",
     totalChargedCents,
-    platformAmountCents: totalChargedCents,
-    parishAmountCents: 0,
+    platformAmountCents,
+    parishAmountCents,
     status: "succeeded",
-    message:
-      "Mock Stripe: skaitmeninės narystės mokestis — 100% AETERNA platformai (ne parapijai).",
+    message: `Mock Stripe: apmokėta ${(totalChargedCents / 100).toFixed(2)} € — ${(parishAmountCents / 100).toFixed(2)} € (20 %) auka parapijai, ${(platformAmountCents / 100).toFixed(2)} € platformai.`,
   };
 }
 
@@ -56,17 +57,19 @@ export function processPremiumSubscription(input: {
 }): PremiumSubscriptionResult {
   const amountCents =
     input.plan === "yearly" ? PREMIUM_YEARLY_CENTS : PREMIUM_MONTHLY_CENTS;
+  const parishAmountCents = Math.round((amountCents * 20) / 100);
+  const platformAmountCents = amountCents - parishAmountCents;
   return {
     paymentId: `pi_prem_${Date.now().toString(36)}`,
     currency: "EUR",
     plan: input.plan,
     amountCents,
-    platformAmountCents: amountCents,
+    platformAmountCents,
     status: "succeeded",
     message:
       input.plan === "yearly"
-        ? "Mock Stripe: Premium narystė 25 €/metus — funkcijos atrakintos."
-        : "Mock Stripe: Premium narystė 1,99 €/mėn. — funkcijos atrakintos.",
+        ? `Mock Stripe: Premium 25 €/metus — ${(parishAmountCents / 100).toFixed(2)} € (20 %) auka parapijai, funkcijos atrakintos.`
+        : `Mock Stripe: Premium 1,99 €/mėn. — ${(parishAmountCents / 100).toFixed(2)} € (20 %) auka parapijai, funkcijos atrakintos.`,
   };
 }
 

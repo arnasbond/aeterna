@@ -1,10 +1,9 @@
 import { MEMORIAL_PACKAGE_CENTS } from "@/lib/qr-plates";
 
 export const BASE_MEMBERSHIP_CENTS = MEMORIAL_PACKAGE_CENTS;
-/** Premium prenumerata — tik mėnesinis mokėjimas */
 export const PREMIUM_MONTHLY_CENTS = 199;
-/** @deprecated Metinis planas nebenaudojamas UI — palikta API suderinamumui */
 export const PREMIUM_YEARLY_CENTS = 2500;
+export const PREMIUM_DATA_RETENTION_MONTHS = 3;
 
 export type PremiumPlan = "monthly" | "yearly";
 export type MembershipPlanId = "standard" | "premium";
@@ -13,16 +12,17 @@ export function formatPremiumPrice(cents: number): string {
   return `${(cents / 100).toFixed(2).replace(".", ",")} €`;
 }
 
-export const PREMIUM_SUBSCRIPTION_LABEL = `${formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.`;
+export const PREMIUM_MONTHLY_LABEL = `${formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.`;
+export const PREMIUM_YEARLY_LABEL = `${formatPremiumPrice(PREMIUM_YEARLY_CENTS)}/metus`;
 
 export const PREMIUM_RETENTION_NOTE =
-  "Nutraukus Premium ar neapmokėjus — memorialas lieka Pagrindiniame plane. Visi įrašyti duomenys (nuotraukos, vaizdo įrašas, giminės medis) saugomi ir vėl aktyvuojami, kai atnaujinsite prenumeratą.";
+  `Nutraukus Premium ar neapmokėjus — memorialas lieka Pagrindiniame plane. Įrašyti Premium duomenys (papildomos nuotraukos, vaizdo įrašas, giminės medis) saugomi ${PREMIUM_DATA_RETENTION_MONTHS} mėn. ir vėl aktyvuojami, kai atnaujinsite prenumeratą.`;
 
 export const STANDARD_FEATURES = [
   "Memorialinis puslapis su QR kodu",
   "Iki 10 nuotraukų galerijoje",
   "Virtuali žvakutė ir parama parapijai",
-  "Duomenys saugomi visada — net ir be Premium",
+  "Pagrindiniai duomenys saugomi visada — net ir be Premium",
 ] as const;
 
 export const PREMIUM_FEATURES = [
@@ -30,7 +30,7 @@ export const PREMIUM_FEATURES = [
   "Vaizdo įrašo įkėlimas memorialiniame puslapyje",
   "Giminės medžio skiltis",
   "Automatiniai priminimai apie metines el. paštu",
-  "Prenumerata — tik 1,99 €/mėn., galite nutraukti bet kada",
+  "Prenumerata — 1,99 €/mėn. arba 25 €/metus (metinis rekomenduojamas)",
 ] as const;
 
 export type MembershipPlan = {
@@ -51,27 +51,32 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
   {
     id: "premium",
     name: "Premium",
-    tagline: "Papildomos galimybės su mėnesine prenumerata",
+    tagline: "Papildomos galimybės su prenumerata",
     features: PREMIUM_FEATURES,
     popular: true,
   },
 ];
 
-export function premiumAddonCents(_billing: PremiumPlan = "monthly"): number {
-  return PREMIUM_MONTHLY_CENTS;
+export function premiumAddonCents(billing: PremiumPlan = "yearly"): number {
+  return billing === "yearly" ? PREMIUM_YEARLY_CENTS : PREMIUM_MONTHLY_CENTS;
 }
 
-export function premiumAddonLabel(): string {
-  return `${formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.`;
+export function premiumAddonLabel(billing: PremiumPlan = "yearly"): string {
+  return billing === "yearly" ? PREMIUM_YEARLY_LABEL : PREMIUM_MONTHLY_LABEL;
+}
+
+export function premiumRenewalLabel(billing: PremiumPlan): string {
+  return billing === "yearly" ? PREMIUM_YEARLY_LABEL : PREMIUM_MONTHLY_LABEL;
 }
 
 /** Pirmo apmokėjimo suma vedlio žingsnyje */
 export function membershipTotalCents(
   planId: MembershipPlanId,
-  plateAddOnCents = 0
+  plateAddOnCents = 0,
+  premiumBilling: PremiumPlan = "yearly"
 ): number {
-  const premiumFirstMonth = planId === "premium" ? PREMIUM_MONTHLY_CENTS : 0;
-  return BASE_MEMBERSHIP_CENTS + premiumFirstMonth + plateAddOnCents;
+  const premiumFirst = planId === "premium" ? premiumAddonCents(premiumBilling) : 0;
+  return BASE_MEMBERSHIP_CENTS + premiumFirst + plateAddOnCents;
 }
 
 export function getMembershipPlan(id: MembershipPlanId): MembershipPlan {

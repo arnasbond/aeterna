@@ -553,8 +553,8 @@ export function PriestLedgerDashboard() {
         <section className="pl-card">
           <h2>💶 Parapijos aukos</h2>
           <p className="pl-caption" style={{ marginBottom: "1rem" }}>
-            Žvakučių ir Šv. Mišų aukos (be platformos aptarnavimo mokesčio 0,50 €). Skaitmeninės narystės mokesčiai
-            neįtraukti — jie skirti platformai.
+            Žvakučių ir Šv. Mišų aukos (be platformos aptarnavimo mokesčio 0,50 €). Narystės ir Premium mokėjimų 20 %
+            — parapijai, likutis platformai.
           </p>
           <div className="pl-card" style={{ marginBottom: "0.75rem" }}>
             <h3>Žvakutės</h3>

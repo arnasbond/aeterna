@@ -34,7 +34,7 @@ export function WizardAuthGate({ returnPath, fromCandle }: Props) {
           <strong>Velionis</strong> — memorialo duomenys, nuotraukos, parapija
         </li>
         <li>
-          <strong>Apmokėjimas</strong> — skaitmeninė narystė (39 €)
+          <strong>Apmokėjimas</strong> — skaitmeninė narystė (nuo 39 €); 20 % sumos — auka parapijai
         </li>
       </ol>
       <div className="ae-wizard-auth-gate__actions">

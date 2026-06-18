@@ -2,20 +2,25 @@
 
 import { useState } from "react";
 import { upgradeMemorialPremium } from "@/lib/api";
+import { parishDonationNoteWithAmount } from "@/lib/parish-donation";
 import {
   formatPremiumPrice,
   getMembershipPlan,
   hasStoredPremiumContent,
+  PREMIUM_DATA_RETENTION_MONTHS,
   PREMIUM_FEATURES,
   PREMIUM_MONTHLY_CENTS,
   PREMIUM_RETENTION_NOTE,
-  PREMIUM_SUBSCRIPTION_LABEL,
+  PREMIUM_YEARLY_CENTS,
+  premiumRenewalLabel,
   STANDARD_FEATURES,
+  type PremiumPlan,
 } from "@/lib/premium";
 
 type Props = {
   slug: string;
   isPremium: boolean;
+  parishTitle?: string;
   videoUrl?: string | null;
   familyTree?: unknown[] | null;
   mediaGallery?: string[] | null;
@@ -25,11 +30,13 @@ type Props = {
 export function PremiumUpgradePanel({
   slug,
   isPremium,
+  parishTitle,
   videoUrl,
   familyTree,
   mediaGallery,
   onUpgraded,
 }: Props) {
+  const [billing, setBilling] = useState<PremiumPlan>("yearly");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -41,13 +48,14 @@ export function PremiumUpgradePanel({
     mediaGallery,
   });
   const premiumPlan = getMembershipPlan("premium");
+  const upgradeCents = billing === "yearly" ? PREMIUM_YEARLY_CENTS : PREMIUM_MONTHLY_CENTS;
 
   async function upgrade() {
     setBusy(true);
     setErr(null);
     setMsg(null);
     try {
-      const res = await upgradeMemorialPremium(slug, "monthly");
+      const res = await upgradeMemorialPremium(slug, billing);
       setMsg(res.message);
       onUpgraded?.();
     } catch (e) {
@@ -74,7 +82,7 @@ export function PremiumUpgradePanel({
       {isPremium ? (
         <>
           <p className="ae-hint" style={{ margin: "0 0 0.75rem" }}>
-            Aktyvi Premium prenumerata ({PREMIUM_SUBSCRIPTION_LABEL}) — visos papildomos funkcijos veikia.
+            Aktyvi Premium prenumerata — visos papildomos funkcijos veikia.
           </p>
           <ul className="ae-membership-plan__features ae-membership-plan__features--plain">
             {PREMIUM_FEATURES.map((f) => (
@@ -86,12 +94,15 @@ export function PremiumUpgradePanel({
         <>
           {storedPremium ? (
             <p className="ae-membership-plans__retention ae-membership-plans__retention--highlight">
-              Jūsų Premium turinys (galerija, vaizdo įrašas, giminės medis) <strong>išsaugotas</strong>, bet
-              viešai neaktyvus. Atnaujinkite prenumeratą — viskas vėl atsivers be papildomo įvedimo.
+              Jūsų Premium turinys (galerija, vaizdo įrašas, giminės medis) <strong>išsaugotas</strong>{" "}
+              {PREMIUM_DATA_RETENTION_MONTHS} mėn., bet viešai neaktyvus. Atnaujinkite prenumeratą — viskas vėl
+              atsivers be papildomo įvedimo.
             </p>
           ) : (
             <p className="ae-hint" style={{ margin: "0 0 1rem" }}>
-              Dabar turite <strong>Pagrindinį</strong> planą. Premium — tik {PREMIUM_SUBSCRIPTION_LABEL}.
+              Dabar turite <strong>Pagrindinį</strong> planą. Premium — nuo{" "}
+              {formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn. arba{" "}
+              {formatPremiumPrice(PREMIUM_YEARLY_CENTS)}/metus.
             </p>
           )}
 
@@ -114,6 +125,39 @@ export function PremiumUpgradePanel({
             </div>
           </div>
 
+          <fieldset className="ae-membership-billing">
+            <legend>Premium prenumeratos laikotarpis</legend>
+            <label className="ae-membership-billing__option">
+              <input
+                type="radio"
+                name="premium-billing-admin"
+                value="yearly"
+                checked={billing === "yearly"}
+                onChange={() => setBilling("yearly")}
+              />
+              <span>
+                <strong>{formatPremiumPrice(PREMIUM_YEARLY_CENTS)}/metus</strong>
+                <span className="ae-membership-billing__badge">Rekomenduojama</span>
+              </span>
+            </label>
+            <label className="ae-membership-billing__option">
+              <input
+                type="radio"
+                name="premium-billing-admin"
+                value="monthly"
+                checked={billing === "monthly"}
+                onChange={() => setBilling("monthly")}
+              />
+              <span>
+                <strong>{formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.</strong>
+              </span>
+            </label>
+          </fieldset>
+
+          <p className="ae-membership-plans__parish-donation">
+            {parishDonationNoteWithAmount(upgradeCents, parishTitle)}
+          </p>
+
           <p className="ae-membership-plans__retention">{PREMIUM_RETENTION_NOTE}</p>
 
           <div className="ae-membership-admin__actions">
@@ -121,8 +165,8 @@ export function PremiumUpgradePanel({
               {busy
                 ? "Apdorojama…"
                 : storedPremium
-                  ? `Atnaujinti Premium — ${formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.`
-                  : `Aktyvuoti Premium — ${formatPremiumPrice(PREMIUM_MONTHLY_CENTS)}/mėn.`}
+                  ? `Atnaujinti Premium — ${premiumRenewalLabel(billing)}`
+                  : `Aktyvuoti Premium — ${premiumRenewalLabel(billing)}`}
             </button>
           </div>
         </>

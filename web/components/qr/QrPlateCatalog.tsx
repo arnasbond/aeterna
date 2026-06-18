@@ -31,7 +31,7 @@ export function QrPlateCatalog({ preselectedParish }: Props) {
     <>
       <p className="ae-qr-catalog-lead">
         Pasirinkite plokštelės medžiagą ir kokybę. Kartu su skaitmenine naryste ({formatPrice(MEMORIAL_PACKAGE_CENTS)}) —
-        neprivalomas priedas, paruoštas montavimui ant paminklo.
+        neprivalomas priedas, paruoštas montavimui ant paminklo. Nuo apmokamos sumos 20 % keliauja auka pasirinktai parapijai.
       </p>
 
       <div className="ae-qr-catalog-grid">
