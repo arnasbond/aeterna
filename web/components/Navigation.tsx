@@ -125,26 +125,6 @@ function useNavActive() {
   return { isActive, sectionTitle, sectionIndex };
 }
 
-function ProfileIconLink() {
-  return (
-    <Link
-      href="/paskyra"
-      className="hercules-header__profile flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/8 text-white/90 transition-colors hover:border-white/35 hover:bg-white/12"
-      aria-label="Mano paskyra"
-    >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.75" />
-        <path
-          d="M5 20c0-3.314 3.134-6 7-6s7 2.686 7 6"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-      </svg>
-    </Link>
-  );
-}
-
 function MobileNavDrawer({
   panelId,
   open,
@@ -228,6 +208,8 @@ function MobileNavDrawer({
 }
 
 export function Navigation() {
+  const pathname = usePathname();
+  const isMemorialPage = pathname.startsWith("/m/");
   const { isActive, sectionTitle, sectionIndex } = useNavActive();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
@@ -240,7 +222,9 @@ export function Navigation() {
 
   return (
     <>
-      <header className="hercules-header hercules-header--stacked">
+      <header
+        className={`hercules-header hercules-header--stacked${isMemorialPage ? " hercules-header--memorial-ivory" : ""}`}
+      >
         <div className="flex w-full items-start justify-between gap-3 px-4 py-3 md:min-w-0 md:flex-1 md:items-center md:gap-0 md:px-0 md:py-0">
           <div className="hercules-header__brand min-w-0">
             <Link href="/" className="hercules-header__logo block shrink-0">
@@ -293,7 +277,25 @@ export function Navigation() {
           </nav>
 
           <div className="hercules-header__actions shrink-0">
-            <ProfileIconLink />
+            <Link
+              href="/paskyra"
+              className={`hercules-header__profile flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-colors ${
+                isMemorialPage
+                  ? "border-[#D4AF37]/25 bg-white/50 text-[#1e3a1e] hover:border-[#D4AF37]/45 hover:bg-white/70"
+                  : "border-white/20 bg-white/8 text-white/90 hover:border-white/35 hover:bg-white/12"
+              }`}
+              aria-label="Mano paskyra"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.75" />
+                <path
+                  d="M5 20c0-3.314 3.134-6 7-6s7 2.686 7 6"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </Link>
             <button
               type="button"
               className="hercules-header__menu"

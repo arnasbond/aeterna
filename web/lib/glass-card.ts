@@ -6,6 +6,10 @@ export const GLASS_CARD =
 export const MEMORIAL_IVORY_CARD =
   "bg-[rgba(255,255,255,0.58)] backdrop-blur-md border border-[#D4AF37]/28 shadow-[0_8px_32px_rgba(30,40,30,0.06)] rounded-lg";
 
+/** Editorial memorial card — cream canvas, generous desktop padding */
+export const MEMORIAL_EDITORIAL_CARD =
+  "rounded-xl border border-[#D4AF37]/20 bg-white/40 p-5 shadow-[0_8px_40px_rgba(61,52,40,0.07)] backdrop-blur-md transition-shadow duration-300 sm:p-6 lg:p-8 lg:shadow-[0_16px_56px_rgba(61,52,40,0.09)]";
+
 /** Premium tactile pill for memorial actions (candle, mass sheets) */
 export const MEMORIAL_PILL_BTN =
   "rounded-full transition-all duration-300 ease-in-out hover:shadow-[0_4px_20px_rgba(61,52,40,0.15)] active:scale-[0.98]";
