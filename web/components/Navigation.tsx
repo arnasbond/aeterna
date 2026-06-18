@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import { APP_SECTIONS, getSectionTitle, resolveSectionIndex } from "@/lib/app-section-nav";
 
 const EXAMPLE = "/m/ona-demo";
@@ -12,6 +12,30 @@ const DESKTOP_NAV = [
   { href: "/#apie", label: "Apie" },
   { href: "/parishes", label: "Parapijos" },
   { href: "/wizard", label: "Narystė" },
+] as const;
+
+const MOBILE_MENU_GROUPS = [
+  {
+    title: "Sekcijos",
+    items: APP_SECTIONS.map((section) => ({ href: section.href, label: section.title })),
+  },
+  {
+    title: "Paskyra",
+    items: [
+      { href: "/prisijungti", label: "Prisijungti / Registruotis" },
+      { href: "/paskyra", label: "Mano paskyra" },
+      { href: "/wizard", label: "Sukurti memorialą" },
+      { href: EXAMPLE, label: "Pavyzdinis metraštis" },
+    ],
+  },
+  {
+    title: "Daugiau",
+    items: [
+      { href: "/map", label: "Žemėlapis" },
+      { href: "/atsisiusti", label: "Android programėlė" },
+      { href: "/priest/login", label: "Parapijos administratorius" },
+    ],
+  },
 ] as const;
 
 function useNavActive() {
@@ -66,8 +90,98 @@ function ProfileIconLink() {
   );
 }
 
+function MobileNavDrawer({
+  panelId,
+  open,
+  onClose,
+  isActive,
+}: {
+  panelId: string;
+  open: boolean;
+  onClose: () => void;
+  isActive: (href: string) => boolean;
+}) {
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [onClose, open]);
+
+  return (
+    <div
+      id={panelId}
+      className={`ch-mobile-drawer md:hidden${open ? " ch-mobile-drawer--open" : ""}`}
+      data-no-section-swipe
+      aria-hidden={!open}
+    >
+      <button
+        type="button"
+        className="ch-mobile-drawer__backdrop"
+        aria-label="Uždaryti meniu"
+        onClick={onClose}
+        tabIndex={open ? 0 : -1}
+      />
+      <div className="ch-mobile-drawer__panel ch-mobile-drawer__panel--dark hercules-mobile-drawer__panel">
+        <div className="hercules-mobile-drawer__head">
+          <p className="hercules-mobile-drawer__title">Meniu</p>
+          <button
+            type="button"
+            className="hercules-mobile-drawer__close"
+            aria-label="Uždaryti meniu"
+            onClick={onClose}
+          >
+            ×
+          </button>
+        </div>
+
+        <nav className="hercules-mobile-drawer__nav" aria-label="Mobilus meniu">
+          {MOBILE_MENU_GROUPS.map((group) => (
+            <div key={group.title} className="hercules-mobile-drawer__group">
+              <p className="hercules-mobile-drawer__group-title">{group.title}</p>
+              {group.items.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`hercules-mobile-drawer__link${isActive(item.href) ? " hercules-mobile-drawer__link--active" : ""}`}
+                  aria-current={isActive(item.href) ? "page" : undefined}
+                  onClick={onClose}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          ))}
+        </nav>
+
+        <Link href="/wizard" className="hercules-mobile-drawer__cta" onClick={onClose}>
+          Pradėti
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export function Navigation() {
   const { isActive, sectionTitle, sectionIndex } = useNavActive();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuId = useId();
+
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+
+  useEffect(() => {
+    closeMenu();
+  }, [closeMenu, sectionTitle]);
 
   return (
     <>
@@ -115,9 +229,23 @@ export function Navigation() {
 
           <div className="hercules-header__actions shrink-0">
             <ProfileIconLink />
+            <button
+              type="button"
+              className="hercules-header__menu"
+              aria-label={menuOpen ? "Uždaryti meniu" : "Atidaryti meniu"}
+              aria-expanded={menuOpen}
+              aria-controls={menuId}
+              onClick={() => setMenuOpen((value) => !value)}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
           </div>
         </div>
       </header>
+
+      <MobileNavDrawer panelId={menuId} open={menuOpen} onClose={closeMenu} isActive={isActive} />
 
       <div className="hercules-header-spacer" aria-hidden />
     </>
