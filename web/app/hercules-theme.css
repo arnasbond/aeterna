@@ -996,14 +996,13 @@ html.aeterna-native-app .hercules-header {
     box-shadow var(--h-duration) var(--h-ease) !important;
 }
 
-.hercules-home .ae-how-step.hercules-float:hover {
+.hercules-home .ae-how-step:hover {
   transform: translateY(-2px) !important;
 }
 
-.hercules-home .ae-how-step.hercules-float {
+.hercules-home .ae-how-step {
   cursor: pointer;
 }
-
 
 .hercules-home .ae-how-step--active,
 .hercules-home .ae-how-step.ae-how-step--active {
@@ -1016,6 +1015,36 @@ html.aeterna-native-app .hercules-header {
 }
 
 .hercules-home .ae-how-step p {
+  color: var(--h-fg-muted) !important;
+}
+
+.hercules-home .ae-how-step__cta {
+  color: rgba(212, 175, 55, 0.95) !important;
+}
+
+.hercules-home .ae-how-interactive__preview {
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.hercules-home .ae-how-preview__hint {
+  color: rgba(212, 175, 55, 0.95) !important;
+}
+
+.hercules-home .ae-how-modal {
+  background: #1a1f1c;
+  border: 1px solid var(--h-border);
+}
+
+.hercules-home .ae-how-modal__title {
+  color: var(--h-fg-strong) !important;
+}
+
+.hercules-home .ae-how-modal__lead {
+  color: rgba(212, 175, 55, 0.95) !important;
+}
+
+.hercules-home .ae-how-modal__detail {
   color: var(--h-fg-muted) !important;
 }
 

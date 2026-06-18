@@ -68,7 +68,7 @@ export function HomeLanding() {
               <span className="vk-badge">Kaip veikia</span>
               <h2 className="vk-title vk-title--center">Kapinėse ir telefone</h2>
               <p className="vk-subtitle vk-subtitle--center">
-                Paspauskite žingsnį — pamatysite, ką mato lankytojas.
+                Paspauskite žingsnio plytelę — atsivers jautri vizualizacija, ką mato lankytojas.
               </p>
             </div>
             <HomeHowItWorksInteractive />
