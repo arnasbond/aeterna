@@ -239,102 +239,62 @@ html.aeterna-native-app .hercules-header {
   }
 
   .hercules-header-spacer {
-    height: 7.25rem;
+    height: 5.25rem;
   }
 
   .hercules-memorial-page .hercules-header-spacer {
-    height: 7.25rem;
+    height: 5.25rem;
   }
 
-  .hercules-header__swipe-wrap {
-    position: relative;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  .hercules-header__swipe-wrap::before,
-  .hercules-header__swipe-wrap::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 1.75rem;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .hercules-header__swipe-wrap::before {
-    left: 0;
-    background: linear-gradient(to right, rgba(15, 15, 15, 0.92), transparent);
-  }
-
-  .hercules-header__swipe-wrap::after {
-    right: 0;
-    background: linear-gradient(to left, rgba(15, 15, 15, 0.92), transparent);
-  }
-
-  .hercules-header__dots {
+  .hercules-header__brand {
     display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
     min-width: 0;
-    padding: 0 0.35rem;
-  }
-
-  .hercules-header__dot {
-    width: 0.4rem;
-    height: 0.4rem;
-    padding: 0;
-    border: none;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.32);
-    cursor: pointer;
-    transition:
-      width 0.25s var(--h-ease),
-      background 0.25s var(--h-ease),
-      transform 0.2s var(--h-ease);
-  }
-
-  .hercules-header__dot--active {
-    width: 1.15rem;
-    background: var(--h-gold);
-  }
-
-  .hercules-header__dot:active {
-    transform: scale(0.92);
-  }
-
-  .hercules-header__swipe {
-    display: flex;
-    flex-wrap: nowrap;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    touch-action: pan-x;
-    scroll-snap-type: x mandatory;
-  }
-
-  .hercules-header__swipe .hercules-nav-pill {
-    flex: 0 0 auto;
-    scroll-snap-align: center;
-    touch-action: pan-x;
   }
 }
 
-/* Mobile swipe pills — preserve Hercules colors over global stone overrides */
-.hercules-header__swipe .hercules-nav-pill {
-  color: #1c1916 !important;
+.hercules-header__section {
+  margin: 0.2rem 0 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  color: var(--h-gold);
+  text-transform: none;
+  pointer-events: none;
+  user-select: none;
 }
 
-.hercules-header__swipe .hercules-nav-pill--active {
-  color: #d4af37 !important;
+.hercules-header__dots {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 0;
+  padding-top: 0.35rem;
+  pointer-events: none;
+}
+
+.hercules-header__dot {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  transition:
+    width 0.25s var(--h-ease),
+    background 0.25s var(--h-ease);
+}
+
+.hercules-header__dot--active {
+  width: 1rem;
+  background: var(--h-gold);
 }
 
 @media (min-width: 768px) {

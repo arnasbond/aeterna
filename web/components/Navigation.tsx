@@ -2,18 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { APP_SECTIONS, getSectionTitle, resolveSectionIndex } from "@/lib/app-section-nav";
 
 const EXAMPLE = "/m/ona-demo";
-
-/** Mobile horizontal swipe — SaaS pivot links */
-const SWIPE_NAV = [
-  { href: "/parishes", label: "⛪ Parapijos" },
-  { href: "/paieska", label: "📜 Skaitmeniniai metraščiai" },
-  { href: "/#parama", label: "💎 Narystės planai" },
-  { href: "/qr-ploksteles", label: "📍 Atminimo plokštelės" },
-  { href: "/#apie", label: "✨ Mūsų istorija" },
-] as const;
 
 const DESKTOP_NAV = [
   { href: "/paieska", label: "Paieška" },
@@ -21,10 +13,6 @@ const DESKTOP_NAV = [
   { href: "/parishes", label: "Parapijos" },
   { href: "/wizard", label: "Narystė" },
 ] as const;
-
-const PILL_BASE =
-  "snap-center shrink-0 bg-white/60 backdrop-blur-md border border-[#D4AF37]/20 text-stone-900 text-sm font-medium px-4 py-2 rounded-full transition-all active:scale-95 no-underline whitespace-nowrap";
-const PILL_ACTIVE = "bg-[#0F2519] text-[#D4AF37] border-[#D4AF37]/40";
 
 function useNavActive() {
   const pathname = usePathname();
@@ -52,57 +40,10 @@ function useNavActive() {
     [hash, mounted, pathname]
   );
 
-  return { isActive, mounted, pathname, hash };
-}
+  const sectionTitle = mounted ? getSectionTitle(pathname, hash) : null;
+  const sectionIndex = mounted ? resolveSectionIndex(pathname, hash) : -1;
 
-function useMobileHorizontalNav(mounted: boolean, isActive: (href: string) => boolean) {
-  const scrollRef = useRef<HTMLElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const scrollToIndex = useCallback((index: number, smooth = true) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const pill = el.children[index] as HTMLElement | undefined;
-    if (!pill) return;
-    const left = pill.offsetLeft - (el.clientWidth - pill.offsetWidth) / 2;
-    el.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "auto" });
-    setActiveIndex(index);
-  }, []);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el || !mounted) return;
-
-    const syncFromScroll = () => {
-      const center = el.scrollLeft + el.clientWidth / 2;
-      let closest = 0;
-      let minDist = Infinity;
-      Array.from(el.children).forEach((child, i) => {
-        const pill = child as HTMLElement;
-        const pillCenter = pill.offsetLeft + pill.offsetWidth / 2;
-        const dist = Math.abs(center - pillCenter);
-        if (dist < minDist) {
-          minDist = dist;
-          closest = i;
-        }
-      });
-      setActiveIndex(closest);
-    };
-
-    el.addEventListener("scroll", syncFromScroll, { passive: true });
-    syncFromScroll();
-    return () => el.removeEventListener("scroll", syncFromScroll);
-  }, [mounted]);
-
-  useEffect(() => {
-    if (!mounted) return;
-    const routeIndex = SWIPE_NAV.findIndex((item) => isActive(item.href));
-    if (routeIndex >= 0) {
-      requestAnimationFrame(() => scrollToIndex(routeIndex, false));
-    }
-  }, [mounted, isActive, scrollToIndex]);
-
-  return { scrollRef, activeIndex, scrollToIndex };
+  return { isActive, sectionTitle, sectionIndex };
 }
 
 function ProfileIconLink() {
@@ -126,16 +67,33 @@ function ProfileIconLink() {
 }
 
 export function Navigation() {
-  const { isActive, mounted } = useNavActive();
-  const { scrollRef, activeIndex, scrollToIndex } = useMobileHorizontalNav(mounted, isActive);
+  const { isActive, sectionTitle, sectionIndex } = useNavActive();
 
   return (
     <>
       <header className="hercules-header hercules-header--stacked">
-        <div className="flex w-full items-center justify-between gap-2 px-4 py-3 md:min-w-0 md:flex-1 md:gap-0 md:px-0 md:py-0">
-          <Link href="/" className="hercules-header__logo shrink-0">
-            AETERNA
-          </Link>
+        <div className="flex w-full items-start justify-between gap-3 px-4 py-3 md:min-w-0 md:flex-1 md:items-center md:gap-0 md:px-0 md:py-0">
+          <div className="hercules-header__brand min-w-0">
+            <Link href="/" className="hercules-header__logo block shrink-0">
+              AETERNA
+            </Link>
+            {sectionTitle ? (
+              <p className="hercules-header__section md:hidden" aria-live="polite">
+                {sectionTitle}
+              </p>
+            ) : null}
+          </div>
+
+          {sectionIndex >= 0 ? (
+            <div className="hercules-header__dots md:hidden" aria-hidden>
+              {APP_SECTIONS.map((section, index) => (
+                <span
+                  key={section.href}
+                  className={`hercules-header__dot${index === sectionIndex ? " hercules-header__dot--active" : ""}`}
+                />
+              ))}
+            </div>
+          ) : null}
 
           <nav className="hercules-header__nav" aria-label="Pagrindinis meniu">
             {DESKTOP_NAV.map((item) => (
@@ -155,47 +113,9 @@ export function Navigation() {
             </Link>
           </nav>
 
-          <div
-            className="hercules-header__dots md:hidden"
-            role="tablist"
-            aria-label="Horizontalus meniu"
-          >
-            {SWIPE_NAV.map((item, index) => (
-              <button
-                key={item.href}
-                type="button"
-                role="tab"
-                aria-selected={index === activeIndex}
-                aria-label={item.label}
-                className={`hercules-header__dot${index === activeIndex ? " hercules-header__dot--active" : ""}`}
-                onClick={() => scrollToIndex(index)}
-              />
-            ))}
-          </div>
-
           <div className="hercules-header__actions shrink-0">
             <ProfileIconLink />
           </div>
-        </div>
-
-        <div className="hercules-header__swipe-wrap md:hidden">
-          <nav
-            ref={scrollRef}
-            className="hercules-header__swipe flex w-full min-w-0 max-w-full flex-nowrap overflow-x-auto snap-x snap-mandatory gap-3 px-4 py-2 scrollbar-hide [-webkit-overflow-scrolling:touch]"
-            aria-label="Greita navigacija"
-          >
-            {SWIPE_NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`hercules-nav-pill ${PILL_BASE}${isActive(item.href) ? ` hercules-nav-pill--active ${PILL_ACTIVE}` : ""}`}
-                aria-current={isActive(item.href) ? "page" : undefined}
-                draggable={false}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
         </div>
       </header>
 

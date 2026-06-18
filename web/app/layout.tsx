@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { headers } from "next/headers";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { AppSectionSwipe } from "@/components/AppSectionSwipe";
 import { Navigation } from "@/components/Navigation";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { DeployBadge } from "@/components/DeployBadge";
@@ -50,6 +51,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {`try{if(/AeternaApp\\//i.test(navigator.userAgent)){document.documentElement.classList.add('aeterna-native-app');}}catch(e){}`}
         </Script>
         <Navigation />
+        <AppSectionSwipe />
         <main className="hercules-main">{children}</main>
         {!inNativeApp && <DeployBadge />}
         <SiteFooter />
