@@ -258,6 +258,7 @@ export type CreateMemorialPayload = {
   birthDate?: string;
   deathDate?: string;
   biography?: string;
+  isPremium?: boolean;
   portraitUrl?: string;
   mediaGallery?: string[];
   videoUrl?: string;
@@ -458,6 +459,7 @@ export type OwnedMemorial = {
   profileUrl: string;
   qrCodeUrl: string | null;
   privacyStatus: string;
+  isPremium?: boolean;
   updatedAt: string;
   pendingGuestbookCount?: number;
 };

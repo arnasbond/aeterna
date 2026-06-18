@@ -12,8 +12,11 @@ import { processPremiumSubscription } from "../services/stripe.js";
 import { sendAnniversaryReminderOptInEmail } from "../services/email-service.js";
 import {
   listGuestbookForOwner,
+  pendingGuestbookCount,
+  setGuestbookApproved,
   setGuestbookEntryStatus,
 } from "../services/guestbook-store.js";
+import type { ModerateGuestbookInput } from "../types/guestbook.js";
 import type { CreateMemorialInput } from "../types/aeterna.js";
 import type { UpdateMemorialInput, UserLoginInput, UserRegisterInput } from "../types/user.js";
 import { config } from "../config.js";
@@ -114,9 +117,8 @@ export async function userRoutes(app: FastifyInstance) {
     const userId = await requireUser(req, reply);
     if (!userId) return;
     const list = await listMemorialsByUserId(userId);
-    return {
-      success: true,
-      data: list.map((m) => ({
+    const data = await Promise.all(
+      list.map(async (m) => ({
         id: m.id,
         slug: m.slug,
         fullName: m.fullName,
@@ -126,9 +128,12 @@ export async function userRoutes(app: FastifyInstance) {
         profileUrl: m.profileUrl,
         qrCodeUrl: m.qrCodeUrl,
         privacyStatus: m.privacyStatus,
+        isPremium: m.isPremium,
         updatedAt: m.updatedAt,
-      })),
-    };
+        pendingGuestbookCount: await pendingGuestbookCount(m.slug, userId),
+      }))
+    );
+    return { success: true, data };
   });
 
   app.get<{ Params: { slug: string } }>("/api/v1/user/memorials/:slug", async (req, reply) => {
@@ -286,15 +291,28 @@ export async function userRoutes(app: FastifyInstance) {
 
   app.patch<{
     Params: { slug: string; id: string };
-    Body: { status?: "approved" | "rejected" };
+    Body: ModerateGuestbookInput;
   }>("/api/v1/user/memorials/:slug/guestbook/:id", async (req, reply) => {
     const userId = await requireUser(req, reply);
     if (!userId) return;
-    const status = req.body?.status;
-    if (status !== "approved" && status !== "rejected") {
-      return reply.status(400).send({ success: false, error: { message: "status: approved arba rejected" } });
+    const { isApproved, status } = req.body ?? {};
+
+    let row = null;
+    if (isApproved === true) {
+      row = await setGuestbookApproved(req.params.slug, req.params.id, userId, true);
+    } else if (isApproved === false && status === "rejected") {
+      row = await setGuestbookEntryStatus(req.params.slug, req.params.id, userId, "rejected");
+    } else if (isApproved === false) {
+      row = await setGuestbookApproved(req.params.slug, req.params.id, userId, false);
+    } else if (status === "approved" || status === "rejected") {
+      row = await setGuestbookEntryStatus(req.params.slug, req.params.id, userId, status);
+    } else {
+      return reply.status(400).send({
+        success: false,
+        error: { message: "Nurodykite isApproved: true arba status: approved / rejected" },
+      });
     }
-    const row = await setGuestbookEntryStatus(req.params.slug, req.params.id, userId, status);
+
     if (!row) {
       return reply.status(404).send({ success: false, error: { message: "Įrašas nerastas" } });
     }

@@ -216,6 +216,18 @@ export default function EditMemorialPage() {
         <Link href="/paskyra">Mano paskyra</Link>
       </p>
 
+      {memorial && (
+        <PremiumUpgradePanel
+          slug={slug}
+          isPremium={memorial.isPremium}
+          onUpgraded={() => {
+            void fetchUserMemorial(slug).then((m) => {
+              if (m) setMemorial(m);
+            });
+          }}
+        />
+      )}
+
       {geo ? (
         <div className="ae-card mb-4 p-4">
           <MemorialLocationShare slug={slug} lat={geo.lat} lng={geo.lng} fullName={fullName} />
@@ -334,18 +346,6 @@ export default function EditMemorialPage() {
           {busy ? "Saugoma…" : "Išsaugoti"}
         </button>
       </form>
-
-      {memorial && (
-        <PremiumUpgradePanel
-          slug={slug}
-          isPremium={memorial.isPremium}
-          onUpgraded={() => {
-            void fetchUserMemorial(slug).then((m) => {
-              if (m) setMemorial(m);
-            });
-          }}
-        />
-      )}
 
       {memorial?.isPremium && (
         <>

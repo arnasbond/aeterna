@@ -21,7 +21,13 @@ import { clearCandleIntent, loadCandleIntent } from "@/lib/candle-intent";
 import { buildWizardReturnPath } from "@/lib/wizard-return-path";
 import { clearWizardDraft, loadWizardDraft, saveWizardDraft } from "@/lib/wizard-draft";
 import { HerculesPageShell } from "@/components/layout/HerculesPageShell";
+import { MembershipPlanPicker } from "@/components/wizard/MembershipPlanPicker";
 import { prepareUploadFile } from "@/lib/compress-upload";
+import {
+  membershipTotalCents,
+  type MembershipPlanId,
+  type PremiumPlan,
+} from "@/lib/premium";
 
 /** Client-side resize/compress before Vercel Blob — keeps storage and mobile loads lean. */
 const WIZARD_IMAGE_COMPRESSION = { maxDimension: 1200, quality: 0.8 } as const;
@@ -81,9 +87,11 @@ function WizardInner() {
   const [mediaBusy, setMediaBusy] = useState(false);
   const [parishId, setParishId] = useState(preParish);
   const [plateAddOn, setPlateAddOn] = useState(false);
-  const BASE_MEMBERSHIP_CENTS = 3900; // 39 €
+  const [membershipPlanId, setMembershipPlanId] = useState<MembershipPlanId>("standard");
+  const [premiumBilling, setPremiumBilling] = useState<PremiumPlan>("yearly");
   const PLATE_ADDON_CENTS = 2500; // +25 €
-  const totalCents = BASE_MEMBERSHIP_CENTS + (plateAddOn ? PLATE_ADDON_CENTS : 0);
+  const plateAddOnCents = plateAddOn ? PLATE_ADDON_CENTS : 0;
+  const totalCents = membershipTotalCents(membershipPlanId, premiumBilling, plateAddOnCents);
   const MAX_GALLERY_PHOTOS = 10;
   const [loggedIn, setLoggedIn] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
@@ -126,6 +134,9 @@ function WizardInner() {
         setGalleryUrls(draft.galleryUrls);
         setVideoUrl(draft.videoUrl);
         if (draft.parishId) setParishId(draft.parishId);
+        if (draft.membershipPlanId) setMembershipPlanId(draft.membershipPlanId);
+        if (draft.premiumBilling) setPremiumBilling(draft.premiumBilling);
+        if (draft.plateAddOn !== undefined) setPlateAddOn(draft.plateAddOn);
         if (draft.privacyStatus) setPrivacyStatus(draft.privacyStatus);
         setConsentTerms(draft.consentTerms ?? false);
         setConsentPrivacy(draft.consentPrivacy ?? false);
@@ -150,6 +161,8 @@ function WizardInner() {
     setMediaBusy(false);
     setBusy(false);
     setPlateAddOn(false);
+    setMembershipPlanId("standard");
+    setPremiumBilling("yearly");
     setPdfBusy(false);
     setPrivacyStatus("");
     setConsentTerms(false);
@@ -172,6 +185,9 @@ function WizardInner() {
       consentTerms,
       consentPrivacy,
       consentMapLocation,
+      membershipPlanId,
+      premiumBilling,
+      plateAddOn,
       step,
       maxStep,
     });
@@ -188,6 +204,9 @@ function WizardInner() {
     consentTerms,
     consentPrivacy,
     consentMapLocation,
+    membershipPlanId,
+    premiumBilling,
+    plateAddOn,
     step,
     maxStep,
     result,
@@ -243,10 +262,16 @@ function WizardInner() {
 
   async function handleGalleryFiles(files: FileList | null) {
     if (!files?.length) return;
-    const remaining = Math.max(0, MAX_GALLERY_PHOTOS - galleryUrls.length);
+    const isPremium = membershipPlanId === "premium";
+    const maxPhotos = isPremium ? Number.POSITIVE_INFINITY : MAX_GALLERY_PHOTOS;
+    const remaining = Math.max(0, maxPhotos - galleryUrls.length);
     const filesArr = Array.from(files).slice(0, remaining);
     if (filesArr.length === 0) {
-      setErr("Pagrindinė narystė leidžia iki 10 nuotraukų. Premium suteikia neribotą galeriją.");
+      setErr(
+        membershipPlanId === "premium"
+          ? "Pasiektas įkėlimo limitas šiai sesijai."
+          : "Pagrindinė narystė leidžia iki 10 nuotraukų. Premium suteikia neribotą galeriją."
+      );
       return;
     }
     setMediaBusy(true);
@@ -289,6 +314,7 @@ function WizardInner() {
     mediaGallery: galleryUrls.length ? galleryUrls : undefined,
     videoUrl: videoUrl || undefined,
     privacyStatus: privacyStatus === "private" ? "private" as const : "public" as const,
+    isPremium: membershipPlanId === "premium",
   });
 
   const privacyValues = {
@@ -539,14 +565,14 @@ function WizardInner() {
             </div>
 
             <div className="ae-field ae-wizard-upload">
-              <label>Vaizdo įrašas (Premium)</label>
+              <label>Vaizdo įrašas {membershipPlanId === "premium" ? "" : "(Premium plane)"}</label>
               <label className="ae-wizard-upload__btn">
                 📁 Įkelti vaizdo įrašą iš telefono galerijos
                 <input
                   type="file"
                   accept="video/mp4,video/webm,video/quicktime,video/*,.mov"
                   hidden
-                  disabled
+                  disabled={mediaBusy || membershipPlanId !== "premium"}
                   onChange={(e) => {
                     void handleVideoFile(e.target.files?.[0] ?? null);
                     e.target.value = "";
@@ -554,9 +580,9 @@ function WizardInner() {
                 />
               </label>
               {videoUrl && <p className="ae-wizard-upload__ok">✓ Vaizdo įrašas įkeltas</p>}
-              {!videoUrl && (
+              {!videoUrl && membershipPlanId !== "premium" && (
                 <p className="ae-hint" style={{ marginTop: "0.5rem" }}>
-                  Premium narystė suteikia galimybę įkelti vaizdo įrašą.
+                  Pasirinkite Premium planą apmokėjimo žingsnyje arba vėliau atnaujinkite memorialo administravime.
                 </p>
               )}
             </div>
@@ -610,12 +636,16 @@ function WizardInner() {
         {step === 5 && (
           <>
             <h2 style={{ fontSize: "1.2rem" }}>5. Apmokėjimas</h2>
-            <div className="ae-card" style={{ marginBottom: "1rem" }}>
-              <p>
-                <strong>Vienkartinis skaitmeninis narystės mokestis:</strong> {formatPrice(BASE_MEMBERSHIP_CENTS)}
-              </p>
+            <MembershipPlanPicker
+              planId={membershipPlanId}
+              premiumBilling={premiumBilling}
+              plateAddOnCents={plateAddOnCents}
+              onPlanChange={setMembershipPlanId}
+              onPremiumBillingChange={setPremiumBilling}
+            />
 
-              <label style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start", marginTop: "0.75rem" }}>
+            <div className="ae-card" style={{ marginBottom: "1rem" }}>
+              <label style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start" }}>
                 <input type="checkbox" checked={plateAddOn} onChange={(e) => setPlateAddOn(e.target.checked)} />
                 <span style={{ fontSize: "0.95rem", lineHeight: 1.55 }}>
                   Pageidauju užsakyti gamyklinę nerūdijančio plieno plokštelę į paštomatą (+25 €)
@@ -626,8 +656,10 @@ function WizardInner() {
                 <strong>Iš viso:</strong> {formatPrice(totalCents)}
               </p>
 
-              <p style={{ fontSize: "0.85rem", color: "var(--ae-muted)" }}>
-                Skaitmeninio memorialo išsaugojimas platformoje ir QR generation.
+              <p style={{ fontSize: "0.85rem", color: "var(--ae-muted)", marginBottom: 0 }}>
+                {membershipPlanId === "premium"
+                  ? "Premium plane įskaičiuotas memorialas, QR generavimas ir papildomos funkcijos."
+                  : "Pagrindiniame plane — memorialo išsaugojimas platformoje ir QR generavimas."}
               </p>
             </div>
             <button type="button" className="ae-btn ae-btn--outline" onClick={() => goToStep(4)}>

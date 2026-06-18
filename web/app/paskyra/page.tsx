@@ -200,6 +200,11 @@ export default function PaskyraPage() {
               <div>
                 <h3 className="chronicle-serif">
                   {m.fullName}
+                  {m.isPremium ? (
+                    <span className="ae-plan-badge ae-plan-badge--premium">Premium</span>
+                  ) : (
+                    <span className="ae-plan-badge">Pagrindinis</span>
+                  )}
                   {(m.pendingGuestbookCount ?? 0) > 0 && (
                     <span
                       className="ae-hint"
@@ -225,6 +230,11 @@ export default function PaskyraPage() {
                 <Link href={`/paskyra/atmintis/${m.slug}`} className="ae-btn ae-btn--primary">
                   Redaguoti
                 </Link>
+                {!m.isPremium && (
+                  <Link href={`/paskyra/atmintis/${m.slug}#premium`} className="ae-btn ae-btn--gold">
+                    Į Premium
+                  </Link>
+                )}
               </div>
             </li>
           ))}
