@@ -6,9 +6,13 @@ export const GLASS_CARD =
 export const MEMORIAL_IVORY_CARD =
   "bg-[rgba(255,255,255,0.58)] backdrop-blur-md border border-[#D4AF37]/28 shadow-[0_8px_32px_rgba(30,40,30,0.06)] rounded-lg";
 
-/** Editorial memorial card — cream canvas, generous desktop padding */
+/** Chronicle cream cards — kaip „Atverkite atmintį“ vizualizacijoje */
+export const MEMORIAL_CHRONICLE_CARD =
+  "rounded-2xl border border-[#D4AF37]/18 bg-[#fcfbf7]/95 p-5 shadow-[0_10px_40px_rgba(30,58,30,0.08)] sm:p-6 lg:p-8";
+
+/** Editorial memorial card — glass on cream chronicle */
 export const MEMORIAL_EDITORIAL_CARD =
-  "rounded-xl border border-[#D4AF37]/20 bg-white/40 p-5 shadow-[0_8px_40px_rgba(61,52,40,0.07)] backdrop-blur-md transition-shadow duration-300 sm:p-6 lg:p-8 lg:shadow-[0_16px_56px_rgba(61,52,40,0.09)]";
+  "rounded-2xl border border-[#D4AF37]/18 bg-white/70 p-5 shadow-[0_8px_32px_rgba(30,58,30,0.06)] backdrop-blur-md transition-shadow duration-300 sm:p-6 lg:p-8";
 
 /** Premium tactile pill for memorial actions (candle, mass sheets) */
 export const MEMORIAL_PILL_BTN =

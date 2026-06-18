@@ -419,6 +419,32 @@ html.aeterna-native-app .hercules-header {
   height: 4.5rem;
 }
 
+/* Memorial pages — floating dark-green sanctuary header */
+.hercules-header--memorial-sanctuary {
+  background: rgba(15, 37, 25, 0.9);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+@media (min-width: 1024px) {
+  .hercules-header--memorial-sanctuary {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(72rem, calc(100% - 3rem));
+    margin-top: 0.65rem;
+    border-radius: 999px;
+    padding: 0.65rem 1.25rem;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    background: rgba(15, 37, 25, 0.88);
+    backdrop-filter: blur(16px);
+  }
+
+  .hercules-header--memorial-sanctuary.hercules-header--stacked {
+    padding: 0.65rem 1.25rem;
+  }
+}
+
 /* Memorial pages — floating ivory ribbon on desktop */
 .hercules-header--memorial-ivory {
   background: rgba(252, 251, 247, 0.88);

@@ -12,11 +12,14 @@ import { MemorialLocationShare } from "@/components/MemorialLocationShare";
 import { MemorialQrHub } from "@/components/memorial/MemorialQrHub";
 import { FamilyTreeDisplay } from "@/components/memorial/FamilyTreeDisplay";
 import { MemorialGalleryMasonry } from "@/components/memorial/MemorialGalleryMasonry";
+import { MemorialGalleryStrip } from "@/components/memorial/MemorialGalleryStrip";
+import { MemorialSectionTabs } from "@/components/memorial/MemorialSectionTabs";
 import { MemorialSubNav } from "@/components/memorial/MemorialSubNav";
 import { parishCardImage } from "@/lib/parish-image";
 import { MapsOpenLink } from "@/components/MapsOpenLink";
 import { googleMapsDirectionsUrl, googleMapsSearchUrl } from "@/lib/open-maps";
-import { MEMORIAL_EDITORIAL_CARD, MEMORIAL_PILL_BTN } from "@/lib/glass-card";
+import { MEMORIAL_CHRONICLE_CARD, MEMORIAL_PILL_BTN } from "@/lib/glass-card";
+import { MEMORIAL_EYEBROW } from "@/lib/memorial-theme";
 import type { MemorialPublic } from "@/lib/api";
 
 function formatYears(birth: string | null, death: string | null) {
@@ -44,22 +47,26 @@ function epitaphFromBio(biography: string): string | null {
 function MemorialArchPortrait({ src, alt, large }: { src: string; alt: string; large?: boolean }) {
   return (
     <div
-      className={`ch-memorial-arch mx-auto mb-4 rounded-t-full bg-gradient-to-b from-[#D4AF37]/40 to-transparent p-[1px] ${
+      className={`ch-memorial-arch ch-memorial-arch--viz mx-auto mb-4 ${
         large ? "w-52 sm:w-56 lg:w-full lg:max-w-[15rem]" : "w-44"
       }`}
     >
-      <div
-        className={`overflow-hidden rounded-t-full border border-white/30 bg-[#1c1916] shadow-[0_12px_40px_rgba(61,52,40,0.18)] ${
-          large ? "h-[14.5rem] sm:h-[15.5rem] lg:h-[17rem]" : "h-[13rem]"
-        }`}
-      >
-        <img
-          src={src}
-          alt={alt}
-          className="ch-memorial-arch__img h-full w-full object-cover object-[center_15%]"
-          referrerPolicy="no-referrer"
-        />
+      <div className="ch-memorial-arch__leaf ch-memorial-arch__leaf--left" aria-hidden />
+      <div className="ch-memorial-arch__ring">
+        <div
+          className={`ch-memorial-arch__frame overflow-hidden ${
+            large ? "h-[14.5rem] sm:h-[15.5rem] lg:h-[17rem]" : "h-[13rem]"
+          }`}
+        >
+          <img
+            src={src}
+            alt={alt}
+            className="ch-memorial-arch__img h-full w-full object-cover object-[center_15%]"
+            referrerPolicy="no-referrer"
+          />
+        </div>
       </div>
+      <div className="ch-memorial-arch__leaf ch-memorial-arch__leaf--right" aria-hidden />
     </div>
   );
 }
@@ -155,17 +162,26 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
     setTimeout(() => document.getElementById("memorial-guestbook")?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
   }
 
+  function scrollToGallery() {
+    document.getElementById("memorial-gallery")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   const memorialActions = (
-    <div className="ch-memorial-actions ch-memorial-actions--trio">
-      <button type="button" className={`ch-btn ch-btn--primary ${MEMORIAL_PILL_BTN}`} onClick={openCandle}>
-        🕯️ Uždegti žvakutę
+    <div className="ch-memorial-actions ch-memorial-actions--sanctuary">
+      <button type="button" className="ch-memorial-candle-bridge" onClick={openCandle}>
+        <span className="ch-memorial-candle-bridge__orb" aria-hidden>
+          🕯️
+        </span>
+        <span className="ch-memorial-candle-bridge__label">Uždegti žvakutę</span>
       </button>
-      <button type="button" className={`ch-btn ch-btn--outline ${MEMORIAL_PILL_BTN}`} onClick={openMass}>
-        ✝ Užsakyti Mišias
-      </button>
-      <button type="button" className={`ch-btn ch-btn--outline ${MEMORIAL_PILL_BTN}`} onClick={openGuestbook}>
-        💐 Užuojauta
-      </button>
+      <div className="ch-memorial-actions--duo">
+        <button type="button" className={`ch-btn ch-btn--sanctuary ${MEMORIAL_PILL_BTN}`} onClick={openMass}>
+          ✝ Mišios
+        </button>
+        <button type="button" className={`ch-btn ch-btn--sanctuary ${MEMORIAL_PILL_BTN}`} onClick={openGuestbook}>
+          💐 Užuojauta
+        </button>
+      </div>
     </div>
   );
 
@@ -176,7 +192,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       {location ? (
         <MapsOpenLink
           href={googleMapsDirectionsUrl(location.lat, location.lng)}
-          className={`ch-btn ch-btn--outline ch-btn--block ${MEMORIAL_PILL_BTN}`}
+          className={`ch-btn ch-btn--sanctuary ch-btn--block ${MEMORIAL_PILL_BTN}`}
           title="Atidaryti GPS maršrutą"
         >
           📍 Rasti kapavietę
@@ -184,7 +200,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       ) : canEdit ? (
         <button
           type="button"
-          className={`ch-btn ch-btn--outline ch-btn--block ${MEMORIAL_PILL_BTN}`}
+          className={`ch-btn ch-btn--sanctuary ch-btn--block ${MEMORIAL_PILL_BTN}`}
           onClick={scrollToLocationSet}
         >
           📍 Nurodyti kapavietę
@@ -192,7 +208,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       ) : (
         <MapsOpenLink
           href={googleMapsSearchUrl(mapsSearchQuery)}
-          className={`ch-btn ch-btn--outline ch-btn--block ${MEMORIAL_PILL_BTN}`}
+          className={`ch-btn ch-btn--sanctuary ch-btn--block ${MEMORIAL_PILL_BTN}`}
           onAfterClick={scrollToLocationHelp}
         >
           📍 Rasti kapavietę
@@ -202,60 +218,71 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
   );
 
   const anchorColumn = (
-  <aside className="ch-memorial-anchor lg:col-span-5 lg:sticky lg:top-24 lg:self-start">
-    <div className={`ch-memorial-hero-card ${MEMORIAL_EDITORIAL_CARD}`}>
-      <section className="ch-memorial-hero">
-        <MemorialArchPortrait src={portrait} alt={memorial.fullName} large />
-        <h1 className="ch-memorial-name chronicle-serif">{memorial.fullName}</h1>
-        <p className="ch-memorial-years">{formatYears(memorial.birthDate, memorial.deathDate)}</p>
-        {expanded && epitaph ? <p className="ch-memorial-epitaph">{epitaph}</p> : null}
-      </section>
+    <aside className="ch-memorial-anchor ch-memorial-sanctuary lg:col-span-5 lg:sticky lg:top-24 lg:self-start">
+      <div className="ch-memorial-sanctuary__inner">
+        <p className="ch-memorial-sanctuary__eyebrow">{MEMORIAL_EYEBROW}</p>
+        <section className="ch-memorial-hero">
+          <MemorialArchPortrait src={portrait} alt={memorial.fullName} large />
+          <h1 className="ch-memorial-name chronicle-serif">{memorial.fullName}</h1>
+          <p className="ch-memorial-years">{formatYears(memorial.birthDate, memorial.deathDate)}</p>
+          <div className="ch-memorial-sanctuary__divider" aria-hidden />
+          {(expanded && epitaph) || memorial.farewellMessage ? (
+            <p className="ch-memorial-epitaph">
+              {epitaph ?? (memorial.farewellMessage ? `„${memorial.farewellMessage}"` : null)}
+            </p>
+          ) : (
+            <p className="ch-memorial-epitaph ch-memorial-epitaph--soft">Amžinai širdyse</p>
+          )}
+        </section>
 
-      {memorialActions}
-      {locationAction}
-    </div>
-
-    {expanded ? (
-      <button
-        type="button"
-        className={`ch-memorial-collapse ch-btn ch-btn--outline ch-btn--block mt-4 ${MEMORIAL_PILL_BTN}`}
-        onClick={() => setExpanded(false)}
-      >
-        ← Suskleisti (QR vaizdas)
-      </button>
-    ) : null}
-
-    <MemorialSubNav visible={expanded} />
-
-    {canEdit ? (
-      <p className="ch-memorial-edit-link mt-4">
-        <Link href={`/paskyra/atmintis/${slug}`} className={`ch-btn ch-btn--gold ch-btn--block ${MEMORIAL_PILL_BTN}`}>
-          Redaguoti biografiją ir nuotraukas
-        </Link>
-      </p>
-    ) : null}
-
-    {!expanded ? (
-      <div className="mt-6 lg:mt-8">
-        <MemorialQrHub
-          slug={slug}
-          fullName={memorial.fullName}
-          qrCodeUrl={memorial.qrCodeUrl}
-          profileUrl={memorial.profileUrl}
-          expandable={!expanded}
-          onExpand={() => setExpanded(true)}
-          showPlateLink={!expanded}
-          showName={false}
-        />
+        {memorialActions}
+        {locationAction}
       </div>
-    ) : null}
-  </aside>
+
+      {expanded ? (
+        <button
+          type="button"
+          className={`ch-memorial-collapse ch-btn ch-btn--sanctuary ch-btn--block mt-4 ${MEMORIAL_PILL_BTN}`}
+          onClick={() => setExpanded(false)}
+        >
+          ← Suskleisti (QR vaizdas)
+        </button>
+      ) : null}
+
+      <MemorialSubNav visible={expanded} />
+
+      {canEdit ? (
+        <p className="ch-memorial-edit-link mt-4">
+          <Link href={`/paskyra/atmintis/${slug}`} className={`ch-btn ch-btn--gold ch-btn--block ${MEMORIAL_PILL_BTN}`}>
+            Redaguoti biografiją ir nuotraukas
+          </Link>
+        </p>
+      ) : null}
+
+      {!expanded ? (
+        <div className="ch-memorial-sanctuary__qr mt-6 lg:mt-8">
+          <MemorialQrHub
+            slug={slug}
+            fullName={memorial.fullName}
+            qrCodeUrl={memorial.qrCodeUrl}
+            profileUrl={memorial.profileUrl}
+            expandable={!expanded}
+            onExpand={() => setExpanded(true)}
+            showPlateLink={!expanded}
+            showName={false}
+          />
+        </div>
+      ) : null}
+    </aside>
   );
 
   const chronicleColumn = (
-    <div className="ch-memorial-chronicle lg:col-span-7 space-y-6 sm:space-y-8 lg:space-y-10">
+    <div className="ch-memorial-chronicle ch-memorial-chronicle--cream lg:col-span-7 space-y-6 sm:space-y-8 lg:space-y-10">
+      {gallery.length > 0 ? (
+        <MemorialGalleryStrip urls={gallery} onSelect={setLightbox} onViewAll={scrollToGallery} />
+      ) : null}
       {expanded && location ? (
-        <div className={MEMORIAL_EDITORIAL_CARD}>
+        <div className={MEMORIAL_CHRONICLE_CARD}>
           <MemorialLocationShare
             slug={slug}
             lat={location.lat}
@@ -266,7 +293,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       ) : null}
 
       {expanded && !location && canEdit ? (
-        <div id="grave-location-set" className={MEMORIAL_EDITORIAL_CARD}>
+        <div id="grave-location-set" className={MEMORIAL_CHRONICLE_CARD}>
           <GraveLocationSet
             slug={slug}
             memorialName={memorial.fullName}
@@ -278,7 +305,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       ) : null}
 
       {expanded && !location && !canEdit ? (
-        <div id="grave-location-help" className={`grave-loc-help-banner ${MEMORIAL_EDITORIAL_CARD}`}>
+        <div id="grave-location-help" className={`grave-loc-help-banner ${MEMORIAL_CHRONICLE_CARD}`}>
           <h3 className="chronicle-serif text-lg mb-2">Kaip pririšti kapą prie šios atminties?</h3>
           <p className="ae-hint mb-3">
             Google Maps vieta <strong>automatiškai neišsaugoma</strong> — reikia nukopijuoti nuorodą ir įklijuoti čia
@@ -316,7 +343,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       ) : null}
 
       {bioParagraphs.length > 0 ? (
-        <section id="memorial-bio" className={`ch-memorial-panel ch-memorial-bio ${MEMORIAL_EDITORIAL_CARD}`}>
+        <section id="memorial-bio" className={`ch-memorial-panel ch-memorial-bio ${MEMORIAL_CHRONICLE_CARD}`}>
           <h2 className="chronicle-serif ch-memorial-panel__title">Gyvenimo istorija</h2>
           {bioParagraphs.map((para, i) => (
             <p key={i}>{para}</p>
@@ -325,26 +352,26 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       ) : null}
 
       {memorial.farewellMessage ? (
-        <blockquote className={`ch-memorial-panel ch-memorial-quote ${MEMORIAL_EDITORIAL_CARD}`}>
+        <blockquote className={`ch-memorial-panel ch-memorial-quote ${MEMORIAL_CHRONICLE_CARD}`}>
           <p>„{memorial.farewellMessage}"</p>
         </blockquote>
       ) : null}
 
       {showVideo ? (
-        <div className={`ch-memorial-panel ${MEMORIAL_EDITORIAL_CARD}`}>
+        <div className={`ch-memorial-panel ${MEMORIAL_CHRONICLE_CARD}`}>
           <MemorialVideoPlayer videoUrl={memorial.videoUrl!} fullName={memorial.fullName} />
         </div>
       ) : null}
 
       {gallery.length > 0 ? (
-        <section id="memorial-gallery" className={`ch-memorial-panel ch-memorial-gallery ${MEMORIAL_EDITORIAL_CARD}`}>
+        <section id="memorial-gallery" className={`ch-memorial-panel ch-memorial-gallery ${MEMORIAL_CHRONICLE_CARD}`}>
           <h2 className="chronicle-serif ch-memorial-panel__title">Nuotraukos</h2>
           <MemorialGalleryMasonry urls={gallery} onSelect={setLightbox} />
         </section>
       ) : null}
 
       {expanded && memorial.isPremium && (memorial.familyTree?.length ?? 0) > 0 ? (
-        <div className={MEMORIAL_EDITORIAL_CARD}>
+        <div className={MEMORIAL_CHRONICLE_CARD}>
           <FamilyTreeDisplay nodes={memorial.familyTree!} memorialName={memorial.fullName} />
         </div>
       ) : null}
@@ -361,7 +388,7 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       ) : null}
 
       {expanded ? (
-        <section id="memorial-mass" className={`ch-parish-card ${MEMORIAL_EDITORIAL_CARD}`}>
+        <section id="memorial-mass" className={`ch-parish-card ${MEMORIAL_CHRONICLE_CARD}`}>
           <div className="ch-parish-card__row">
             <img src={parishImg} alt="" className="ch-parish-card__img rounded-xl" referrerPolicy="no-referrer" />
             <div>
@@ -389,8 +416,10 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
       ) : null}
 
       {expanded ? (
-        <section className={`ch-memorial-board ${MEMORIAL_EDITORIAL_CARD}`}>
-          <h2 className="chronicle-serif ch-memorial-panel__title">Uždegtos žvakutės</h2>
+        <section className={`ch-memorial-board ${MEMORIAL_CHRONICLE_CARD}`}>
+          <h2 className="chronicle-serif ch-memorial-panel__title" id="memorial-candles">
+            Uždegtos žvakutės
+          </h2>
           <VirtualCandles slug={slug} parishTitle={parishTitle} />
 
           <h2 className="chronicle-serif ch-memorial-panel__title mt-8" id="memorial-guestbook">
@@ -403,17 +432,19 @@ export function MemorialProfile({ memorial, slug, geo, canEdit, canClaim, onGeoU
   );
 
   return (
-    <article className={`ch-memorial ch-memorial--editorial${expanded ? "" : " ch-memorial--compact"}`}>
+    <article className={`ch-memorial ch-memorial--viz ch-memorial--editorial${expanded ? "" : " ch-memorial--compact"}`}>
       {parishId ? (
         <p className="hercules-memorial__back">
           <Link href={`/parishes/${parishId}`}>← {parishTitle}</Link>
         </p>
       ) : null}
 
-      <div className="ch-memorial-layout lg:grid lg:grid-cols-12 lg:gap-12 lg:max-w-6xl lg:mx-auto">
+      <div className="ch-memorial-layout ch-memorial-viz-shell lg:grid lg:grid-cols-12 lg:gap-8 lg:max-w-6xl lg:mx-auto">
         {anchorColumn}
         {chronicleColumn}
       </div>
+
+      <MemorialSectionTabs visible={expanded} />
 
       {lightbox ? (
         <div className="vk-memorial-lightbox" role="dialog" aria-modal onClick={() => setLightbox(null)}>
