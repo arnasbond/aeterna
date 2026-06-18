@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useState } from "react";
 import { APP_SECTIONS, getSectionTitle, resolveSectionIndex } from "@/lib/app-section-nav";
+import { SectionNavLink } from "@/components/SectionNavLink";
 
 const EXAMPLE = "/m/ona-demo";
 
@@ -150,7 +151,7 @@ function MobileNavDrawer({
             <div key={group.title} className="hercules-mobile-drawer__group">
               <p className="hercules-mobile-drawer__group-title">{group.title}</p>
               {group.items.map((item) => (
-                <Link
+                <SectionNavLink
                   key={item.href}
                   href={item.href}
                   className={`hercules-mobile-drawer__link${isActive(item.href) ? " hercules-mobile-drawer__link--active" : ""}`}
@@ -158,7 +159,7 @@ function MobileNavDrawer({
                   onClick={onClose}
                 >
                   {item.label}
-                </Link>
+                </SectionNavLink>
               ))}
             </div>
           ))}
@@ -210,15 +211,25 @@ export function Navigation() {
           ) : null}
 
           <nav className="hercules-header__nav" aria-label="Pagrindinis meniu">
-            {DESKTOP_NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`hercules-header__link${isActive(item.href) ? " hercules-header__link--active" : ""}`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {DESKTOP_NAV.map((item) =>
+              item.href.startsWith("/#") ? (
+                <SectionNavLink
+                  key={item.href}
+                  href={item.href}
+                  className={`hercules-header__link${isActive(item.href) ? " hercules-header__link--active" : ""}`}
+                >
+                  {item.label}
+                </SectionNavLink>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`hercules-header__link${isActive(item.href) ? " hercules-header__link--active" : ""}`}
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
             <Link href={EXAMPLE} className="hercules-header__link">
               Pavyzdys
             </Link>

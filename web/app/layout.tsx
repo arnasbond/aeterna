@@ -3,6 +3,7 @@ import Script from "next/script";
 import { headers } from "next/headers";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import { AppSectionSwipe } from "@/components/AppSectionSwipe";
+import { HashScrollSync } from "@/components/HashScrollSync";
 import { Navigation } from "@/components/Navigation";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { DeployBadge } from "@/components/DeployBadge";
@@ -52,6 +53,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </Script>
         <Navigation />
         <AppSectionSwipe />
+        <HashScrollSync />
         <main className="hercules-main">{children}</main>
         {!inNativeApp && <DeployBadge />}
         <SiteFooter />

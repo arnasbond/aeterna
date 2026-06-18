@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { sectionHrefByDelta } from "@/lib/app-section-nav";
+import { navigateToSectionHref, sectionHrefByDelta } from "@/lib/app-section-nav";
 
 const SWIPE_MIN_PX = 64;
 const SWIPE_RATIO = 1.2;
@@ -92,7 +92,7 @@ export function AppSectionSwipe() {
 
       const delta = dx < 0 ? 1 : -1;
       const href = sectionHrefByDelta(pathnameRef.current, hashRef.current, delta);
-      router.push(href);
+      navigateToSectionHref(href, router);
     };
 
     const onTouchCancel = () => {
