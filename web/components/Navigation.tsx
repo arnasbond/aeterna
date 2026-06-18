@@ -8,6 +8,48 @@ import { SectionNavLink } from "@/components/SectionNavLink";
 
 const EXAMPLE = "/m/ona-demo";
 
+type MobileMenuItem = {
+  href: string;
+  label: string;
+  nested?: boolean;
+};
+
+type MobileMenuGroup = {
+  title: string;
+  items: MobileMenuItem[];
+};
+
+const MOBILE_MENU_GROUPS: MobileMenuGroup[] = [
+  {
+    title: "Sekcijos",
+    items: APP_SECTIONS.map((section) => ({ href: section.href, label: section.title })),
+  },
+  {
+    title: "Prisijungimas ir registracija",
+    items: [
+      { href: "/prisijungti?tab=login", label: "Prisijungti", nested: true },
+      { href: "/prisijungti?tab=register", label: "Registruotis", nested: true },
+      { href: "/priest/login", label: "Parapijos administratoriui", nested: true },
+      { href: "/admin/login", label: "Administratoriui", nested: true },
+    ],
+  },
+  {
+    title: "Paskyra",
+    items: [
+      { href: "/paskyra", label: "Mano paskyra" },
+      { href: "/wizard", label: "Sukurti memorialą" },
+      { href: EXAMPLE, label: "Pavyzdinis metraštis" },
+    ],
+  },
+  {
+    title: "Kita",
+    items: [
+      { href: "/map", label: "Žemėlapis" },
+      { href: "/atsisiusti", label: "Android programėlė" },
+    ],
+  },
+];
+
 const DESKTOP_NAV = [
   { href: "/paieska", label: "Paieška" },
   { href: "/#apie", label: "Apie" },
@@ -15,54 +57,66 @@ const DESKTOP_NAV = [
   { href: "/wizard", label: "Narystė" },
 ] as const;
 
-const MOBILE_MENU_GROUPS = [
-  {
-    title: "Sekcijos",
-    items: APP_SECTIONS.map((section) => ({ href: section.href, label: section.title })),
-  },
-  {
-    title: "Paskyra",
-    items: [
-      { href: "/prisijungti", label: "Prisijungti / Registruotis" },
-      { href: "/paskyra", label: "Mano paskyra" },
-      { href: "/wizard", label: "Sukurti memorialą" },
-      { href: EXAMPLE, label: "Pavyzdinis metraštis" },
-    ],
-  },
-  {
-    title: "Daugiau",
-    items: [
-      { href: "/map", label: "Žemėlapis" },
-      { href: "/atsisiusti", label: "Android programėlė" },
-      { href: "/priest/login", label: "Parapijos administratorius" },
-    ],
-  },
-] as const;
+function matchesMenuHref(href: string, pathname: string, hash: string, search: string): boolean {
+  if (href.startsWith("/#")) {
+    const target = href.slice(1);
+    return pathname === "/" && hash === target;
+  }
+
+  const [path, queryPart] = href.split("?");
+  const pathMatches = pathname === path || pathname.startsWith(`${path}/`);
+  if (!pathMatches) return false;
+  if (!queryPart) return true;
+
+  const hrefParams = new URLSearchParams(queryPart);
+  const currentParams = new URLSearchParams(search.replace(/^\?/, ""));
+
+  for (const [key, value] of hrefParams) {
+    const current = currentParams.get(key);
+    if (key === "tab" && path === "/prisijungti" && value === "login") {
+      if (current === null || current === "login") return true;
+      return false;
+    }
+    if (current !== value) return false;
+  }
+
+  return true;
+}
 
 function useNavActive() {
   const pathname = usePathname();
   const [hash, setHash] = useState("");
+  const [search, setSearch] = useState("");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const syncHash = () => setHash(window.location.hash);
-    syncHash();
-    window.addEventListener("hashchange", syncHash);
-    return () => window.removeEventListener("hashchange", syncHash);
+    const syncLocation = () => {
+      setHash(window.location.hash);
+      setSearch(window.location.search);
+    };
+    syncLocation();
+    window.addEventListener("hashchange", syncLocation);
+    window.addEventListener("popstate", syncLocation);
+    return () => {
+      window.removeEventListener("hashchange", syncLocation);
+      window.removeEventListener("popstate", syncLocation);
+    };
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    setHash(window.location.hash);
+    setSearch(window.location.search);
+  }, [mounted, pathname]);
 
   const isActive = useCallback(
     (href: string) => {
       if (!mounted) return false;
-      if (href.startsWith("/#")) {
-        const target = href.slice(1);
-        return pathname === "/" && hash === target;
-      }
       if (href === "/") return pathname === "/";
-      return pathname === href || pathname.startsWith(`${href}/`);
+      return matchesMenuHref(href, pathname, hash, search);
     },
-    [hash, mounted, pathname]
+    [hash, mounted, pathname, search]
   );
 
   const sectionTitle = mounted ? getSectionTitle(pathname, hash) : null;
@@ -154,7 +208,7 @@ function MobileNavDrawer({
                 <SectionNavLink
                   key={item.href}
                   href={item.href}
-                  className={`hercules-mobile-drawer__link${isActive(item.href) ? " hercules-mobile-drawer__link--active" : ""}`}
+                  className={`hercules-mobile-drawer__link${item.nested ? " hercules-mobile-drawer__link--nested" : ""}${isActive(item.href) ? " hercules-mobile-drawer__link--active" : ""}`}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   onClick={onClose}
                 >
