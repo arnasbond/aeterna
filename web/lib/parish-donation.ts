@@ -11,7 +11,7 @@ export function formatDonationEuro(cents: number): string {
 }
 
 export const PARISH_DONATION_NOTE =
-  "Nuo kiekvienos apmokamos sumos 20 % automatiškai keliauja kaip auka pasirinktai parapijai.";
+  "Skaitmeninės narystės ir Premium mokėjimuose 20 % sumos automatiškai skiriama pasirinktai parapijai.";
 
 export function parishDonationNoteWithAmount(totalCents: number, parishTitle?: string): string {
   const amount = formatDonationEuro(parishDonationCents(totalCents));

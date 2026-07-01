@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FinancialTransparencyBlock } from "@/components/compliance/FinancialTransparencyBlock";
+import { InstitutionalLegalNotice } from "@/components/compliance/InstitutionalLegalNotice";
 import {
   DonationAmountPicker,
   donationAmountCents,
@@ -8,9 +10,9 @@ import {
 } from "@/components/DonationAmountPicker";
 import { RequestMassSlotsButton } from "@/components/mass/RequestMassSlotsButton";
 import { bookMass, fetchAvailableMasses, fetchParishes, type MassSlot, type Parish } from "@/lib/api";
+import { SERVICE_FEE_EUR } from "@/lib/financial-compliance";
 import { HOME_ACTION_PILL } from "@/lib/glass-card";
 
-const SERVICE_FEE_EUR = 0.5;
 
 function formatSlot(dt: string) {
   const d = new Date(dt);
@@ -89,8 +91,7 @@ export function MassBookingSection({ initialParishId, lockParish, presentation =
 
   const parishTitle = parishes.find((p) => p.id === parishId)?.title;
   const amountCents = donationAmountCents(amountEur, customMode, customInput);
-  const amountLabel =
-    amountCents != null ? `${(amountCents / 100).toFixed(2).replace(/\.00$/, "")} €` : null;
+  const donationAmountEur = amountCents != null ? amountCents / 100 : null;
   const totalCents = amountCents != null ? amountCents + SERVICE_FEE_EUR * 100 : null;
   const totalLabel =
     totalCents != null ? `${(totalCents / 100).toFixed(2).replace(/\.00$/, "")} €` : null;
@@ -201,10 +202,8 @@ export function MassBookingSection({ initialParishId, lockParish, presentation =
             onCustomInput={setCustomInput}
             label="Auka už Šv. Mišias (€)"
           />
-          <p className="ch-fee-note">
-            Mokėjimas (mock): {SERVICE_FEE_EUR.toFixed(2).replace(/\\.00$/, "")} € aptarnavimo mokestis atskiriamas
-            nuo parapijai skiriamos sumos.
-          </p>
+          <FinancialTransparencyBlock donationAmountEur={donationAmountEur} />
+          <InstitutionalLegalNotice compact />
 
           {err && <p className="ae-error">{err}</p>}
           {msg && <p className="ae-ok">{msg}</p>}
@@ -215,8 +214,8 @@ export function MassBookingSection({ initialParishId, lockParish, presentation =
           >
             {busy
               ? "Užsakoma…"
-              : amountLabel
-                ? `Užsakyti Mišias ir paaukoti (${amountLabel}) — viso ${totalLabel}`
+              : totalLabel
+                ? `Užsakyti Mišias ir paaukoti — viso ${totalLabel}`
                 : "Pasirinkite sumą"}
           </button>
         </form>

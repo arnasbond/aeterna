@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SupportInbox } from "@/components/support/SupportInbox";
+import { auditTrailToCsv, buildDonationAuditTrail } from "@/lib/donation-audit-trail";
 import {
   acknowledgePriestMassSlotRequest,
   clearPriestToken,
@@ -190,6 +191,32 @@ export function PriestLedgerDashboard() {
     () => masses.filter((m) => m.status === "open" && m.isAvailable),
     [masses]
   );
+
+  const donationAuditTrail = useMemo(() => {
+    if (!dash) return [];
+    return buildDonationAuditTrail(dash.parish.bankAccount, masses);
+  }, [dash, masses]);
+
+  function exportAuditCsv() {
+    if (!donationAuditTrail.length) return;
+    const blob = new Blob([auditTrailToCsv(donationAuditTrail)], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `aeterna-audit-${dash?.parish.id ?? "parish"}-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function formatAuditWhen(iso: string) {
+    return new Date(iso).toLocaleString("lt-LT", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
 
   function resolveDayDate(): Date | null {
     const now = new Date();
@@ -564,10 +591,56 @@ export function PriestLedgerDashboard() {
             <h3>Šv. Mišios</h3>
             <p className="pl-finance-value">{formatEuro(dash.finances.massesTotalCents)}</p>
           </div>
-          <div className="pl-card">
+          <div className="pl-card" style={{ marginBottom: "1rem" }}>
             <h3>Iš viso</h3>
             <p className="pl-finance-value">{formatEuro(dash.finances.totalCents)}</p>
           </div>
+
+          <h3>📋 Skaitmeninių aukų audit trail</h3>
+          <p className="pl-caption" style={{ marginBottom: "0.5rem" }}>
+            Kiekviena eilutė: laikas, unikalus ID, anoniminis aukotojas, parapijos sąskaita — eksportuojama Kurijos
+            finansų kontrolieriams.
+          </p>
+          {donationAuditTrail.length === 0 ? (
+            <p className="pl-caption">Kol kas nėra užregistruotų skaitmeninių aukų įrašų.</p>
+          ) : (
+            <div style={{ overflowX: "auto" }}>
+              <table className="pl-audit-table">
+                <thead>
+                  <tr>
+                    <th>Laikas</th>
+                    <th>ID</th>
+                    <th>Aukotojas</th>
+                    <th>Parapijos sąskaita</th>
+                    <th>Tipas</th>
+                    <th>Suma</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {donationAuditTrail.map((row) => (
+                    <tr key={`${row.kind}-${row.referenceId}`}>
+                      <td>{formatAuditWhen(row.timestamp)}</td>
+                      <td>
+                        <code>{row.referenceId.slice(0, 8)}…</code>
+                      </td>
+                      <td>{row.donorName}</td>
+                      <td>{row.parishDestinationAccount}</td>
+                      <td>{row.kind === "mass" ? "Mišios" : "Žvakutė"}</td>
+                      <td>{formatEuro(row.parishAmountCents)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <button
+            type="button"
+            className="pl-confirm-mass pl-audit-export"
+            disabled={donationAuditTrail.length === 0}
+            onClick={exportAuditCsv}
+          >
+            ⬇ Eksportuoti audit trail (CSV)
+          </button>
         </section>
       )}
 

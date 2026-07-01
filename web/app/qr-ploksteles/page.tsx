@@ -10,7 +10,6 @@ export const metadata = {
 export default function QrPlokstelesPage() {
   return (
     <div className={`hercules-page ${HERCULES_REVEAL}`}>
-      <div className="hercules-header-spacer" aria-hidden />
       <section className="ae-qr-catalog-hero">
         <div className="ae-qr-catalog-hero__inner">
           <Link href="/" className="ae-qr-catalog-back">

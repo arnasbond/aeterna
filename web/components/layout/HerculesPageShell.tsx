@@ -24,7 +24,6 @@ export function HerculesPageShell({
 }: Props) {
   return (
     <div className={`hercules-page ${HERCULES_REVEAL} ${className}`.trim()}>
-      <div className="hercules-header-spacer" aria-hidden />
       <div className={`hercules-page__inner ${narrow ? "hercules-page__inner--narrow" : ""}`}>
         {(eyebrow || title || lead) && (
           <header className={`hercules-page__head ${center ? "hercules-page__head--center" : ""}`}>

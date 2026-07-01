@@ -1,5 +1,6 @@
 import { getApiProxyTarget } from "./api-proxy-target";
 import { DEFAULT_API } from "./production-api-default";
+import type { DonationAuditEntry } from "./financial-compliance";
 import { parishCardImage } from "./parish-image";
 import type { CompressUploadOptions } from "./compress-upload";
 
@@ -391,6 +392,7 @@ export type PriestDashboard = {
     memorialsTotalCents: number;
     totalCents: number;
   };
+  donationAuditTrail?: DonationAuditEntry[];
   pendingMasses: number;
   upcomingSlots: number;
 };

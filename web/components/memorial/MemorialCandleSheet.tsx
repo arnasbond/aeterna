@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { FinancialTransparencyBlock } from "@/components/compliance/FinancialTransparencyBlock";
+import { InstitutionalLegalNotice } from "@/components/compliance/InstitutionalLegalNotice";
+import { SERVICE_FEE_EUR } from "@/lib/financial-compliance";
 import { lightCandle } from "@/lib/api";
 
 const PRESET_AMOUNTS = [5, 10, 20] as const;
-const SERVICE_FEE_EUR = 0.5;
 const MIN_CUSTOM = 1;
 const MAX_CUSTOM = 5000;
 
@@ -152,22 +154,10 @@ export function MemorialCandleSheet({ slug, parishTitle, isPremium, open, onClos
             </div>
           )}
 
-          <p className="ch-fee-disclaimer">
-            <em>
-              Papildomai taikomas 0.50 € sistemos aptarnavimo mokestis. 100% pasirinktos aukos keliauja tiesiai į
-              parapijos sąskaitą.
-            </em>
-          </p>
-
-          <p className="ch-fee-note">
-            Iš viso mokėti: <strong>{canSubmit ? total.toFixed(2) : "—"} €</strong>
-            {canSubmit && (
-              <>
-                {" "}
-                (auka {effectiveAmount.toFixed(2)} € + aptarnavimas {SERVICE_FEE_EUR.toFixed(2)} €)
-              </>
-            )}
-          </p>
+          <FinancialTransparencyBlock
+            donationAmountEur={canSubmit ? effectiveAmount : null}
+          />
+          <InstitutionalLegalNotice compact />
 
           {err && <p className="ae-error">{err}</p>}
 

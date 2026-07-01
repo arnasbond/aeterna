@@ -4,6 +4,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { navigateToSectionHref, sectionHrefByDelta } from "@/lib/app-section-nav";
 
+function swipeDisabledForPath(pathname: string): boolean {
+  return (
+    pathname.startsWith("/m/") ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/priest") ||
+    pathname.startsWith("/wizard") ||
+    pathname.startsWith("/paskyra/atmintis")
+  );
+}
 const SWIPE_MIN_PX = 64;
 const SWIPE_RATIO = 1.2;
 
@@ -66,6 +75,7 @@ export function AppSectionSwipe() {
   useEffect(() => {
     const onTouchStart = (event: TouchEvent) => {
       if (!gestureNavEnabled()) return;
+      if (swipeDisabledForPath(pathnameRef.current)) return;
       if (event.touches.length !== 1) return;
       if (shouldIgnoreTarget(event.target)) return;
 
@@ -78,6 +88,7 @@ export function AppSectionSwipe() {
 
     const onTouchEnd = (event: TouchEvent) => {
       if (!gestureNavEnabled()) return;
+      if (swipeDisabledForPath(pathnameRef.current)) return;
       if (!startRef.current.active) return;
       startRef.current.active = false;
 

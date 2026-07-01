@@ -56,7 +56,6 @@ export default function ParishHubPage() {
   return (
     <>
       <div className={`hercules-page ${HERCULES_REVEAL}`}>
-        <div className="hercules-header-spacer" aria-hidden />
         <section className="ae-parish-hero">
           <div className="ae-parish-hero__media">
             <img src={parishHeroImage(parish)} alt={parish.title} referrerPolicy="no-referrer" />

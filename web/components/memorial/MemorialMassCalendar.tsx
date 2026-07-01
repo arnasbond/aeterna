@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FinancialTransparencyBlock } from "@/components/compliance/FinancialTransparencyBlock";
+import { InstitutionalLegalNotice } from "@/components/compliance/InstitutionalLegalNotice";
 import {
   DonationAmountPicker,
   donationAmountCents,
   DONATION_MIN_EUR,
 } from "@/components/DonationAmountPicker";
 import { RequestMassSlotsButton } from "@/components/mass/RequestMassSlotsButton";
+import { SERVICE_FEE_EUR } from "@/lib/financial-compliance";
 import { bookMass, fetchAvailableMasses, type MassSlot } from "@/lib/api";
 
 function formatSlot(dt: string) {
@@ -48,8 +51,8 @@ export function MemorialMassCalendar({ parishId, parishTitle, deceasedName }: Pr
   const selected = slots.find((s) => s.id === selectedId);
 
   const amountCents = donationAmountCents(amountEur, customMode, customInput);
-  const amountLabel =
-    amountCents != null ? `${(amountCents / 100).toFixed(2).replace(/\.00$/, "")} €` : null;
+  const donationAmountEur = amountCents != null ? amountCents / 100 : null;
+  const totalEur = donationAmountEur != null ? donationAmountEur + SERVICE_FEE_EUR : null;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -151,14 +154,15 @@ export function MemorialMassCalendar({ parishId, parishTitle, deceasedName }: Pr
             onCustomInput={setCustomInput}
             label="Auka už Šv. Mišias (€)"
           />
-          <p className="ch-fee-note">Mokėjimas (mock) — visa suma skiriama parapijos sąskaitai.</p>
+          <FinancialTransparencyBlock donationAmountEur={donationAmountEur} />
+          <InstitutionalLegalNotice compact />
           {err && <p className="ae-error">{err}</p>}
           {msg && <p className="ae-hint" style={{ color: "var(--ch-emerald)" }}>{msg}</p>}
           <button type="submit" className="ch-btn ch-btn--primary ch-btn--block" disabled={busy}>
             {busy
               ? "Užsakoma…"
-              : amountLabel
-                ? `Užsakyti ir paaukoti (${amountLabel})`
+              : totalEur != null
+                ? `Užsakyti ir paaukoti ${totalEur.toFixed(2)} €`
                 : "Pasirinkite sumą"}
           </button>
         </form>

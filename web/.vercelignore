@@ -1,6 +1,7 @@
 node_modules
 .next
 .git
+vauto
 *.apk
 android
 api

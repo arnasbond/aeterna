@@ -163,9 +163,9 @@ function MobileNavDrawer({
       <button
         type="button"
         className="ch-mobile-drawer__backdrop"
-        aria-label="Uždaryti meniu"
+        aria-hidden={!open}
+        tabIndex={-1}
         onClick={onClose}
-        tabIndex={open ? 0 : -1}
       />
       <div className="ch-mobile-drawer__panel ch-mobile-drawer__panel--dark hercules-mobile-drawer__panel">
         <div className="hercules-mobile-drawer__head">

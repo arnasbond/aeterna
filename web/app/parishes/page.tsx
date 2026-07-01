@@ -40,7 +40,7 @@ export default function ParishesPage() {
 
       title="Parapijos"
 
-      lead="Pasirinkite parapiją, kuriai skiriama 20 % nuo kiekvienos apmokamos sumos (narystė, Premium, žvakutė, mišios)."
+      lead="Pasirinkite parapiją. Žvakutės ir Šv. Mišios — 100 % aukos parapijai; narystėje ir Premium — 20 % sumos."
 
       center
 

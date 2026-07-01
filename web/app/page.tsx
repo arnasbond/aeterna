@@ -57,8 +57,9 @@ export default function HomePage() {
                 Žvakutė ir mišios remia parapiją
               </h2>
               <p className="vk-parish-band__lead">
-                Nuo kiekvienos apmokamos sumos (narystė, Premium, žvakutė, Šv. Mišios) 20 % automatiškai keliauja
-                kaip auka pasirinktai parapijai.
+                Uždegus virtualią žvakutę ar užsakius Šv. Mišias — visa parapijos auka (be 0,50 € sistemos
+                mokesčio) keliauja tiesiai į parapijos sąskaitą. Skaitmeninės narystės ir Premium mokėjimų 20 %
+                skiriama pasirinktai parapijai.
               </p>
               <div className="vk-parish-band__links">
                 <Link href="/map" className="vk-btn vk-btn--white">

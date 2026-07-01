@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { InstitutionalLegalNotice } from "@/components/compliance/InstitutionalLegalNotice";
 
 export function SiteFooter() {
   return (
@@ -17,6 +18,7 @@ export function SiteFooter() {
           <p className="text-white/70">
             QR kodas ant paminklo — amžina atmintis ir parama Jūsų parapijai.
           </p>
+          <InstitutionalLegalNotice />
         </div>
 
         <div>
